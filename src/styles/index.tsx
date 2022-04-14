@@ -1,4 +1,6 @@
-export const PrimaryColor = "#5764BD";
-export const TextColor = "#24354F";
-export const BackgroundColor = "#F7F8FC"; 
-export const LightTextColor="#9DA2AD"
+export const COLORS = {
+  primary: "#5764BD",
+  background: "#F7F8FC",
+  text: "#24354F",
+  lightText: "#9DA2AD",
+};
