@@ -21,21 +21,24 @@ export const CustomButton = ({ text, link, color, startIcon, endIcon, type, hand
   };
 
   const buttonStyle = {
-    ":hover": {
-      backgroundColor: color ? (isType("outlined") ? COLORS.background : color) : COLORS.primary,
-      color: "white",
-    },
-    padding: "10px 20px",
-    backgroundColor: color ? (isType("outlined") ? COLORS.background : color) : COLORS.primary,
+    // ":hover": {
+    //   backgroundColor: color ? (isType("outlined") ? COLORS.background : color) : COLORS.primary,
+    //   color: "white",
+    // },
+    paddingX: "20px",
+    paddingY: "10px",
+    // backgroundColor: color ? (isType("outlined") ? COLORS.background : color) : COLORS.primary,
     borderRadius: isType("rounded") ? 10 : 2,
   };
 
   return (
     <Button
-      variant="contained"
+      variant={isType("outlined") ? "outlined" : "contained"}
       size="medium"
-      startIcon={startIcon && <CustomIcon name={startIcon} color="white" size={20} />}
-      endIcon={endIcon && <CustomIcon name={endIcon} color="white" size={20} />}
+      startIcon={
+        startIcon && <CustomIcon name={startIcon} color={isType("outlined") ? COLORS.primary : "white"} size={20} />
+      }
+      endIcon={endIcon && <CustomIcon name={endIcon} color={isType("outlined") ? COLORS.primary : "white"} size={20} />}
       sx={buttonStyle}
       onClick={handleOnClick}
     >

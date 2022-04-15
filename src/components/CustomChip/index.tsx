@@ -6,8 +6,8 @@ interface CustomChipProps {
   color?: string;
   size?: number;
 }
-export const CustomChip = (props: CustomChipProps) => {
-  const chipColor = props.color ?? COLORS.primary;
+export const CustomChip = ({text,color,size}: CustomChipProps) => {
+  const chipColor = color ?? COLORS.primary;
   const chipStyle = {  fill: chipColor };
-  return <Chip label={props.text} sx = {chipStyle}></Chip>;
+  return <Chip label={text} sx = {chipStyle}></Chip>;
 };
