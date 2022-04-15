@@ -3,6 +3,7 @@ import { Grid } from "@mui/material";
 import { CustomTitle } from "./components/CustomTitle";
 import { CustomIcon } from "components/CustomIcon";
 import { COLORS } from "styles";
+import { CustomChip } from "components/CustomChip";
 import { CustomButton } from "components/CustomButton";
 
 function App() {
@@ -23,7 +24,9 @@ function App() {
           <CustomIcon name="about" size={75} color={COLORS.primary} />
         </Grid>
         <Grid item xs={12}>
-          <CustomButton text="button"/>
+          <CustomChip text = "abc"></CustomChip>
+          <CustomButton text="button" icon = "settings" />
+          
         </Grid>
       </Grid>
     </div>
