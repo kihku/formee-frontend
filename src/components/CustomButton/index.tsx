@@ -2,77 +2,45 @@ import { Button } from "@mui/material";
 import { IconType } from "components/CustomIcon";
 import { CustomIcon } from "components/CustomIcon";
 import { COLORS } from "styles";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
 
-//export type ButtonType = "filled" | "outlineRounded" | "filledRounded";
-
-declare module "@mui/material/styles" {
-  interface Theme {
-    status: {
-      danger: React.CSSProperties["color"];
-    };
-  }
-
-  interface Palette {
-    neutral: Palette["primary"];
-  }
-  interface PaletteOptions {
-    neutral: PaletteOptions["primary"];
-  }
-
-  interface PaletteColor {
-    darker?: string;
-  }
-  interface SimplePaletteColorOptions {
-    darker?: string;
-  }
-  interface ThemeOptions {
-    status: {
-      danger: React.CSSProperties["color"];
-    };
-  }
-}
-
-const theme = createTheme({
-  status: {
-    danger: "#e53e3e",
-  },
-  palette: {
-    primary: {
-      main: COLORS.primary,
-      darker: COLORS.primaryDark,
-    },
-    neutral: {
-      main: "#64748B",
-      contrastText: "#fff",
-    },
-  },
-});
+export type ButtonType = "default" | "rounded" | "outlined" | "rounded-outlined";
 
 interface CustomButtonProps {
   text: string;
   link?: string;
-  icon?: IconType;
-  //type?: ButtonType;
+  color?: string;
+  startIcon?: IconType;
+  endIcon?: IconType;
+  type: ButtonType;
+  handleOnClick?: () => void;
 }
-export const CustomButton = ({ text, link, icon /*type*/ }: CustomButtonProps) => {
-  // const ButtonType = type ?? "filled";
-  // switch (ButtonType) {
-  //   case "filled":
+
+export const CustomButton = ({ text, link, color, startIcon, endIcon, type, handleOnClick }: CustomButtonProps) => {
+  const isType = (keyword: string) => {
+    return type.includes(keyword);
+  };
+
+  const buttonStyle = {
+    ":hover": {
+      backgroundColor: color ? (isType("outlined") ? COLORS.background : color) : COLORS.primary,
+      color: "white",
+    },
+    padding: "10px 20px",
+    backgroundColor: color ? (isType("outlined") ? COLORS.background : color) : COLORS.primary,
+    borderRadius: isType("rounded") ? 10 : 2,
+  };
+
   return (
-    <ThemeProvider theme={theme}>
-      <Button
-        variant="contained"
-        color="primary"
-        size="medium"
-        startIcon={<CustomIcon name={icon as IconType} color="white" size={20} />}
-        onClick={() => {
-          alert("clicked");
-        }}
-      >
-        {text}
-      </Button>
-    </ThemeProvider>
+    <Button
+      variant="contained"
+      size="medium"
+      startIcon={startIcon && <CustomIcon name={startIcon} color="white" size={20} />}
+      endIcon={endIcon && <CustomIcon name={endIcon} color="white" size={20} />}
+      sx={buttonStyle}
+      onClick={handleOnClick}
+    >
+      {text}
+    </Button>
   );
   //}
 };

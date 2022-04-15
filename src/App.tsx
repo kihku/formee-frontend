@@ -24,9 +24,20 @@ function App() {
           <CustomIcon name="about" size={75} color={COLORS.primary} />
         </Grid>
         <Grid item xs={12}>
-          <CustomChip text = "abc"></CustomChip>
-          <CustomButton text="button" icon = "settings" />
-          
+          <CustomChip text="abc"></CustomChip>
+        </Grid>
+        <Grid item xs={12} sx={{ display: "flex", gap: "10px" }}>
+          <CustomButton text="button" startIcon="settings" type="default" />
+          <CustomButton text="button" endIcon="settings" type="rounded" color={COLORS.text} />
+          <CustomButton text="button" endIcon="settings" type="outlined" />
+          <CustomButton
+            text="button"
+            endIcon="settings"
+            type="rounded-outlined"
+            handleOnClick={() => {
+              alert("clicked");
+            }}
+          />
         </Grid>
       </Grid>
     </div>
