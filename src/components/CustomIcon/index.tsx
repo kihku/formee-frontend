@@ -1,8 +1,86 @@
 import NotificationsRoundedIcon from "@mui/icons-material/NotificationsRounded";
 import SettingsIcon from "@mui/icons-material/Settings";
+import HelpRoundedIcon from "@mui/icons-material/HelpRounded"; //about
+import AddBoxRoundedIcon from "@mui/icons-material/AddBoxRounded";
+import VisibilityOffRoundedIcon from "@mui/icons-material/VisibilityOffRounded";
+import VisibilityRoundedIcon from "@mui/icons-material/VisibilityRounded";
+import FileDownloadRoundedIcon from "@mui/icons-material/FileDownloadRounded";
+import FileUploadRoundedIcon from "@mui/icons-material/FileUploadRounded";
+import KeyboardArrowDownRoundedIcon from "@mui/icons-material/KeyboardArrowDownRounded";
+import KeyboardArrowUpRoundedIcon from "@mui/icons-material/KeyboardArrowUpRounded";
+import ChevronRightRoundedIcon from "@mui/icons-material/ChevronRightRounded";
+import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
+import CheckCircleRoundedIcon from "@mui/icons-material/CheckCircleRounded";
+import CancelRoundedIcon from "@mui/icons-material/CancelRounded";
+import CalendarMonthRoundedIcon from "@mui/icons-material/CalendarMonthRounded";
+import ArrowRightRoundedIcon from "@mui/icons-material/ArrowRightRounded";
+import ArrowLeftRoundedIcon from "@mui/icons-material/ArrowLeftRounded";
+import DoubleArrowRoundedIcon from "@mui/icons-material/DoubleArrowRounded";
+import SkipNextRoundedIcon from "@mui/icons-material/SkipNextRounded";
+import SkipPreviousRoundedIcon from "@mui/icons-material/SkipPreviousRounded";
+import SaveRoundedIcon from "@mui/icons-material/SaveRounded";
+import ArrowDropDownRoundedIcon from "@mui/icons-material/ArrowDropDownRounded";
+import GradeRoundedIcon from "@mui/icons-material/GradeRounded";
+import LinkRoundedIcon from "@mui/icons-material/LinkRounded";
+import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
+import EditRoundedIcon from "@mui/icons-material/EditRounded";
+import IndeterminateCheckBoxRoundedIcon from "@mui/icons-material/IndeterminateCheckBoxRounded";
+import CheckBoxRoundedIcon from "@mui/icons-material/CheckBoxRounded";
+import AddRoundedIcon from "@mui/icons-material/AddRounded";
+import AddPhotoAlternateRoundedIcon from "@mui/icons-material/AddPhotoAlternateRounded";
+import RestartAltRoundedIcon from "@mui/icons-material/RestartAltRounded";
+import PersonRoundedIcon from "@mui/icons-material/PersonRounded";
+import CameraAltRoundedIcon from "@mui/icons-material/CameraAltRounded";
+import LogoutRoundedIcon from "@mui/icons-material/LogoutRounded";
+import LoginRoundedIcon from "@mui/icons-material/LoginRounded";
+import AccessTimeRoundedIcon from "@mui/icons-material/AccessTimeRounded";
+import BookmarkBorderRoundedIcon from "@mui/icons-material/BookmarkBorderRounded";
+import PhoneRoundedIcon from "@mui/icons-material/PhoneRounded";
+import ZoomOutMapRoundedIcon from "@mui/icons-material/ZoomOutMapRounded";
+import ZoomInMapRoundedIcon from "@mui/icons-material/ZoomInMapRounded";
 import { COLORS } from "styles";
 
-export type IconType = "notification" | "settings";
+export type IconType =
+  | "notification"
+  | "settings"
+  | "about"
+  | "add"
+  | "visibleEyeOff"
+  | "visibleEye"
+  | "import"
+  | "export"
+  | "downArrow"
+  | "upArrow"
+  | "rightArrow"
+  | "search"
+  | "checkCircle"
+  | "cancelCircle"
+  | "calendar"
+  | "nextArrow"
+  | "previousArrow"
+  | "doubleArrowRight"
+  | "nextSkip"
+  | "previousSkip"
+  | "save"
+  | "downFilledArrow"
+  | "copyLink"
+  | "close"
+  | "edit"
+  | "remove"
+  | "star"
+  | "squareCheckBox"
+  | "lightAdd"
+  | "addPhoto"
+  | "reset"
+  | "person"
+  | "camera"
+  | "logout"
+  | "login"
+  | "accessTime"
+  | "bookmark"
+  | "phone"
+  | "zoomOut"
+  | "zoomIn";
 
 interface IconProps {
   name: IconType;
@@ -19,9 +97,98 @@ export const CustomIcon = ({ name, size, color }: IconProps) => {
   const iconStyle = { width: iconSize, height: iconSize, fill: iconColor };
 
   switch (name) {
+    //Header icon
     case "notification":
       return <NotificationsRoundedIcon sx={iconStyle} />;
     case "settings":
       return <SettingsIcon sx={iconStyle} />;
+    case "about":
+      return <HelpRoundedIcon sx={iconStyle} />;
+    //Home- order icon
+    case "add":
+      return <AddBoxRoundedIcon sx={iconStyle} />;
+    //Log in
+    case "visibleEyeOff":
+      return <VisibilityOffRoundedIcon sx={iconStyle} />;
+    case "visibleEye":
+      return <VisibilityRoundedIcon sx={iconStyle} />;
+    //Form - order
+    case "import":
+      return <FileDownloadRoundedIcon sx={iconStyle} />;
+    case "export":
+      return <FileUploadRoundedIcon sx={iconStyle} />;
+    //filter bar
+    case "downArrow":
+      return <KeyboardArrowDownRoundedIcon sx={iconStyle} />;
+    case "upArrow":
+      return <KeyboardArrowUpRoundedIcon sx={iconStyle} />;
+    case "rightArrow":
+      return <ChevronRightRoundedIcon sx={iconStyle} />;
+    case "search":
+      return <SearchRoundedIcon sx={iconStyle} />;
+    case "checkCircle":
+      return <CheckCircleRoundedIcon sx={iconStyle} />;
+    case "cancelCircle":
+      return <CancelRoundedIcon sx={iconStyle} />;
+    case "calendar":
+      return <CalendarMonthRoundedIcon sx={iconStyle} />;
+    case "squareCheckBox":
+      return <CheckBoxRoundedIcon sx={iconStyle} />;
+    //Pagination bar
+    case "nextArrow":
+      return <ArrowRightRoundedIcon sx={iconStyle} />;
+    case "previousArrow":
+      return <ArrowLeftRoundedIcon sx={iconStyle} />;
+    case "doubleArrowRight":
+      return <DoubleArrowRoundedIcon sx={iconStyle} />;
+    case "nextSkip":
+      return <SkipNextRoundedIcon sx={iconStyle} />;
+    case "previousSkip":
+      return <SkipPreviousRoundedIcon sx={iconStyle} />;
+    //order details
+    case "save":
+      return <SaveRoundedIcon sx={iconStyle} />;
+    case "downFilledArrow":
+      return <ArrowDropDownRoundedIcon sx={iconStyle} />;
+    case "copyLink":
+      return <LinkRoundedIcon sx={iconStyle} />;
+    case "close":
+      return <CloseRoundedIcon sx={iconStyle} />;
+    case "edit":
+      return <EditRoundedIcon sx={iconStyle} />;
+    case "remove":
+      return <IndeterminateCheckBoxRoundedIcon sx={iconStyle} />;
+    //Form gallery
+    case "star":
+      return <GradeRoundedIcon sx={iconStyle} />;
+    //Form view
+    case "lightAdd":
+      return <AddRoundedIcon sx={iconStyle} />;
+    case "addPhoto":
+      return <AddPhotoAlternateRoundedIcon sx={iconStyle} />;
+    //create order
+    case "reset":
+      return <RestartAltRoundedIcon sx={iconStyle} />;
+    //my account
+    case "person":
+      return <PersonRoundedIcon sx={iconStyle} />;
+    case "camera":
+      return <CameraAltRoundedIcon sx={iconStyle} />;
+    case "logout":
+      return <LogoutRoundedIcon sx={iconStyle} />;
+    case "login":
+      return <LoginRoundedIcon sx={iconStyle} />;
+    //Template display
+    case "accessTime":
+      return <AccessTimeRoundedIcon sx={iconStyle} />;
+    case "bookmark":
+      return <BookmarkBorderRoundedIcon sx={iconStyle} />;
+    //extra
+    case "phone":
+      return <PhoneRoundedIcon sx={iconStyle} />;
+    case "zoomOut":
+      return <ZoomOutMapRoundedIcon sx={iconStyle} />;
+    case "zoomIn":
+      return <ZoomInMapRoundedIcon sx={iconStyle} />;
   }
 };

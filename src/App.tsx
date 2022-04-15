@@ -3,6 +3,7 @@ import { Grid } from "@mui/material";
 import { CustomTitle } from "./components/CustomTitle";
 import { CustomIcon } from "components/CustomIcon";
 import { COLORS } from "styles";
+import { CustomButton } from "components/CustomButton";
 
 function App() {
   return (
@@ -19,7 +20,10 @@ function App() {
         </Grid>
         <Grid item xs={12}>
           <CustomIcon name="settings" />
-          <CustomIcon name="settings" size={75} color={COLORS.primary} />
+          <CustomIcon name="about" size={75} color={COLORS.primary} />
+        </Grid>
+        <Grid item xs={12}>
+          <CustomButton text="button"/>
         </Grid>
       </Grid>
     </div>
