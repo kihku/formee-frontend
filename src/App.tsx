@@ -5,6 +5,7 @@ import { CustomIcon } from "components/CustomIcon";
 import { COLORS } from "styles";
 import { CustomChip } from "components/CustomChip";
 import { CustomButton } from "components/CustomButton";
+import { GoogleLoginButton } from "./firebase/googleLoginButton";
 
 function App() {
   return (
@@ -27,9 +28,10 @@ function App() {
           <CustomChip text="fast food" color="red"></CustomChip>
         </Grid>
         <Grid item xs={12} sx={{ display: "flex", gap: "10px" }}>
-          <CustomButton text="button" startIcon="settings" type="default" />
+          {/* <CustomButton text="button" startIcon="settings" type="default" />
           <CustomButton text="button" endIcon="settings" type="rounded" color={COLORS.text} />
-          <CustomButton text="button" endIcon="settings" type="outlined" color={"white"} />
+          <CustomButton text="button" endIcon="settings" type="outlined" color={"white"} /> */}
+          <GoogleLoginButton></GoogleLoginButton>
           <CustomButton
             color={"white"}
             text="button"

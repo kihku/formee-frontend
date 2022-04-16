@@ -23,6 +23,7 @@
     "axios": "^0.26.1",
     "echarts": "^5.3.1",
     "echarts-for-react": "^3.0.2",
+    "firebase": "^9.6.11",
     "formik": "^2.2.9",
     "i18next": "^21.6.16",
     "moment": "^2.29.1",
