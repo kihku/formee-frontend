@@ -6,11 +6,12 @@ import { COLORS } from "styles";
 import { CustomChip } from "components/CustomChip";
 import { CustomButton } from "components/CustomButton";
 import { GoogleLoginButton } from "./firebase/googleLoginButton";
+import { CustomBackgroundCard } from "components/CustomBackgroundCard";
 
 function App() {
   return (
     <div className="App">
-      <Grid container className="text-title">
+      <Grid sx={{ rowGap: 1, columnGap: 1 }} container className="text-title">
         <Grid item xs={12} sx={{ fontSize: "100px" }}>
           <CustomTitle
             text={[
@@ -25,7 +26,7 @@ function App() {
           <CustomIcon name="about" size={75} color={COLORS.primary} />
         </Grid>
         <Grid item xs={12}>
-          <CustomChip text="fast food"   ></CustomChip>
+          <CustomChip text="fast food"></CustomChip>
         </Grid>
         <Grid item xs={12} sx={{ display: "flex", gap: "10px" }}>
           {/* <CustomButton text="button" startIcon="settings" type="default" />
@@ -40,6 +41,9 @@ function App() {
               alert("clicked");
             }}
           />
+        </Grid>
+        <Grid item xs={12} >
+          <CustomBackgroundCard sizeX={800} sizeY={400}></CustomBackgroundCard>
         </Grid>
       </Grid>
     </div>
