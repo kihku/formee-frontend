@@ -25,7 +25,7 @@ function App() {
           <CustomIcon name="about" size={75} color={COLORS.primary} />
         </Grid>
         <Grid item xs={12}>
-          <CustomChip text="fast food" color="red"></CustomChip>
+          <CustomChip text="fast food"   ></CustomChip>
         </Grid>
         <Grid item xs={12} sx={{ display: "flex", gap: "10px" }}>
           {/* <CustomButton text="button" startIcon="settings" type="default" />
@@ -33,7 +33,6 @@ function App() {
           <CustomButton text="button" endIcon="settings" type="outlined" color={"white"} /> */}
           <GoogleLoginButton></GoogleLoginButton>
           <CustomButton
-            color={"white"}
             text="button"
             endIcon="settings"
             type="rounded-outlined"
