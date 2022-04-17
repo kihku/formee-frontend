@@ -7,12 +7,19 @@ import { CustomChip } from "components/CustomChip";
 import { CustomButton } from "components/CustomButton";
 import { GoogleLoginButton } from "./firebase/googleLoginButton";
 import { CustomBackgroundCard } from "components/CustomBackgroundCard";
+import { CustomSwitch } from "components/CustomSwitch";
+import { CustomRadio } from "components/CustomRadio";
+import { CustomCheckbox } from "components/CustomCheckbox";
+import { genderOptions, testOptions } from "models/customOption";
+import CropSquareRoundedIcon from "@mui/icons-material/CropSquareRounded";
+import { CustomTextField } from "components/CustomTextField";
+import { Layout } from "components/Layout";
 
 function App() {
   return (
-    <div className="App">
-      <Grid sx={{ rowGap: 1, columnGap: 1 }} container className="text-title">
-        <Grid item xs={12} sx={{ fontSize: "100px" }}>
+    <Layout>
+      <Grid sx={{ rowGap: 1, columnGap: 1, paddingTop: "3vh", display: "flex", justifyContent: "center", alignItems: "center" }} container className="text-title">
+        <Grid item xs={12} sx={{ fontSize: "30px" }}>
           <CustomTitle
             text={[
               { text: "Order", highlight: true },
@@ -29,10 +36,7 @@ function App() {
           <CustomChip text="fast food"></CustomChip>
         </Grid>
         <Grid item xs={12} sx={{ display: "flex", gap: "10px" }}>
-          {/* <CustomButton text="button" startIcon="settings" type="default" />
-          <CustomButton text="button" endIcon="settings" type="rounded" color={COLORS.text} />
-          <CustomButton text="button" endIcon="settings" type="outlined" color={"white"} /> */}
-          <GoogleLoginButton></GoogleLoginButton>
+          <GoogleLoginButton/>
           <CustomButton
             text="button"
             endIcon="settings"
@@ -42,11 +46,41 @@ function App() {
             }}
           />
         </Grid>
-        <Grid item xs={12} >
-          <CustomBackgroundCard sizeX={800} sizeY={400}></CustomBackgroundCard>
+        {/* <Grid item xs={12} >
+          <CustomBackgroundCard sizeX={800} sizeY={400}/>
+        </Grid> */}
+        <Grid item xs={12}>
+          <CustomSwitch
+            defaultChecked
+            handleOnChange={e => {
+              // alert(e.target.checked);
+            }}
+          />
+          <CustomRadio
+            options={genderOptions}
+            handleOnChange={e => {
+              // alert(e.target.value);
+            }}
+            defaultValue={1}
+          />
+          <CustomCheckbox
+            options={testOptions}
+            handleOnChange={e => {
+              // alert(e.target.value);
+            }}
+            defaultValue={1}
+          />
+        </Grid>
+        <Grid item xs={12}>
+          <CustomTextField
+            label="Text field"
+            handleOnChange={e => {
+              // alert(e.target.value);
+            }}
+          />
         </Grid>
       </Grid>
-    </div>
+    </Layout>
   );
 }
 

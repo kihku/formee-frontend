@@ -1,5 +1,7 @@
-.App {
+.base-layout {
   text-align: center;
+  min-height: 100vh;
+  position: relative;
 }
 
 .App-logo {

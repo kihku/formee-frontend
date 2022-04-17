@@ -21,11 +21,13 @@ import SkipPreviousRoundedIcon from "@mui/icons-material/SkipPreviousRounded";
 import SaveRoundedIcon from "@mui/icons-material/SaveRounded";
 import ArrowDropDownRoundedIcon from "@mui/icons-material/ArrowDropDownRounded";
 import GradeRoundedIcon from "@mui/icons-material/GradeRounded";
+import StarBorderRoundedIcon from "@mui/icons-material/StarBorderRounded";
 import LinkRoundedIcon from "@mui/icons-material/LinkRounded";
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 import EditRoundedIcon from "@mui/icons-material/EditRounded";
 import IndeterminateCheckBoxRoundedIcon from "@mui/icons-material/IndeterminateCheckBoxRounded";
 import CheckBoxRoundedIcon from "@mui/icons-material/CheckBoxRounded";
+import CheckBoxOutlineBlankRoundedIcon from "@mui/icons-material/CheckBoxOutlineBlankRounded";
 import AddRoundedIcon from "@mui/icons-material/AddRounded";
 import AddPhotoAlternateRoundedIcon from "@mui/icons-material/AddPhotoAlternateRounded";
 import RestartAltRoundedIcon from "@mui/icons-material/RestartAltRounded";
@@ -34,6 +36,7 @@ import CameraAltRoundedIcon from "@mui/icons-material/CameraAltRounded";
 import LogoutRoundedIcon from "@mui/icons-material/LogoutRounded";
 import LoginRoundedIcon from "@mui/icons-material/LoginRounded";
 import AccessTimeRoundedIcon from "@mui/icons-material/AccessTimeRounded";
+import BookmarkRoundedIcon from '@mui/icons-material/BookmarkRounded';
 import BookmarkBorderRoundedIcon from "@mui/icons-material/BookmarkBorderRounded";
 import PhoneRoundedIcon from "@mui/icons-material/PhoneRounded";
 import ZoomOutMapRoundedIcon from "@mui/icons-material/ZoomOutMapRounded";
@@ -68,7 +71,9 @@ export type IconType =
   | "edit"
   | "remove"
   | "star"
+  | "starOutlined"
   | "squareCheckBox"
+  | "squareCheckBoxChecked"
   | "lightAdd"
   | "addPhoto"
   | "reset"
@@ -78,6 +83,7 @@ export type IconType =
   | "login"
   | "accessTime"
   | "bookmark"
+  | "bookmarkOutlined"
   | "phone"
   | "zoomOut"
   | "zoomIn";
@@ -133,6 +139,8 @@ export const CustomIcon = ({ name, size, color }: IconProps) => {
     case "calendar":
       return <CalendarMonthRoundedIcon sx={iconStyle} />;
     case "squareCheckBox":
+      return <CheckBoxOutlineBlankRoundedIcon sx={iconStyle} />;
+    case "squareCheckBoxChecked":
       return <CheckBoxRoundedIcon sx={iconStyle} />;
     //Pagination bar
     case "nextArrow":
@@ -161,6 +169,8 @@ export const CustomIcon = ({ name, size, color }: IconProps) => {
     //Form gallery
     case "star":
       return <GradeRoundedIcon sx={iconStyle} />;
+    case "starOutlined":
+      return <StarBorderRoundedIcon sx={iconStyle} />;
     //Form view
     case "lightAdd":
       return <AddRoundedIcon sx={iconStyle} />;
@@ -182,6 +192,8 @@ export const CustomIcon = ({ name, size, color }: IconProps) => {
     case "accessTime":
       return <AccessTimeRoundedIcon sx={iconStyle} />;
     case "bookmark":
+      return <BookmarkRoundedIcon sx={iconStyle} />;
+    case "bookmarkOutlined":
       return <BookmarkBorderRoundedIcon sx={iconStyle} />;
     //extra
     case "phone":
