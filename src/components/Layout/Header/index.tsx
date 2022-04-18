@@ -1,15 +1,23 @@
-import { Box, Button, Grid, IconButton, Tab, Tabs } from "@mui/material";
+import {  Box, Button, Grid, IconButton, Tab, Tabs } from "@mui/material";
 import { COLORS } from "styles";
 import CircleIcon from "@mui/icons-material/Circle";
 import { CustomIcon } from "components/CustomIcon";
 import { CustomButton } from "components/CustomButton";
 import { useState } from "react";
+import { CustomAvatar } from "components/CustomAvatar";
+import { useSelector } from "react-redux";
+import { RootState } from "redux/rootReducer";
+
+
 
 interface HeaderProps {}
 
 export const Header = ({}: HeaderProps) => {
   const [testHeader, setTestHeader] = useState<string>("");
-
+  const avatarURL = useSelector((state: RootState) => {
+    console.log("use selector called")
+    return state.globalAvatar.value;
+  });
   return (
     <Grid
       container
@@ -81,7 +89,8 @@ export const Header = ({}: HeaderProps) => {
         }}
       >
         {/* avatar here */}
-        <CircleIcon sx={{ fill: COLORS.primary, width: "40px", height: "40px" }} />
+        {/* <CircleIcon sx={{ fill: COLORS.primary, width: "40px", height: "40px" }} /> */}
+       <CustomAvatar image={avatarURL}/>
         <IconButton>
           <CustomIcon name="settings" size={25} />
         </IconButton>

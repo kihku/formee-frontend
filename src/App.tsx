@@ -12,10 +12,13 @@ import { CustomRadio } from "components/CustomRadio";
 import { CustomCheckbox } from "components/CustomCheckbox";
 import { genderOptions, testOptions } from "models/customOption";
 import CropSquareRoundedIcon from "@mui/icons-material/CropSquareRounded";
+import { ImagePicker } from "components/CustomAvatar/imagePicker";
 import { CustomTextField } from "components/CustomTextField";
 import { Layout } from "components/Layout";
+import { string } from "yup";
 
 function App() {
+  
   return (
     <Layout>
       <Grid sx={{ rowGap: 1, columnGap: 1, paddingTop: "3vh", display: "flex", justifyContent: "center", alignItems: "center" }} container className="text-title">
@@ -78,6 +81,9 @@ function App() {
               // alert(e.target.value);
             }}
           />
+          <Grid>
+            <ImagePicker />
+          </Grid>
         </Grid>
       </Grid>
     </Layout>

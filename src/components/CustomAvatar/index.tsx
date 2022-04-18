@@ -1,12 +1,13 @@
 import { Avatar } from "@mui/material";
 
 interface CustomAvatarProps {
-    image: String;
+    image?: string;
+    
   }
-  export const CustomAvatar = (props: CustomAvatarProps) => {
+  export const CustomAvatar = ({image}: CustomAvatarProps) => {
       return(
-          <Avatar>
+          <Avatar src={image}  imgProps={{referrerPolicy:"no-referrer"}}/>
               
-          </Avatar>
+         
       );
   }
