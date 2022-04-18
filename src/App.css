@@ -1,7 +1,7 @@
 .base-layout {
-  text-align: center;
   min-height: 100vh;
   position: relative;
+  color: #24354F;
 }
 
 .App-logo {

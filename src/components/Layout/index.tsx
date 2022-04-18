@@ -22,7 +22,7 @@ export const Layout = ({ children, title = "FORMEE" }: LayoutProps) => {
         <meta name="description" content="Formee" />
         {/* <meta name="image" content="/assets/general/web-thumbnail.png" /> */}
 
-        <meta property="og:title" content="Thùy Vy Nguyễn" key="ogtitle" />
+        <meta property="og:title" content="FORMEE" key="ogtitle" />
         <meta property="og:description" content="Formee" key="ogdesc" />
         {/* <meta property="og:image" content="/assets/general/web-thumbnail.png" key="ogimg" /> */}
         <link rel="icon" href="/favicon.ico" />
@@ -33,7 +33,7 @@ export const Layout = ({ children, title = "FORMEE" }: LayoutProps) => {
         </div>
         <div >{children}</div>
         <div>
-          <Footer />
+          {/* <Footer /> */}
         </div>
       </div>
     </div>
