@@ -35,11 +35,11 @@ export const CustomTextField = ({ label, defaultValue, handleOnChange }: CustomT
   return (
     <FormControl variant="standard">
       {label && (
-        <InputLabel shrink sx={{ color: "#24354f", fontSize: "18px", fontWeight: 500, textTransform: "uppercase" }}>
+        <InputLabel shrink sx={{ color: "#24354f", fontSize: "18px", fontWeight: 500 }}>
           {label}
         </InputLabel>
       )}
-      <StyledInput defaultValue={defaultValue ?? defaultValue} onChange={e => handleOnChange(e)} />
+      <StyledInput fullWidth defaultValue={defaultValue ?? defaultValue} onChange={e => handleOnChange(e)} />
     </FormControl>
   );
 };

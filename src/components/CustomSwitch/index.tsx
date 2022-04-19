@@ -41,7 +41,7 @@ const StyledSwitch = styled((props: SwitchProps) => <Switch focusVisibleClassNam
     },
     "& .MuiSwitch-track": {
       borderRadius: 26 / 2,
-      backgroundColor: "#9f9f9f",
+      backgroundColor: "#e2e7ed",
       opacity: 1,
       transition: theme.transitions.create(["background-color"], {
         duration: 500,

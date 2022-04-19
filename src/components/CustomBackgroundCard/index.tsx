@@ -1,15 +1,31 @@
 import { Box } from "@mui/system";
-import { COLORS } from "styles";
+import { ReactNode } from "react";
 
 interface CustomBackgroundCardProps {
   backgroundColor?: string;
-  sizeX?: number;
-  sizeY?: number;
+  sizeX?: number | string;
+  sizeY?: number | string;
+  children?: ReactNode;
+  padding?: number;
 }
-export const CustomBackgroundCard = ({ backgroundColor, sizeX, sizeY }: CustomBackgroundCardProps) => {
+
+export const CustomBackgroundCard = ({
+  backgroundColor,
+  sizeX,
+  sizeY,
+  children,
+  padding,
+}: CustomBackgroundCardProps) => {
   const cardBackgroundColor = backgroundColor ?? "white";
   const cardWidth = sizeX ?? 200;
   const cardHeight = sizeY ?? 300;
-  const cardStyle = {bgcolor: cardBackgroundColor,width: cardWidth, height: cardHeight, boxShadow: "0 4px 8px rgb(176 190 197 / 0.24)", borderRadius: 8 }
-  return <Box sx={cardStyle}></Box>;
+  const cardStyle = {
+    bgcolor: cardBackgroundColor,
+    width: cardWidth,
+    height: cardHeight,
+    boxShadow: "rgba(0, 0, 0, 0.15) 0px 2px 8px",
+    borderRadius: 2,
+    padding: 4 + (padding ? padding : 0),
+  };
+  return <Box sx={cardStyle}>{children}</Box>;
 };

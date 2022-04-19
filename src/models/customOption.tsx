@@ -1,4 +1,5 @@
 import { IconType } from "components/CustomIcon";
+import { ReactNode } from "react";
 
 export interface CustomOption {
   title: string;
@@ -8,6 +9,7 @@ export interface CustomOption {
   checkedIcon?: IconType;
   checkedIconColor?: string;
   disableRipple?: boolean;
+  component?: ReactNode;
 }
 
 export const genderOptions: CustomOption[] = [

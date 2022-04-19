@@ -1,27 +1,72 @@
-import { Box, Divider, Grid } from "@mui/material";
+import { Box, Grid } from "@mui/material";
+import { CustomBackgroundCard } from "components/CustomBackgroundCard";
+import { CustomIcon, IconType } from "components/CustomIcon";
+import { Header } from "components/Layout/Header";
+import { CustomOption } from "models/customOption";
+import { useState } from "react";
 import { COLORS } from "styles";
+import AccountSettings from "./account";
+import NotificationSettings from "./notification";
 
 function SettingsPage() {
+  const [chosenTab, setChosenTab] = useState("account");
+
   return (
-    <Grid container sx={{ marginTop: 5, paddingX: 15 }}>
-      <Grid item xs={12} sx={{ fontWeight: 700, fontSize: "28px", textAlign: "start", marginBottom: 4 }}>
-        Account Settings
+    <Box>
+      <Header />
+      <Grid container sx={{ marginTop: 5, marginBottom: 8, paddingX: 15 }}>
+        <Grid item xs={12} sx={{ fontWeight: 800, fontSize: "28px", textAlign: "start", marginBottom: 4, color: COLORS.text }}>
+          ACCOUNT SETTINGS
+        </Grid>
+        <Grid item xs={2} sx={{ display: "flex", flexDirection: "column", cursor: "pointer" }}>
+          {settingOptions.map((opt, key) => {
+            return (
+              <Box
+                key={key}
+                onClick={() => {
+                  setChosenTab(opt.value);
+                }}
+                sx={{
+                  marginBottom: 1,
+                  fontWeight: 700,
+                  color: chosenTab === opt.value ? COLORS.primary : COLORS.text,
+                  backgroundColor: chosenTab === opt.value ? "#eeefff" : "#ffffff",
+                  paddingLeft: 2,
+                  paddingY: 2,
+                  borderRadius: "5px 25px 25px 5px",
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "start",
+                  alignItems: "center",
+                  gap: 1,
+                  ":hover": {
+                    backgroundColor: COLORS.background,
+                  },
+                }}
+              >
+                <CustomIcon
+                  name={opt.icon as IconType}
+                  color={chosenTab === opt.value ? COLORS.primary : COLORS.text}
+                  size={24}
+                />
+                <Box>{opt.title}</Box>
+              </Box>
+            );
+          })}
+        </Grid>
+        <Grid item xs={10} sx={{ paddingX: 5 }}>
+          <CustomBackgroundCard sizeX="100%" sizeY="auto">
+            {settingOptions.find(opt => opt.value === chosenTab)?.component}
+          </CustomBackgroundCard>
+        </Grid>
       </Grid>
-      <Grid item xs={3} sx={{ display: "flex", flexDirection: "column", gap: 3, cursor: "pointer" }}>
-        <Box sx={{ fontWeight: 700, color: COLORS.primary }}>Account details</Box>
-        <Box>Notifications</Box>
-      </Grid>
-      <Grid item xs={9}>
-        <Box sx={{ fontWeight: 700, color: COLORS.primary, fontSize: "24px", marginBottom: 3 }}>Account details</Box>
-        <Box sx={{ display: "flex", flexDirection: "row" }}>
-          <Box sx={{ fontWeight: 700, fontSize: "18px" }}>Personal information</Box>
-          <Box>
-            <Divider />
-          </Box>
-        </Box>
-      </Grid>
-    </Grid>
+    </Box>
   );
 }
 
 export default SettingsPage;
+
+export const settingOptions: CustomOption[] = [
+  { title: "Account details", value: "account", icon: "person", component: <AccountSettings /> },
+  { title: "Notifications", value: "notification", icon: "notification", component: <NotificationSettings /> },
+];
