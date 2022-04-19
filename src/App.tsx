@@ -7,13 +7,13 @@ import "./App.css";
 
 function App() {
   return (
-    <Layout>
+    //<Layout>
       <Routes>
         <Route path="/components" element={<ComponentsPage />} />
         <Route path="/settings" element={<SettingsPage />} />
         <Route path="/login" element={<LoginPage />} />
       </Routes>
-    </Layout>
+    //</Layout>
   );
 }
 
