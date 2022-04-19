@@ -28,7 +28,7 @@ export const CustomButton = ({ text, link, color, startIcon, endIcon, type, hand
     paddingX: "4%",
     paddingY: "0.5%",
     // backgroundColor: color ? (isType("outlined") ? COLORS.background : color) : COLORS.primary,
-    borderRadius: isType("rounded") ? 10 : 2,
+    borderRadius: isType("rounded") ? 10 : 1,
   };
 
   return (
