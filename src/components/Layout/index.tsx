@@ -9,7 +9,7 @@ interface LayoutProps {
 
 export const Layout = ({ children, title }: LayoutProps) => {
   useEffect(() => {
-    CommonUtils.setPageTitle(String(title));
+    title && CommonUtils.setPageTitle(title);
     // eslint-disable-next-line no-restricted-globals
     screen.orientation.lock("portrait").then(
       success => {},
