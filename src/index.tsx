@@ -8,13 +8,13 @@ import { BrowserRouter } from "react-router-dom";
 import { store } from "./redux/store";
 import "./index.css";
 import { ThemeProvider } from "@mui/material";
-import { theme } from "styles/theme";
+import { mainTheme } from "styles/theme";
 
 ReactDOM.render(
   <React.StrictMode>
     <BrowserRouter>
       <Provider store={store}>
-        <ThemeProvider theme={theme}>
+        <ThemeProvider theme={mainTheme}>
           <App />
         </ThemeProvider>
       </Provider>

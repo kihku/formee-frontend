@@ -27,13 +27,32 @@ declare module "@mui/material/styles" {
     };
   }
 }
-export const theme = createTheme({
+export const mainTheme = createTheme({
   status: {
     danger: "#e53e3e",
   },
   palette: {
     primary: {
       main: COLORS.primary,
+      darker: COLORS.primaryDark,
+    },
+    secondary:{
+      main: "#EFF0FF",
+      contrastText: COLORS.primary,
+    },
+    neutral: {
+      main: "#EFF0FF",
+      contrastText: COLORS.primary,
+    },
+  },
+});
+export const lightTheme = createTheme({
+  status: {
+    danger: "#e53e3e",
+  },
+  palette: {
+    primary: {
+      main: COLORS.lightText,
       darker: COLORS.primaryDark,
     },
     secondary:{

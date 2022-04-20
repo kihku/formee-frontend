@@ -1,11 +1,12 @@
 import { Box, Link, Paper, Typography } from "@mui/material";
+import { COLORS } from "styles";
 
 function GeneralErrorPage() {
   return (
     <Box
       sx={{
         width: "100vw",
-        height: "100vh",
+        height: "85vh",
         display: "flex",
         flexDirection: "column",
         justifyContent: "center",
@@ -20,7 +21,7 @@ function GeneralErrorPage() {
           backgroundSize: "25%",
           backgroundRepeat: "no-repeat",
           backgroundPositionX: "center",
-          backgroundPositionY: "45%",
+          backgroundPositionY: "55%",
           // maxWidth: "230px",
           //maxHeight: "1000px",
           //   height: "200px",
@@ -32,16 +33,18 @@ function GeneralErrorPage() {
       ></Paper>
 
       <Typography
+      fontSize={36}
+      fontWeight={700}
         sx={{
           position: "70%",
         }}
       >
         Oops! Something went wrong
       </Typography>
-      <Box>We couldn't find the page you were looking for</Box>
-      <Box>
-        Why not try back to the <Link>homepage</Link>
-      </Box>
+      <Typography fontWeight={400} color={COLORS.lightText} sx={{marginTop:"10px"}}>We couldn't find the page you were looking for</Typography>
+      <Typography fontWeight={400} color={COLORS.lightText}>
+        Why not try back to the <Link sx={{textDecoration:"none" }}>homepage</Link>
+      </Typography>
     </Box>
   );
 }

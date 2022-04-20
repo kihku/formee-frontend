@@ -4,6 +4,9 @@ import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 //redux
 import { updateAvatar } from "../redux/actions";
 import { useDispatch } from "react-redux";
+import { IconButton } from "@mui/material";
+import { CustomIcon } from "components/CustomIcon";
+import { COLORS } from "styles";
 
 // TODO: Replace the following with your app's Firebase project configuration
 // See: https://firebase.google.com/docs/web/learn-more#config-object
@@ -27,12 +30,9 @@ const provider = new GoogleAuthProvider();
 export const GoogleLoginButton = () => {
   const dispatch = useDispatch();
   return (
-    <CustomButton
-      color={"white"}
-      text="Google"
-      endIcon="settings"
-      type="rounded-outlined"
-      handleOnClick={() => {
+    <IconButton
+      sx={{ marginRight: "10px", color:COLORS.primary, border: "1px solid "+COLORS.lightText, }}
+      onClick={() => {
         signInWithPopup(auth, provider)
           .then(result => {
             // This gives you a Google Access Token. You can use it to access the Google API.
@@ -46,7 +46,6 @@ export const GoogleLoginButton = () => {
             }
             // The signed-in user info.
             const user = result.user;
-            // ...
           })
           .catch(error => {
             // Handle Errors here.
@@ -59,6 +58,41 @@ export const GoogleLoginButton = () => {
             // ...
           });
       }}
-    />
+    >
+      <CustomIcon name="google" size={25} />
+    </IconButton>
+    // <CustomButton
+    //   color={"white"}
+    //   text="Google"
+    //   endIcon="google"
+    //   type="rounded-outlined"
+    //   handleOnClick={() => {
+    //     signInWithPopup(auth, provider)
+    //       .then(result => {
+    //         // This gives you a Google Access Token. You can use it to access the Google API.
+    //         const credential = GoogleAuthProvider.credentialFromResult(result);
+    //         if (credential !== null) {
+    //           const token = credential.accessToken;
+    //           console.log(token);
+    //           if (result.user.photoURL !== null) {
+    //             dispatch(updateAvatar(result.user.photoURL));
+    //           }
+    //         }
+    //         // The signed-in user info.
+    //         const user = result.user;
+    //         // ...
+    //       })
+    //       .catch(error => {
+    //         // Handle Errors here.
+    //         const errorCode = error.code;
+    //         const errorMessage = error.message;
+    //         // The email of the user's account used.
+    //         const email = error.email;
+    //         // The AuthCredential type that was used.
+    //         const credential = GoogleAuthProvider.credentialFromError(error);
+    //         // ...
+    //       });
+    //   }}
+    // />
   );
 };

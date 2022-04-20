@@ -36,11 +36,12 @@ import CameraAltRoundedIcon from "@mui/icons-material/CameraAltRounded";
 import LogoutRoundedIcon from "@mui/icons-material/LogoutRounded";
 import LoginRoundedIcon from "@mui/icons-material/LoginRounded";
 import AccessTimeRoundedIcon from "@mui/icons-material/AccessTimeRounded";
-import BookmarkRoundedIcon from '@mui/icons-material/BookmarkRounded';
+import BookmarkRoundedIcon from "@mui/icons-material/BookmarkRounded";
 import BookmarkBorderRoundedIcon from "@mui/icons-material/BookmarkBorderRounded";
 import PhoneRoundedIcon from "@mui/icons-material/PhoneRounded";
 import ZoomOutMapRoundedIcon from "@mui/icons-material/ZoomOutMapRounded";
 import ZoomInMapRoundedIcon from "@mui/icons-material/ZoomInMapRounded";
+import GoogleIcon from "@mui/icons-material/Google";
 import { COLORS } from "styles";
 
 export type IconType =
@@ -86,7 +87,8 @@ export type IconType =
   | "bookmarkOutlined"
   | "phone"
   | "zoomOut"
-  | "zoomIn";
+  | "zoomIn"
+  | "google";
 
 interface IconProps {
   name: IconType;
@@ -202,5 +204,8 @@ export const CustomIcon = ({ name, size, color }: IconProps) => {
       return <ZoomOutMapRoundedIcon sx={iconStyle} />;
     case "zoomIn":
       return <ZoomInMapRoundedIcon sx={iconStyle} />;
+    //social media
+    case "google":
+      return <GoogleIcon sx={iconStyle} />;
   }
 };

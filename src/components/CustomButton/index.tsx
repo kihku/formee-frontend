@@ -21,9 +21,10 @@ export const CustomButton = ({ text, link, color, startIcon, endIcon, type, hand
   };
 
   const buttonStyle = {
-    paddingX: 2.5,
-    paddingY: 1,
+    paddingX: isType("rounded") ? 4 : 2.5,
+    paddingY: isType("rounded") ?0.5:1,
     borderRadius: isType("rounded") ? 10 : 1,
+    textTransform: "none"
   };
 
   return (
