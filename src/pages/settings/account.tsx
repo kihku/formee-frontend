@@ -1,13 +1,83 @@
 import { Box, Divider, Fade, Grid } from "@mui/material";
+import CreateFields, { CreateFieldsProps } from "components/CreateFields";
 import { CustomButton } from "components/CustomButton";
 import { CustomTextField } from "components/CustomTextField";
+import { useFormik } from "formik";
+import { initDataUser, UserDTO } from "models/user";
+import { useState } from "react";
 import { COLORS } from "styles";
+import * as Yup from "yup";
+import DialogChangePassword from "./dialog/dialogChangePassword";
 
 interface AccountSettingsProps {
   tab: string;
 }
 
 function AccountSettings(props: AccountSettingsProps) {
+  const [openDialog, setOpenDialog] = useState<boolean>(false);
+
+  const validationSchema = Yup.object().shape({});
+
+  const handleSubmit = (values: UserDTO) => {
+    console.log("values", values);
+  };
+
+  const formik = useFormik({
+    initialValues: initDataUser,
+    onSubmit: handleSubmit,
+    validationSchema: validationSchema,
+    validateOnChange: false,
+  });
+
+  const fieldsInfo: CreateFieldsProps<UserDTO, any>[] = [
+    {
+      label: "FIRST NAME",
+      name: "firstName",
+      xs: 3,
+      Component: CustomTextField,
+    },
+    {
+      label: "LAST NAME",
+      name: "lastName",
+      xs: 3,
+      Component: CustomTextField,
+    },
+    {
+      xs: 6,
+    },
+    {
+      label: "BIRTHDATE",
+      name: "birthDate",
+      xs: 3,
+      Component: CustomTextField,
+    },
+    {
+      label: "PHONE NUMBER",
+      name: "phoneNumber",
+      xs: 3,
+      Component: CustomTextField,
+    },
+  ];
+
+  const fieldsAccount: CreateFieldsProps<UserDTO, any>[] = [
+    {
+      label: "EMAIL",
+      name: "email",
+      xs: 3,
+      Component: CustomTextField,
+    },
+    {
+      label: "PASSWORD",
+      name: "password",
+      helplerText: "Change password?",
+      handleOnClickHelperText: () => {
+        setOpenDialog(true);
+      },
+      xs: 3,
+      Component: CustomTextField,
+    },
+  ];
+
   return (
     <Fade in={props.tab === "account"}>
       <Box>
@@ -20,27 +90,16 @@ function AccountSettings(props: AccountSettingsProps) {
             </Box>
           </Box>
           <Grid container sx={{ marginTop: 4 }}>
-            <Grid item xs={6} sx={{ marginBottom: 4, display: "flex", flexDirection: "row" }}>
-              <Grid item>
-                <CustomTextField label="FIRST NAME" handleOnChange={e => {}} />
-              </Grid>
-              <Grid item sx={{ paddingX: "25px" }}>
-                <CustomTextField label="LAST NAME" handleOnChange={e => {}} />
-              </Grid>
-            </Grid>
-            <Grid item xs={6}>
-              {/* Avatar */}
-            </Grid>
-            <Grid item xs={6} sx={{ marginBottom: 4, display: "flex", flexDirection: "row" }}>
-              <Grid item>
-                <CustomTextField label="BIRTHDATE" handleOnChange={e => {}} />
-              </Grid>
-              <Grid item sx={{ paddingX: "25px" }}>
-                <CustomTextField label="PHONE NUMBER" handleOnChange={e => {}} />
-              </Grid>
-            </Grid>
-            <Grid item xs={12}>
-              <CustomButton text="Save changes" type="outlined" startIcon="save" />
+            <CreateFields fields={fieldsInfo} formik={formik} />
+            <Grid item xs={12} sx={{ paddingX: "10px" }}>
+              <CustomButton
+                text="SAVE CHANGES"
+                type="outlined"
+                startIcon="save"
+                handleOnClick={() => {
+                  formik.handleSubmit();
+                }}
+              />
             </Grid>
           </Grid>
         </Box>
@@ -52,22 +111,23 @@ function AccountSettings(props: AccountSettingsProps) {
             </Box>
           </Box>
           <Grid container sx={{ marginTop: 4 }}>
-            <Grid item xs={6} sx={{ marginBottom: 4, display: "flex", flexDirection: "row" }}>
-              <Grid item>
-                <CustomTextField label="EMAIL" handleOnChange={e => {}} />
-              </Grid>
-              <Grid item sx={{ paddingX: "25px" }}>
-                <CustomTextField label="PASSWORD" handleOnChange={e => {}} />
-              </Grid>
-            </Grid>
+            <CreateFields fields={fieldsAccount} formik={formik} />
             <Grid item xs={12}>
-              <Box sx={{ display: "flex", flexDirection: "row", gap: "15px" }}>
-                <CustomButton text="Save changes" type="outlined" startIcon="save" />
-                <CustomButton text="Log out" type="default" startIcon="logout" />
+              <Box sx={{ display: "flex", flexDirection: "row", gap: "15px", paddingX: "10px" }}>
+                <CustomButton text="SAVE CHANGES" type="outlined" startIcon="save" />
+                <CustomButton text="LOG OUT" type="default" startIcon="logout" />
               </Box>
             </Grid>
           </Grid>
         </Box>
+        {openDialog && (
+          <DialogChangePassword
+            openDialog={openDialog}
+            handleCloseDialog={() => {
+              setOpenDialog(false);
+            }}
+          />
+        )}
       </Box>
     </Fade>
   );

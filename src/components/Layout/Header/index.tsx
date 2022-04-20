@@ -114,7 +114,7 @@ export const Header = () => {
         </IconButton>
         <IconButton
         onClick={() => {
-          navigate("/generalError"); //test
+          navigate("/error"); //test
         }}>
           <CustomIcon name="about" size={28} />
         </IconButton>

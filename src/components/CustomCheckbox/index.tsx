@@ -1,6 +1,6 @@
 import { Checkbox, FormControl, FormControlLabel, FormGroup, FormLabel } from "@mui/material";
 import { CustomIcon } from "components/CustomIcon";
-import { CustomOption } from "models/customOption";
+import { CustomOption } from "models/baseModels";
 import { COLORS } from "styles";
 
 interface CustomCheckboxProps {

@@ -19,18 +19,18 @@ export const Layout = ({ children, title }: LayoutProps) => {
 
   return (
     <div>
-      <head>
+      {/* <head>
         <title>{title}</title>
         <meta charSet="utf-8" />
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
         <meta name="description" content="FORMEE" />
-        {/* <meta name="image" content="/assets/general/web-thumbnail.png" /> */}
+        <meta name="image" content="/assets/general/web-thumbnail.png" />
 
         <meta property="og:title" content="FORMEE" key="ogtitle" />
         <meta property="og:description" content="FORMEE" key="ogdesc" />
-        {/* <meta property="og:image" content="/assets/general/web-thumbnail.png" key="ogimg" /> */}
+        <meta property="og:image" content="/assets/general/web-thumbnail.png" key="ogimg" />
         <link rel="icon" href="/favicon.ico" />
-      </head>
+      </head> */}
       <div>
         <div>
           <Header />

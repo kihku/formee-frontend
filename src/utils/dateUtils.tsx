@@ -1,5 +1,5 @@
 import moment from "moment";
-export default class DateUtil {
+export default class DateUtils {
 	static toDDMMYYYY_HH_MM_SS(date: Date): string {
 		if (date !== null) {
 			return moment(date).format("DD/MM/YYYY HH:mm:ss");

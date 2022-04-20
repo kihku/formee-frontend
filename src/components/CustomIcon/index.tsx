@@ -102,7 +102,7 @@ interface IconProps {
 export const CustomIcon = ({ name, size, color }: IconProps) => {
   const iconSize = size ?? 50;
   const iconColor = color ?? COLORS.lightText;
-  const iconStyle = { width: iconSize, height: iconSize, fill: iconColor };
+  const iconStyle = { width: iconSize, height: iconSize, fill: iconColor, overflow: "hidden" };
 
   switch (name) {
     //Header icon

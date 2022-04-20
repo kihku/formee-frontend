@@ -1,5 +1,5 @@
 import { FormControl, FormControlLabel, FormLabel, Radio, RadioGroup } from "@mui/material";
-import { CustomOption } from "models/customOption";
+import { CustomOption } from "models/baseModels";
 
 interface CustomRadioProps {
   label?: string;

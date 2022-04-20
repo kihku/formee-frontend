@@ -6,11 +6,11 @@ import { CustomButton } from "components/CustomButton";
 import { CustomSwitch } from "components/CustomSwitch";
 import { CustomRadio } from "components/CustomRadio";
 import { CustomCheckbox } from "components/CustomCheckbox";
-import { genderOptions, testOptions } from "models/customOption";
 import { CustomTextField } from "components/CustomTextField";
 import { CustomTitle } from "components/CustomTitle";
 import { GoogleLoginButton } from "firebase/googleLoginButton";
 import { CustomFormCard } from "components/CustomFormCard";
+import { genderOptions, testOptions } from "constants/constants";
 
 function ComponentsPage() {
   return (
@@ -86,64 +86,7 @@ function ComponentsPage() {
         />
       </Grid>
       <Grid item xs={12}>
-        <CustomTextField
-          label="Text field"
-          handleOnChange={e => {
-            // alert(e.target.value);
-          }}
-        />
-      </Grid>
-      <Grid item xs={12}>
-        <CustomTextField
-          label="Text field"
-          handleOnChange={e => {
-            // alert(e.target.value);
-          }}
-        />
-      </Grid>
-      <Grid item xs={12}>
-        <CustomTextField
-          label="Text field"
-          handleOnChange={e => {
-            // alert(e.target.value);
-          }}
-        />
-      </Grid>
-      <Grid item xs={12}>
-        <CustomTextField
-          label="Text field"
-          handleOnChange={e => {
-            // alert(e.target.value);
-          }}
-        />
-      </Grid>
-      <Grid item xs={12}>
-        <CustomTextField
-          label="Text field"
-          handleOnChange={e => {
-            // alert(e.target.value);
-          }}
-        />
-      </Grid>
-      {/* <Grid item xs={12}>
-        <CustomTextField
-          label="Text field"
-          handleOnChange={e => {
-            // alert(e.target.value);
-          }}
-        />
-      </Grid>
-      <Grid item xs={12}>
-        <CustomTextField
-          label="Text field"
-          handleOnChange={e => {
-            // alert(e.target.value);
-          }}
-        />
-      </Grid> */}
-       <Grid item xs={12}>
-       <CustomFormCard name={"food order"}/>
-
+        <CustomFormCard name={"food order"} />
       </Grid>
     </Grid>
   );

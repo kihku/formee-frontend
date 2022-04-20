@@ -1,7 +1,7 @@
 import { Box, Grid } from "@mui/material";
 import { CustomBackgroundCard } from "components/CustomBackgroundCard";
 import { CustomIcon, IconType } from "components/CustomIcon";
-import { CustomOption } from "models/customOption";
+import { CustomOption } from "models/baseModels";
 import { useState } from "react";
 import { COLORS } from "styles";
 import AccountSettings from "./account";
@@ -26,11 +26,11 @@ function SettingsPage() {
         <Grid
           item
           xs={12}
-          sx={{ fontWeight: 800, fontSize: "28px", textAlign: "start", marginBottom: 4, color: COLORS.text }}
+          sx={{ fontWeight: 800, fontSize: "30px", textAlign: "start", marginBottom: 4, color: COLORS.text }}
         >
           ACCOUNT SETTINGS
         </Grid>
-        <Grid item xs={2} sx={{ display: "flex", flexDirection: "column", cursor: "pointer" }}>
+        <Grid item xs={2} sx={{ display: "flex", flexDirection: "column" }}>
           {settingOptions.map((opt, key) => {
             return (
               <Box
@@ -45,13 +45,14 @@ function SettingsPage() {
                   backgroundColor: chosenTab === opt.value ? "#eeefff" : "#ffffff",
                   paddingLeft: 2,
                   paddingY: 2,
-                  borderRadius: "5px 25px 25px 5px",
+                  borderRadius: "5px 100px 100px 5px",
                   display: "flex",
                   flexDirection: "row",
                   justifyContent: "start",
                   alignItems: "center",
                   gap: 1,
                   transition: "all 0.15s ease",
+                  cursor: "pointer",
                   ":hover": {
                     backgroundColor: COLORS.background,
                   },
@@ -62,7 +63,7 @@ function SettingsPage() {
                   color={chosenTab === opt.value ? COLORS.primary : COLORS.text}
                   size={24}
                 />
-                <Box>{opt.title}</Box>
+                <Box sx={{ whiteSpace: "nowrap", textOverflow: "ellipsis", overflow: "hidden" }}>{opt.title}</Box>
               </Box>
             );
           })}

@@ -1,4 +1,4 @@
-export default class StringUtil {
+export default class StringUtils {
   static isNullOrEmty(str: any): boolean {
     if (
       typeof str == "undefined" ||
@@ -12,4 +12,12 @@ export default class StringUtil {
       return true;
     else return false;
   }
+
+  static isNumeric(str: string) {
+		if (/^[1-9]?[\d]+$/g.test(str)) {
+			return true;
+		}
+		return false;
+	}
+
 }

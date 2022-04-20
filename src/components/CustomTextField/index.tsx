@@ -3,6 +3,10 @@ import InputBase from "@mui/material/InputBase";
 import InputLabel from "@mui/material/InputLabel";
 import FormControl from "@mui/material/FormControl";
 import { COLORS } from "styles";
+import { FormHelperText } from "@mui/material";
+import { useEffect, useState } from "react";
+import StringUtils from "utils/stringUtils";
+import { getIn } from "formik";
 
 const StyledInput = styled(InputBase)(({ theme }) => ({
   "label + &": {
@@ -27,20 +31,102 @@ const StyledInput = styled(InputBase)(({ theme }) => ({
 }));
 
 interface CustomTextFieldProps {
+  name?: string;
   label?: string;
+  helperText?: string;
+  placeholder?: string;
+  formik?: any;
   defaultValue?: any;
-  handleOnChange: (event: any) => void;
+  required?: boolean;
+  disabled?: boolean;
+  type?: "text" | "number" | "password";
+  handleOnChange?: (event: any) => void;
+  handleOnClickHelperText?: () => void;
 }
 
-export const CustomTextField = ({ label, defaultValue, handleOnChange }: CustomTextFieldProps) => {
+export const CustomTextField = ({
+  name,
+  label,
+  helperText,
+  placeholder,
+  formik,
+  defaultValue,
+  required,
+  disabled,
+  type,
+  handleOnClickHelperText,
+}: CustomTextFieldProps) => {
+  const [value, setValue] = useState<String>("");
+
+  const renderValue = () => {
+    if ((type === "text" || type === "number") && name && formik) {
+      setValue(formik.values[`${name}`] && String(formik.values[`${name}`]));
+    }
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (type === "number") {
+      formik &&
+        formik.setFieldValue &&
+        formik.setFieldValue(
+          `${name}`,
+          StringUtils.isNumeric(e.target.value) || e.target.value === "" ? e.target.value : value + "",
+        );
+      setValue(StringUtils.isNumeric(e.target.value) || e.target.value === "" ? e.target.value : value + "");
+      return;
+    }
+    formik && formik.setFieldValue && formik.setFieldValue(`${name}`, e.target.value);
+    setValue(e.target.value);
+  };
+
+  const hasErrors = () => {
+    return Boolean(getIn(formik && formik.errors, `${name}`)) && formik;
+  };
+
+  useEffect(() => {
+    renderValue();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [formik && formik.values]);
+
   return (
-    <FormControl variant="standard">
+    <FormControl variant="standard" sx={{ width: "100%" }}>
       {label && (
-        <InputLabel shrink sx={{ color: "#24354f", fontSize: "18px", fontWeight: 500 }}>
+        <InputLabel shrink sx={{ fontSize: "18px", fontWeight: 500 }}>
           {label}
+          {required && " *"}
         </InputLabel>
       )}
-      <StyledInput fullWidth defaultValue={defaultValue ?? defaultValue} onChange={e => handleOnChange(e)} />
+      <StyledInput
+        fullWidth
+        name={`${name}`}
+        type={type}
+        required={required}
+        disabled={disabled}
+        placeholder={placeholder}
+        defaultValue={defaultValue ?? defaultValue}
+        onChange={handleChange}
+        inputProps={{
+          autocomplete: "new-password",
+          form: {
+            autocomplete: "off",
+          },
+        }}
+      />
+      <FormHelperText
+        sx={{
+          color: hasErrors() ? "red" : COLORS.primary,
+          cursor: handleOnClickHelperText ? "pointer" : "auto",
+          paddingTop: 0.75,
+          ":hover": {
+            textDecorationLine: handleOnClickHelperText ? "underline" : "none",
+          },
+        }}
+        onClick={() => {
+          handleOnClickHelperText && handleOnClickHelperText();
+        }}
+      >
+        {hasErrors() ? formik.errors[`${name}`] : helperText}
+      </FormHelperText>
     </FormControl>
   );
 };
