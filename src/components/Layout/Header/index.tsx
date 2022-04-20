@@ -1,26 +1,23 @@
-import { Box, Button, Grid, IconButton, Tab, Tabs } from "@mui/material";
+import { Grid, IconButton } from "@mui/material";
 import { COLORS } from "styles";
-import CircleIcon from "@mui/icons-material/Circle";
 import { CustomIcon } from "components/CustomIcon";
-import { CustomButton } from "components/CustomButton";
-import { useState } from "react";
 import { CustomAvatar } from "components/CustomAvatar";
 import { useSelector } from "react-redux";
 import { RootState } from "redux/rootReducer";
 import { useNavigate } from "react-router-dom";
 import { CustomChip } from "components/CustomChip";
 
-interface HeaderProps {}
+// interface HeaderProps {}
 
-export const Header = ({}: HeaderProps) => {
+export const Header = () => {
   const navigate = useNavigate();
 
   const avatarURL = useSelector((state: RootState) => {
-    console.log("use selector called");
+    // console.log("use selector called");
     return state.globalAvatar.value;
   });
 
-  console.log(window.location.href);
+  // console.log(window.location.href);
 
   return (
     <Grid

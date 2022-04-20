@@ -1,7 +1,6 @@
 import { Box, Grid } from "@mui/material";
 import { CustomBackgroundCard } from "components/CustomBackgroundCard";
 import { CustomIcon, IconType } from "components/CustomIcon";
-import { Header } from "components/Layout/Header";
 import { CustomOption } from "models/customOption";
 import { useState } from "react";
 import { COLORS } from "styles";
@@ -11,11 +10,24 @@ import NotificationSettings from "./notification";
 function SettingsPage() {
   const [chosenTab, setChosenTab] = useState("account");
 
+  const settingOptions: CustomOption[] = [
+    { title: "Account details", value: "account", icon: "person", component: <AccountSettings tab={chosenTab} /> },
+    {
+      title: "Notifications",
+      value: "notification",
+      icon: "notification",
+      component: <NotificationSettings tab={chosenTab} />,
+    },
+  ];
+
   return (
     <Box>
-      <Header />
       <Grid container sx={{ marginTop: 5, marginBottom: 8, paddingX: 15 }}>
-        <Grid item xs={12} sx={{ fontWeight: 800, fontSize: "28px", textAlign: "start", marginBottom: 4, color: COLORS.text }}>
+        <Grid
+          item
+          xs={12}
+          sx={{ fontWeight: 800, fontSize: "28px", textAlign: "start", marginBottom: 4, color: COLORS.text }}
+        >
           ACCOUNT SETTINGS
         </Grid>
         <Grid item xs={2} sx={{ display: "flex", flexDirection: "column", cursor: "pointer" }}>
@@ -39,6 +51,7 @@ function SettingsPage() {
                   justifyContent: "start",
                   alignItems: "center",
                   gap: 1,
+                  transition: "all 0.15s ease",
                   ":hover": {
                     backgroundColor: COLORS.background,
                   },
@@ -65,8 +78,3 @@ function SettingsPage() {
 }
 
 export default SettingsPage;
-
-export const settingOptions: CustomOption[] = [
-  { title: "Account details", value: "account", icon: "person", component: <AccountSettings /> },
-  { title: "Notifications", value: "notification", icon: "notification", component: <NotificationSettings /> },
-];

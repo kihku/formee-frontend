@@ -21,13 +21,8 @@ export const CustomButton = ({ text, link, color, startIcon, endIcon, type, hand
   };
 
   const buttonStyle = {
-    // ":hover": {
-    //   backgroundColor: color ? (isType("outlined") ? COLORS.background : color) : COLORS.primary,
-    //   color: "white",
-    // },
-    paddingX: "4%",
-    paddingY: "0.5%",
-    // backgroundColor: color ? (isType("outlined") ? COLORS.background : color) : COLORS.primary,
+    paddingX: 2.5,
+    paddingY: 1,
     borderRadius: isType("rounded") ? 10 : 1,
   };
 
