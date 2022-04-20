@@ -112,6 +112,7 @@ function LoginPage() {
               <Box
                 sx={{
                   paddingTop: "5%",
+                  paddingRight: "10%",
                   gap: "10px",
                   display: "flex",
                   flexDirection: "column",
