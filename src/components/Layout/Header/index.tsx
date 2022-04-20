@@ -117,7 +117,7 @@ export const Header = ({}: HeaderProps) => {
         </IconButton>
         <IconButton
         onClick={() => {
-          navigate("/login"); //test
+          navigate("/generalError"); //test
         }}>
           <CustomIcon name="about" size={28} />
         </IconButton>

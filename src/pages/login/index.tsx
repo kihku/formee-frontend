@@ -1,12 +1,8 @@
 import {
-  CardMedia,
   Box,
-  Container,
-  Divider,
   Grid,
   Paper,
   CssBaseline,
-  Typography,
   Link,
   IconButton,
 } from "@mui/material";
