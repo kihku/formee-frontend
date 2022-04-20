@@ -10,6 +10,7 @@ import { genderOptions, testOptions } from "models/customOption";
 import { CustomTextField } from "components/CustomTextField";
 import { CustomTitle } from "components/CustomTitle";
 import { GoogleLoginButton } from "firebase/googleLoginButton";
+import { CustomFormCard } from "components/CustomFormCard";
 
 function ComponentsPage() {
   return (
@@ -124,7 +125,7 @@ function ComponentsPage() {
           }}
         />
       </Grid>
-      <Grid item xs={12}>
+      {/* <Grid item xs={12}>
         <CustomTextField
           label="Text field"
           handleOnChange={e => {
@@ -139,6 +140,10 @@ function ComponentsPage() {
             // alert(e.target.value);
           }}
         />
+      </Grid> */}
+       <Grid item xs={12}>
+       <CustomFormCard name={"food order"}/>
+
       </Grid>
     </Grid>
   );
