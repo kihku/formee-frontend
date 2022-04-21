@@ -18,7 +18,7 @@ export const CustomFormCard = ({ name, image }: FormCardProps) => {
   return (
     <Box sx={{
         display:"flex",
-        alignItems:"center",
+        //alignItems:"center",
         flexDirection:"column",
         maxWidth: 400,
         maxHeight: 250,

@@ -38,13 +38,15 @@ function LoginPage() {
 
         //backgroundImage:"/images/loginBG.svg",
         width: "100vw",
-        height: "100vh",
+        height: "auto",
+        minHeight:"100vh",
       }}
     >
       <Box
         sx={{
-          width: "90%",
-          height: "85%",
+          width: "85%",
+          height: "auto",
+          padding:"25px",
           backgroundColor: "white",
         }}
       >
@@ -63,8 +65,10 @@ function LoginPage() {
           >
             <Box
               sx={{
-                height: "80vh",
-                width: "31vw",
+                
+                height: "100%",
+                width: "100%",
+                minHeight:"80vh",
                 backgroundImage: "url(/images/startImage.jpg)",
                 backgroundRepeat: "no-repeat",
                 //backgroundColor: t => (t.palette.mode === "light" ? t.palette.grey[50] : t.palette.grey[900]),
@@ -77,7 +81,7 @@ function LoginPage() {
             item
             md={7.5}
             sx={{
-              
+              paddingLeft: "7%",
               alignItems: "center",
             }}
           >
@@ -102,7 +106,7 @@ function LoginPage() {
               <CustomButton text="SIGN IN" type="rounded-outlined" color={COLORS.lightText} />
               </ThemeProvider>
             </Box>
-            <Box sx={{ paddingLeft: "7%", paddingTop:"8%", paddingBottom:"5%",  zoom: "130%", }}>
+            <Box sx={{  paddingTop:"8%", paddingBottom:"5%",  zoom: "130%", }}>
               <Typography fontWeight={700} fontSize={40}>
                 Welcome to FORMEE!
               </Typography>
@@ -141,7 +145,7 @@ function LoginPage() {
             <Box
               sx={{
                 zoom: "120%",
-                paddingLeft: "7%",
+               
                 display: "flex",
                 flexDirection: "row",
                 gap: "3%",
