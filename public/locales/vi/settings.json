@@ -1,0 +1,21 @@
+{
+    "settings_title": "Cài đặt tài khoản",
+    "settings_account_title": "Thông tin tài khoản",
+    "settings_account_info": "Thông tin cá nhân",
+    "settings_account": "Tài khoản",
+    "settings_account_info_first_name": "HỌ",
+    "settings_account_info_last_name": "TÊN",
+    "settings_account_info_bday": "NGÀY SINH",
+    "settings_account_info_phone": "SỐ ĐIỆN THOẠI",
+    "settings_account_email": "EMAIL",
+    "settings_account_password": "MẬT KHẨU",
+    "settings_account_password_change": "Đổi mật khẩu?",
+    "settings_noti_title": "Thông báo",
+    "settings_noti_type": "Loại thông báo",
+    "settings_noti_push": "Push",
+    "settings_noti_email": "Email",
+    "settings_noti_type_comments": "Bình luận mới",
+    "settings_noti_type_orders": "Đơn hàng mới",
+    "settings_noti_type_order_confirm": "Xác nhận đơn hàng",
+    "settings_noti_type_order_change": "Chỉnh sửa đơn hàng"
+}

@@ -7,6 +7,7 @@ import { useDispatch } from "react-redux";
 import { IconButton } from "@mui/material";
 import { CustomIcon } from "components/CustomIcon";
 import { COLORS } from "styles";
+import { useNavigate } from "react-router-dom";
 
 // TODO: Replace the following with your app's Firebase project configuration
 // See: https://firebase.google.com/docs/web/learn-more#config-object
@@ -29,6 +30,8 @@ const provider = new GoogleAuthProvider();
 
 export const GoogleLoginButton = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   return (
     <IconButton
       sx={{ marginRight: "10px", color:COLORS.primary, border: "1px solid "+COLORS.lightText, }}
@@ -45,7 +48,8 @@ export const GoogleLoginButton = () => {
               }
             }
             // The signed-in user info.
-            const user = result.user;
+            // const user = result.user;
+            navigate("/home");
           })
           .catch(error => {
             // Handle Errors here.

@@ -5,29 +5,15 @@ import { GoogleLoginButton } from "../../firebase/googleLoginButton";
 
 import { COLORS } from "styles";
 import { lightTheme } from "styles/theme";
-
+import { useNavigate } from "react-router-dom";
 
 function LoginPage() {
+  const navigate = useNavigate();
+
   return (
-    //     <Box sx={{
-    //       backgroundColor: "red",
-    //       //   backgroundImage: "require("/images/loginBG.svg")",
-    //       backgroundPosition: "center",
-    //       backgroundSize: "cover",
-    //       backgroundRepeat: "no-repeat",
-    //       height: "100%",
-    //     }}>
-    //     <Grid container sx={{ marginTop: 0, paddingX: 15 }}>
-    //       <Grid item xs={12} sx={{ marginBottom: 4 }}>
-    //         abc
-    //       </Grid>
-    //     </Grid>
-    //   <Box/>
     <Paper
-      //image="/images/loginBG.svg" // require image
-      className="classes.pageMedia"
-      title="LoginPage"
-      //component={"img"}
+      // className="classes.pageMedia"
+      title="Login Page"
       sx={{
         display: "flex",
         justifyContent: "center",
@@ -35,19 +21,20 @@ function LoginPage() {
         backgroundImage: "url(/images/loginBG.svg)",
         backgroundSize: "cover",
         backgroundRepeat: "no-repeat",
-
-        //backgroundImage:"/images/loginBG.svg",
-        width: "100vw",
-        height: "auto",
-        minHeight:"100vh",
+        // width: "100vw",
+        // height: "auto",
+        height: "100vh",
       }}
     >
       <Box
         sx={{
-          width: "85%",
-          height: "auto",
-          padding:"25px",
+          width: "100%",
+          // height: "auto",
+          padding: "25px",
           backgroundColor: "white",
+          marginX: 10,
+          marginY: 10,
+          borderRadius: 3,
         }}
       >
         <Grid container component="main" sx={{ height: "100%", width: "100%" }}>
@@ -65,15 +52,14 @@ function LoginPage() {
           >
             <Box
               sx={{
-                
                 height: "100%",
                 width: "100%",
-                minHeight:"80vh",
+                minHeight: "80vh",
                 backgroundImage: "url(/images/startImage.jpg)",
                 backgroundRepeat: "no-repeat",
-                //backgroundColor: t => (t.palette.mode === "light" ? t.palette.grey[50] : t.palette.grey[900]),
                 backgroundSize: "cover",
                 backgroundPosition: "center",
+                borderRadius: 2,
               }}
             ></Box>
           </Grid>
@@ -81,32 +67,31 @@ function LoginPage() {
             item
             md={7.5}
             sx={{
-              paddingLeft: "7%",
+              paddingLeft: "5%",
               alignItems: "center",
             }}
           >
             <Box
               sx={{
-               
-                paddingTop: "40px",
-                paddingRight: "25px",
+                // paddingTop: "40px",
+                // paddingRight: "25px",
                 gap: "4%",
                 display: "flex",
                 flexDirection: "row",
                 justifyContent: "right",
-                height: "5%",
+                // height: "5%",
                 alignItems: "center",
               }}
             >
               <ThemeProvider theme={lightTheme}>
-              <Link href="#" variant="body2" sx={{}}>
-                {"Already have an account?"}
-              </Link>
-              
-              <CustomButton text="SIGN IN" type="rounded-outlined" color={COLORS.lightText} />
+                <Link href="#" sx={{}}>
+                  {"Already have an account?"}
+                </Link>
+
+                <CustomButton text="SIGN IN" type="rounded-outlined" color={COLORS.lightText} />
               </ThemeProvider>
             </Box>
-            <Box sx={{  paddingTop:"8%", paddingBottom:"5%",  zoom: "130%", }}>
+            <Box sx={{ paddingTop: "4%", paddingBottom: "4%", zoom: "120%" }}>
               <Typography fontWeight={700} fontSize={40}>
                 Welcome to FORMEE!
               </Typography>
@@ -116,7 +101,7 @@ function LoginPage() {
               <Box
                 sx={{
                   paddingTop: "5%",
-                  paddingRight: "10%",
+                  paddingRight: "5%",
                   gap: "10px",
                   display: "flex",
                   flexDirection: "column",
@@ -135,6 +120,7 @@ function LoginPage() {
                   }}
                 ></CustomTextField>
                 <CustomTextField
+                  type="password"
                   label="Password"
                   handleOnChange={e => {
                     // alert(e.target.value);
@@ -145,24 +131,29 @@ function LoginPage() {
             <Box
               sx={{
                 zoom: "120%",
-               
                 display: "flex",
                 flexDirection: "row",
                 gap: "3%",
-
                 alignItems: "center",
               }}
             >
-              <CustomButton text="Login" type="rounded" />
-
-              <Typography sx={{
-                fontWeight:"500",
-                color:COLORS.lightText,
-              }}>Or login with</Typography>
+              <CustomButton
+                text="Login"
+                type="rounded"
+                handleOnClick={() => {
+                  navigate("/home");
+                }}
+              />
+              <Typography
+                sx={{
+                  fontWeight: "500",
+                  color: COLORS.lightText,
+                }}
+              >
+                Or login with
+              </Typography>
               <GoogleLoginButton />
             </Box>
-
-           
           </Grid>
         </Grid>
       </Box>

@@ -71,6 +71,7 @@ function ComponentsPage() {
         />
         <CustomCheckbox
           options={testOptions}
+          chosenValues={[]}
           handleOnChange={e => {
             // alert(e.target.value);
           }}

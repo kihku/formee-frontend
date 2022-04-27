@@ -6,6 +6,7 @@ const SettingsPage = lazy(() => import("pages/settings"));
 const GeneralErrorPage = lazy(() => import("pages/generalError"));
 const HomePage = lazy(() => import("pages/home"));
 const FormGalleryPage = lazy(() => import("pages/formGallery"));
+const OrdersPage = lazy(() => import("pages/orders"));
 
 export interface RouteProps {
   title: string;
@@ -21,4 +22,5 @@ export const PUBLIC_ROUTES: RouteProps[] = [
   { title: "404 Not Found", component: <GeneralErrorPage />, path: "/error" },
   { title: "Home", component: <HomePage />, path: "/home" },
   { title: "Form Gallery", component: <FormGalleryPage />, path: "/gallery" },
+  { title: "Orders", component: <OrdersPage />, path: "/orders" },
 ];

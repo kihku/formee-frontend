@@ -7,14 +7,24 @@ interface CustomCheckboxProps {
   label?: string;
   size?: number;
   defaultValue?: any;
-  options: CustomOption[];
+  options: any[];
+  chosenValues: any[];
+  showLabel?: boolean;
   handleOnChange: (event: any) => void;
 }
 
-export const CustomCheckbox = ({ label, size, options, defaultValue, handleOnChange }: CustomCheckboxProps) => {
+export const CustomCheckbox = ({
+  label,
+  showLabel,
+  size,
+  options,
+  defaultValue,
+  chosenValues,
+  handleOnChange,
+}: CustomCheckboxProps) => {
   return (
     <FormControl>
-      <FormLabel>{label ?? label}</FormLabel>
+      {Boolean(showLabel) && <FormLabel>{label ?? label}</FormLabel>}
       <FormGroup defaultValue={defaultValue} onChange={e => handleOnChange(e)}>
         {options.map((opt, key) => {
           return (
@@ -22,6 +32,7 @@ export const CustomCheckbox = ({ label, size, options, defaultValue, handleOnCha
               key={key}
               value={opt.value}
               label={opt.title}
+              checked={chosenValues.includes(opt.value)}
               control={
                 <Checkbox
                   disableRipple={opt.disableRipple ?? opt.disableRipple}

@@ -1,6 +1,7 @@
 import { Box, Typography } from "@mui/material";
 import { CustomBackgroundCard } from "components/CustomBackgroundCard";
 import { CustomFormCard } from "components/CustomFormCard";
+import { COLORS } from "styles";
 
 function HomePage() {
   return (
@@ -9,12 +10,14 @@ function HomePage() {
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        width: "100vw",
-        height: "100vh",
+        paddingX: 5, 
+        paddingY: 5
+        // width: "100vw",
+        // height: "100vh",
       }}
     >
-      <CustomBackgroundCard sizeX={"88%"} sizeY={"auto"}>
-        <Typography sx={{ marginLeft: "4%", marginTop: "2%" }}>Start a new order</Typography>
+      <CustomBackgroundCard sizeX={"100%"} sizeY={"auto"} padding={-3}>
+        <Typography sx={{ marginLeft: "4%", marginTop: "2%", fontSize: "25px", fontWeight: 600, color: COLORS.primary }}>Start a new order</Typography>
         <Box
           sx={{
             display: "flex",
@@ -22,17 +25,17 @@ function HomePage() {
             alignItems: "center",
             //justifyContent: "center",
             gap: "3%",
-            padding: "4%",
+            paddingX: "4%",
             paddingTop: "2%",
           }}
         >
-          <CustomFormCard name={"food"} />
-          <CustomFormCard name={"clothes"} />
-          <CustomFormCard name={"chicken"} />
-          <CustomFormCard name={"fish"} />
-          <CustomFormCard name={"apple"} />
+          <CustomFormCard name={"Food"} />
+          <CustomFormCard name={"Clothes"} />
+          <CustomFormCard name={"Chicken"} />
+          <CustomFormCard name={"Fish"} />
+          <CustomFormCard name={"Apple"} />
         </Box>
-        <Typography sx={{ marginLeft: "4%", marginTop: "2%" }}>Recent</Typography>
+        <Typography sx={{ marginLeft: "4%", marginTop: "2%", fontSize: "25px", fontWeight: 600, color: COLORS.primary }}>Recent</Typography>
         <Box
           sx={{
             display: "flex",
@@ -41,15 +44,15 @@ function HomePage() {
             alignItems: "center",
             //justifyContent: "center",
             gap: "3%",
-            padding: "4%",
-            paddingTop: "2%",
+            paddingX: "4%",
+            paddingY: "2%",
           }}
         >
-          <CustomFormCard name={"food"} />
-          <CustomFormCard name={"clothes"} />
-          <CustomFormCard name={"chicken"} />
-          <CustomFormCard name={"fish"} />
-          <CustomFormCard name={"apple"} />
+          <CustomFormCard name={"Food"} />
+          <CustomFormCard name={"Clothes"} />
+          <CustomFormCard name={"Chicken"} />
+          <CustomFormCard name={"Fish"} />
+          <CustomFormCard name={"Apple"} />
         </Box>
       </CustomBackgroundCard>
     </Box>

@@ -1,0 +1,21 @@
+{
+    "settings_title": "Account settings",
+    "settings_account_title": "Account Details",
+    "settings_account_info": "Personal information",
+    "settings_account": "Account",
+    "settings_account_info_first_name": "FIRST NAME",
+    "settings_account_info_last_name": "LAST NAME",
+    "settings_account_info_bday": "BIRTHDATE",
+    "settings_account_info_phone": "PHONE NUMBER",
+    "settings_account_email": "EMAIL",
+    "settings_account_password": "PASSWORD",
+    "settings_account_password_change": "Change password?",
+    "settings_noti_title": "Notifications",
+    "settings_noti_type": "Notification types",
+    "settings_noti_push": "Push",
+    "settings_noti_email": "Email",
+    "settings_noti_type_comments": "New comments",
+    "settings_noti_type_orders": "New orders",
+    "settings_noti_type_order_confirm": "Order confirmation",
+    "settings_noti_type_order_change": "Order changes"
+}

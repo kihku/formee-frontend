@@ -14,6 +14,12 @@ export interface CustomOption {
   component?: ReactNode;
 }
 
+export interface Pageable {
+  total: number;
+  pageNumber: number;
+  pageSize: number;
+}
+
 export interface FormikType<T> {
   handleChange: {
     (e: React.ChangeEvent<any>): void;
@@ -40,6 +46,22 @@ export interface FieldGeneral<T, K> {
   type?: "text" | "number" | "password";
   helplerText?: string;
   handleOnClickHelperText?: () => void;
+
+  // select
+  options?: K[];
+  fieldValue?: keyof K;
+  fieldString?: keyof K;
+}
+
+export interface FilterFieldGeneral<T, K> {
+  name: keyof T;
+  label: string;
+  placeholder?: string;
+  disabled?: boolean;
+  formik?: FormikType<T>;
+
+  // text field
+  type: "text" | "checkbox" | "picker";
 
   // select
   options?: K[];

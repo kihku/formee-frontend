@@ -3,17 +3,19 @@ import { CustomBackgroundCard } from "components/CustomBackgroundCard";
 import { CustomIcon, IconType } from "components/CustomIcon";
 import { CustomOption } from "models/baseModels";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { COLORS } from "styles";
-import AccountSettings from "./account";
-import NotificationSettings from "./notification";
+import AccountSettings from "./tabs/account";
+import NotificationSettings from "./tabs/notification";
 
 function SettingsPage() {
+  const { t }  = useTranslation(["settings"]);
   const [chosenTab, setChosenTab] = useState("account");
 
   const settingOptions: CustomOption[] = [
-    { title: "Account details", value: "account", icon: "person", component: <AccountSettings tab={chosenTab} /> },
+    { title: t("settings_account_title"), value: "account", icon: "person", component: <AccountSettings tab={chosenTab} /> },
     {
-      title: "Notifications",
+      title: t("settings_noti_title"),
       value: "notification",
       icon: "notification",
       component: <NotificationSettings tab={chosenTab} />,
@@ -22,15 +24,15 @@ function SettingsPage() {
 
   return (
     <Box>
-      <Grid container sx={{ marginTop: 5, marginBottom: 8, paddingX: 15 }}>
+      <Grid container sx={{ paddingTop: 5, paddingBottom: 8, paddingX: 15 }}>
         <Grid
           item
           xs={12}
-          sx={{ fontWeight: 800, fontSize: "30px", textAlign: "start", marginBottom: 4, color: COLORS.text }}
+          sx={{ fontWeight: 800, fontSize: "30px", textAlign: "start", marginBottom: 4, color: COLORS.text, textTransform: "uppercase", letterSpacing: 0.75 }}
         >
-          ACCOUNT SETTINGS
+          {t("settings_title")}
         </Grid>
-        <Grid item xs={2} sx={{ display: "flex", flexDirection: "column" }}>
+        <Grid item xs={2.5} sx={{ display: "flex", flexDirection: "column" }}>
           {settingOptions.map((opt, key) => {
             return (
               <Box
@@ -42,7 +44,7 @@ function SettingsPage() {
                   marginBottom: 1,
                   fontWeight: 700,
                   color: chosenTab === opt.value ? COLORS.primary : COLORS.text,
-                  backgroundColor: chosenTab === opt.value ? "#eeefff" : "#ffffff",
+                  backgroundColor: chosenTab === opt.value ? COLORS.primaryBackground : "",
                   paddingLeft: 2,
                   paddingY: 2,
                   borderRadius: "5px 100px 100px 5px",
@@ -54,7 +56,7 @@ function SettingsPage() {
                   transition: "all 0.15s ease",
                   cursor: "pointer",
                   ":hover": {
-                    backgroundColor: COLORS.background,
+                    backgroundColor: COLORS.primaryBackground,
                   },
                 }}
               >
@@ -68,7 +70,7 @@ function SettingsPage() {
             );
           })}
         </Grid>
-        <Grid item xs={10} sx={{ paddingX: 5 }}>
+        <Grid item xs={9.5} sx={{ paddingX: 5 }}>
           <CustomBackgroundCard sizeX="100%" sizeY="auto">
             {settingOptions.find(opt => opt.value === chosenTab)?.component}
           </CustomBackgroundCard>

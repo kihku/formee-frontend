@@ -32,7 +32,7 @@ export const Layout = ({ children, title }: LayoutProps) => {
         <link rel="icon" href="/favicon.ico" />
       </head> */}
       <div>
-        <div>
+        <div className="layout-header">
           <Header />
         </div>
         <div>{children}</div>

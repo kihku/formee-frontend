@@ -1,4 +1,4 @@
-import { Grid, IconButton } from "@mui/material";
+import { Grid, IconButton, Tooltip } from "@mui/material";
 import { COLORS } from "styles";
 import { CustomIcon } from "components/CustomIcon";
 import { CustomAvatar } from "components/CustomAvatar";
@@ -6,10 +6,10 @@ import { useSelector } from "react-redux";
 import { RootState } from "redux/rootReducer";
 import { useNavigate } from "react-router-dom";
 import { CustomChip } from "components/CustomChip";
-
-// interface HeaderProps {}
+import { useTranslation } from "react-i18next";
 
 export const Header = () => {
+  const { t, i18n } = useTranslation(["commons"]);
   const navigate = useNavigate();
 
   const avatarURL = useSelector((state: RootState) => {
@@ -17,7 +17,9 @@ export const Header = () => {
     return state.globalAvatar.value;
   });
 
-  // console.log(window.location.href);
+  const changeLanguage = (language: "en" | "vi") => {
+    i18n.changeLanguage(language);
+  };
 
   return (
     <Grid
@@ -29,12 +31,19 @@ export const Header = () => {
         alignItems: "center",
         paddingX: 4,
         paddingY: 0.5,
-        backgroundColor: COLORS.background,
+        backgroundColor: COLORS.white,
         boxShadow: " rgba(0, 0, 0, 0.1) 0px 4px 6px -1px, rgba(0, 0, 0, 0.06) 0px 2px 4px -1px",
       }}
     >
-      <Grid item xs={2}>
-        Logo
+      <Grid
+        item
+        xs={2}
+        sx={{ cursor: "pointer" }}
+        onClick={() => {
+          changeLanguage(i18n.language === "en" ? "vi" : "en");
+        }}
+      >
+        Logo / Change language
       </Grid>
       <Grid
         item
@@ -43,45 +52,53 @@ export const Header = () => {
           display: "flex",
           paddingLeft: "5vh",
           justifyContent: "start",
-          gap: 1,
+          gap: 1.5,
         }}
       >
         <CustomChip
           clickable
-          text="Home"
-          backgroundColor={window.location.href === "http://localhost:3000/" ? "#eeefff" : "#f7f8fc"}
-          textColor={window.location.href === "http://localhost:3000/" ? COLORS.primary : COLORS.text}
-          size={16}
+          text={t("header_home")}
+          backgroundColor={
+            window.location.href === "http://localhost:3000/home" ? COLORS.primaryBackground : COLORS.white
+          }
+          textColor={window.location.href === "http://localhost:3000/home" ? COLORS.primary : COLORS.text}
+          size={18}
           handleOnClick={() => {
-            navigate("/");
+            navigate("/home");
           }}
         />
         <CustomChip
           clickable
-          backgroundColor={window.location.href === "http://localhost:3000/orders" ? "#eeefff" : "#f7f8fc"}
+          backgroundColor={
+            window.location.href === "http://localhost:3000/orders" ? COLORS.primaryBackground : COLORS.white
+          }
           textColor={window.location.href === "http://localhost:3000/orders" ? COLORS.primary : COLORS.text}
-          text="Orders"
-          size={16}
+          text={t("header_orders")}
+          size={18}
           handleOnClick={() => {
             navigate("/orders");
           }}
         />
         <CustomChip
           clickable
-          backgroundColor={window.location.href === "http://localhost:3000/report" ? "#eeefff" : "#f7f8fc"}
+          backgroundColor={
+            window.location.href === "http://localhost:3000/report" ? COLORS.primaryBackground : COLORS.white
+          }
           textColor={window.location.href === "http://localhost:3000/report" ? COLORS.primary : COLORS.text}
-          text="Report"
-          size={16}
+          text={t("header_report")}
+          size={18}
           handleOnClick={() => {
             navigate("/report");
           }}
         />
         <CustomChip
           clickable
-          backgroundColor={window.location.href === "http://localhost:3000/components" ? "#eeefff" : "#f7f8fc"}
+          backgroundColor={
+            window.location.href === "http://localhost:3000/components" ? COLORS.primaryBackground : COLORS.white
+          }
           textColor={window.location.href === "http://localhost:3000/components" ? COLORS.primary : COLORS.text}
-          text="Components"
-          size={16}
+          text={t("header_components")}
+          size={18}
           handleOnClick={() => {
             navigate("/components");
           }}
@@ -101,23 +118,30 @@ export const Header = () => {
         }}
       >
         <CustomAvatar image={avatarURL} />
-        <IconButton
-          sx={{ marginRight: "10px" }}
-          onClick={() => {
-            navigate("/settings");
-          }}
-        >
-          <CustomIcon name="settings" size={25} />
-        </IconButton>
-        <IconButton>
-          <CustomIcon name="notification" size={28} />
-        </IconButton>
-        <IconButton
-        onClick={() => {
-          navigate("/error"); //test
-        }}>
-          <CustomIcon name="about" size={28} />
-        </IconButton>
+        <Tooltip title={t("header_settings")}>
+          <IconButton
+            sx={{ marginRight: "10px" }}
+            onClick={() => {
+              navigate("/settings");
+            }}
+          >
+            <CustomIcon name="settings" size={25} />
+          </IconButton>
+        </Tooltip>
+        <Tooltip title={t("header_notifications")}>
+          <IconButton>
+            <CustomIcon name="notification" size={28} />
+          </IconButton>
+        </Tooltip>
+        <Tooltip title={t("header_help")}>
+          <IconButton
+            onClick={() => {
+              navigate("/error"); //test
+            }}
+          >
+            <CustomIcon name="about" size={28} />
+          </IconButton>
+        </Tooltip>
       </Grid>
     </Grid>
   );

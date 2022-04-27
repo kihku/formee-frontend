@@ -8,7 +8,7 @@ import { useEffect, useState } from "react";
 import StringUtils from "utils/stringUtils";
 import { getIn } from "formik";
 
-const StyledInput = styled(InputBase)(({ theme }) => ({
+export const StyledInput = styled(InputBase)(({ theme }) => ({
   "label + &": {
     marginTop: theme.spacing(3),
   },
@@ -39,7 +39,7 @@ interface CustomTextFieldProps {
   defaultValue?: any;
   required?: boolean;
   disabled?: boolean;
-  type?: "text" | "number" | "password";
+  type?: "text" | "number" | "password" | "date";
   handleOnChange?: (event: any) => void;
   handleOnClickHelperText?: () => void;
 }
@@ -106,9 +106,9 @@ export const CustomTextField = ({
         defaultValue={defaultValue ?? defaultValue}
         onChange={handleChange}
         inputProps={{
-          autocomplete: "new-password",
+          autoComplete: "new-password",
           form: {
-            autocomplete: "off",
+            autoComplete: "off",
           },
         }}
       />

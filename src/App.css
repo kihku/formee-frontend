@@ -2,4 +2,10 @@
   min-height: 100vh;
   color: #24354F;
   font-family: Inter;
+  background-color: #F7F8FC;
+}
+
+.layout-header {
+  position: sticky;
+  z-index: 100;
 }

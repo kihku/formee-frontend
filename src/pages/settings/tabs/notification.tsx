@@ -1,5 +1,6 @@
 import { Box, Divider, Fade, Grid, InputLabel } from "@mui/material";
 import { CustomSwitch } from "components/CustomSwitch";
+import { useTranslation } from "react-i18next";
 import { COLORS } from "styles";
 
 interface NotificationSettingsProps {
@@ -7,10 +8,14 @@ interface NotificationSettingsProps {
 }
 
 function NotificationSettings(props: NotificationSettingsProps) {
+  const { t } = useTranslation(["settings", "buttons"]);
+
   return (
     <Fade in={props.tab === "notification"}>
       <Box>
-        <Box sx={{ fontWeight: 700, color: COLORS.primary, fontSize: "24px", marginBottom: 4 }}>Notifications</Box>
+        <Box sx={{ fontWeight: 700, color: COLORS.primary, fontSize: "24px", marginBottom: 4 }}>
+          {t("settings_noti_title")}
+        </Box>
         <Box>
           <Grid container>
             <Grid item xs={4}>
@@ -18,7 +23,7 @@ function NotificationSettings(props: NotificationSettingsProps) {
                 shrink
                 sx={{ color: "#24354f", fontSize: "18px", fontWeight: 500, textTransform: "uppercase" }}
               >
-                Notification type
+                {t("settings_noti_type")}
               </InputLabel>
             </Grid>
             <Grid item xs={1}>
@@ -32,7 +37,7 @@ function NotificationSettings(props: NotificationSettingsProps) {
                   paddingLeft: 2,
                 }}
               >
-                Push
+                {t("settings_noti_push")}
               </InputLabel>
             </Grid>
             <Grid item xs={1}>
@@ -46,7 +51,7 @@ function NotificationSettings(props: NotificationSettingsProps) {
                   paddingLeft: 1,
                 }}
               >
-                Email
+                {t("settings_noti_email")}
               </InputLabel>
             </Grid>
             <Grid item xs={6}></Grid>
@@ -54,7 +59,12 @@ function NotificationSettings(props: NotificationSettingsProps) {
               <Divider sx={{ width: "100%", borderBottomWidth: "2px" }} />
             </Grid>
             <Grid item xs={6}></Grid>
-            {["New comments", "New orders", "Order confirmation", "Order changes"].map((item, key) => {
+            {[
+              t("settings_noti_type_comments"),
+              t("settings_noti_type_orders"),
+              t("settings_noti_type_order_confirm"),
+              t("settings_noti_type_order_change"),
+            ].map((item, key) => {
               return (
                 <Grid
                   item

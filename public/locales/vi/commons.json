@@ -1,0 +1,13 @@
+{
+    "header_home": "Trang chủ",
+    "header_orders": "Đơn hàng",
+    "header_report": "Thống kê",
+    "header_components": "Phần tử",
+    "header_help": "Trợ giúp",
+    "header_notifications": "Thông báo",
+    "header_settings": "Cài đặt",
+    "helper_search": "Tìm kiếm",
+    "helper_filters": "Bộ lọc",
+    "table_rows_per_page": "Số dòng",
+    "table_view_details": "Xem chi tiết đơn hàng"
+}
