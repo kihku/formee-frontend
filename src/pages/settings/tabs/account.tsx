@@ -6,6 +6,7 @@ import { useFormik } from "formik";
 import { initDataUser, UserDTO } from "models/user";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 import { COLORS } from "styles";
 import * as Yup from "yup";
 import DialogChangePassword from "../dialog/dialogChangePassword";
@@ -16,6 +17,8 @@ interface AccountSettingsProps {
 
 function AccountSettings(props: AccountSettingsProps) {
   const { t } = useTranslation(["settings", "buttons"]);
+  const navigate = useNavigate();
+
   const [openDialog, setOpenDialog] = useState<boolean>(false);
 
   const validationSchema = Yup.object().shape({});
@@ -83,7 +86,9 @@ function AccountSettings(props: AccountSettingsProps) {
   return (
     <Fade in={props.tab === "account"}>
       <Box>
-        <Box sx={{ fontWeight: 700, color: COLORS.primary, fontSize: "24px", marginBottom: 4 }}>{t("settings_account_title")}</Box>
+        <Box sx={{ fontWeight: 700, color: COLORS.primary, fontSize: "24px", marginBottom: 4 }}>
+          {t("settings_account_title")}
+        </Box>
         <Box sx={{ marginBottom: 4 }}>
           <Box sx={{ display: "flex", flexDirection: "row" }}>
             <Box sx={{ fontWeight: 600, fontSize: "18px", width: "25%" }}>{t("settings_account_info")}</Box>
@@ -117,7 +122,14 @@ function AccountSettings(props: AccountSettingsProps) {
             <Grid item xs={12}>
               <Box sx={{ display: "flex", flexDirection: "row", gap: "15px", paddingX: "10px" }}>
                 <CustomButton text={t("button_save")} type="outlined" startIcon="save" />
-                <CustomButton text={t("button_log_out")} type="default" startIcon="logout" />
+                <CustomButton
+                  text={t("button_log_out")}
+                  type="default"
+                  startIcon="logout"
+                  handleOnClick={() => {
+                    navigate("/login");
+                  }}
+                />
               </Box>
             </Grid>
           </Grid>
