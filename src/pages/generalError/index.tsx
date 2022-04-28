@@ -43,7 +43,7 @@ function GeneralErrorPage() {
       </Typography>
       <Typography fontWeight={400} color={COLORS.lightText} sx={{marginTop:"10px"}}>We couldn't find the page you were looking for</Typography>
       <Typography fontWeight={400} color={COLORS.lightText}>
-        Why not try back to the <Link sx={{textDecoration:"none" }}>homepage</Link>
+        Why not try going back to the <Link href="/home" sx={{textDecoration:"none" }}>homepage</Link>
       </Typography>
     </Box>
   );
