@@ -4,26 +4,29 @@ import { StyledTableCell } from ".";
 
 export interface CustomTableHeaderProps<D extends object> {
   headerGroups: Array<HeaderGroup<D>>;
+  showCheckbox?: boolean;
 }
 
-const CustomTableHeader = <D extends object>({ headerGroups }: CustomTableHeaderProps<D>) => {
+const CustomTableHeader = <D extends object>({ headerGroups, showCheckbox }: CustomTableHeaderProps<D>) => {
   return (
     <TableHead>
       {headerGroups.map(headerGroup => (
         <TableRow {...headerGroup.getHeaderGroupProps()} sx={{ borderRadius: "5px 10px 15px 20px" }}>
-          <StyledTableCell
-            component="th"
-            scope="row"
-            align="center"
-            width="3%"
-            sx={{
-              borderRadius: "10px 0px 0px 0px",
-            }}
-          >
-            <Box>
-              <Checkbox disableRipple size="small" />
-            </Box>
-          </StyledTableCell>
+          {Boolean(showCheckbox) && (
+            <StyledTableCell
+              component="th"
+              scope="row"
+              align="center"
+              width="3%"
+              sx={{
+                borderRadius: "10px 0px 0px 0px",
+              }}
+            >
+              <Box>
+                <Checkbox disableRipple size="small" />
+              </Box>
+            </StyledTableCell>
+          )}
           <StyledTableCell component="th" scope="row" align="center" width="3%" sx={{}}>
             <Box component="span" textAlign="center">
               #

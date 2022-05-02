@@ -6,22 +6,27 @@ import * as Yup from "yup";
 import CreateFieldsFilter, { CreateFieldsFilterProps } from "components/CreateFieldsFilter";
 import { useFormik } from "formik";
 import { CustomCheckbox } from "components/CustomCheckbox";
-import { orderList, orderStatusList } from "constants/constants";
+import { exampleForm, exampleLayout, exampleResponses, orderStatusList } from "constants/constants";
 import { CustomOption, Pageable } from "models/baseModels";
 import { CustomButton } from "components/CustomButton";
 import { useEffect, useMemo, useState } from "react";
-import { OrderDTO } from "models/orders";
+import { FormDTO, FormLayoutDTO, FormResponseDTO } from "models/form";
 import { CellProps, Column, useTable } from "react-table";
 import DateUtils from "utils/dateUtils";
 import CustomTable from "components/CustomTable";
 import { CustomBackgroundCard } from "components/CustomBackgroundCard";
 import { CustomChip } from "components/CustomChip";
 import { useTranslation } from "react-i18next";
+import DialogOrderDetails from "./dialogs/dialogDetails";
 
 function OrdersPage() {
+  const formName = "Form ABC";
   const { t } = useTranslation(["commons", "buttons"]);
 
-  const [data, setData] = useState<OrderDTO[]>(orderList);
+  const [form, setForm] = useState<FormDTO>(exampleForm);
+  const [responses, setResponses] = useState<FormResponseDTO[]>(exampleResponses);
+  const [item, setItem] = useState<FormResponseDTO>({} as FormResponseDTO);
+  const [openDetailDialog, setOpenDetailDialog] = useState<boolean>(false);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [pageParams, setPageParams] = useState<Pageable>({
     total: 0,
@@ -57,6 +62,7 @@ function OrdersPage() {
       Component: () => {
         return (
           <CustomCheckbox
+            size={20}
             options={orderStatusList}
             chosenValues={formik.values.status}
             handleOnChange={e => {
@@ -90,81 +96,73 @@ function OrdersPage() {
     },
   ];
 
-  const tableContent: Array<Column<OrderDTO>> = [
+  const getColumns = (): Column<FormResponseDTO>[] => {
+    let result: Column<FormResponseDTO>[] = [];
+    form.layout.components.map((component, index) => {
+      if (component.showOnTable) {
+        result.push({
+          Header: component.title,
+          accessor: String(index),
+          maxWidth: 10,
+          Cell: ({ row }: CellProps<FormResponseDTO, {}>) => {
+            switch (component.type) {
+              case "TEXT":
+                return (
+                  <Box display="flex" justifyContent="center">
+                    {row.original.response[index]}
+                  </Box>
+                );
+              case "STATUS":
+                return (
+                  <Box display="flex" justifyContent="center">
+                    <CustomChip
+                      text={orderStatusList.find(item => item.value === row.original.response[index])?.title}
+                      backgroundColor={
+                        orderStatusList.find(item => item.value === row.original.response[index])?.backgroundColor
+                      }
+                      textColor={orderStatusList.find(item => item.value === row.original.response[index])?.color}
+                    />
+                  </Box>
+                );
+            }
+          },
+        } as Column<FormResponseDTO>);
+      }
+    });
+    return result;
+  };
+
+  const tableContent: Column<FormResponseDTO>[] = [
     {
       Header: "Order ID",
       accessor: "id",
       maxWidth: 10,
-      Cell: ({ row }: CellProps<OrderDTO, {}>) => {
+      Cell: ({ row }: CellProps<FormResponseDTO, {}>) => {
         return (
           <Tooltip title={t("table_view_details")}>
-            <Box display="flex" justifyContent="center" sx={{ textDecoration: "underline", cursor: "pointer" }}>
+            <Box
+              display="flex"
+              justifyContent="center"
+              sx={{ textDecoration: "underline", cursor: "pointer" }}
+              onClick={() => {
+                handleOpenDetailDialog(row.original);
+              }}
+            >
               {row.original.id}
             </Box>
           </Tooltip>
         );
       },
     },
-    {
-      Header: "Customer Name",
-      accessor: "customerName",
-      maxWidth: 10,
-      Cell: ({ row }: CellProps<OrderDTO, {}>) => {
-        return (
-          <Box display="flex" justifyContent="center">
-            {row.original.customerName}
-          </Box>
-        );
-      },
-    },
-    {
-      Header: "Contact Number",
-      accessor: "phoneNumber",
-      maxWidth: 10,
-      Cell: ({ row }: CellProps<OrderDTO, {}>) => {
-        return (
-          <Box display="flex" justifyContent="center">
-            {row.original.phoneNumber}
-          </Box>
-        );
-      },
-    },
-    {
-      Header: "Total",
-      accessor: "total",
-      maxWidth: 10,
-      Cell: ({ row }: CellProps<OrderDTO, {}>) => {
-        return (
-          <Box display="flex" justifyContent="center">
-            {row.original.total}
-          </Box>
-        );
-      },
-    },
+    ...getColumns(),
     {
       Header: "Created Date",
       accessor: "createdDate",
       maxWidth: 10,
-      Cell: ({ row }: CellProps<OrderDTO, {}>) => {
+      Cell: ({ row }: CellProps<FormResponseDTO, {}>) => {
         return (
           <Box display="flex" justifyContent="center">
             {DateUtils.toDDMMYYYY(row.original.createdDate)}
-          </Box>
-        );
-      },
-    },
-    {
-      Header: "Status",
-      accessor: "status",
-      maxWidth: 10,
-      Cell: ({ row }: CellProps<OrderDTO, {}>) => {
-        return (
-          <Box display="flex" justifyContent="center">
-            <CustomChip
-              text={row.original.status}
-              backgroundColor={row.original.statusBackgroundColor}
-              textColor={row.original.statusColor}
-            />
           </Box>
         );
       },
@@ -175,21 +173,29 @@ function OrdersPage() {
 
   const table = useTable({
     columns,
-    data,
+    data: responses,
   });
 
   async function handleSubmitForm(values: any) {
     console.log("values", values);
   }
 
+  const handleOpenDetailDialog = (item: FormResponseDTO) => {
+    setItem(item);
+    setOpenDetailDialog(true);
+  };
+
   useEffect(() => {
-    setData(orderList);
-    setPageParams({ ...pageParams, total: orderList.length });
+    setResponses(exampleResponses);
+    setPageParams({ ...pageParams, total: exampleResponses.length });
   }, []);
 
   useEffect(() => {
-    setData(
-      orderList.slice(pageParams.pageNumber * pageParams.pageSize, (pageParams.pageNumber + 1) * pageParams.pageSize),
+    setResponses(
+      exampleResponses.slice(
+        pageParams.pageNumber * pageParams.pageSize,
+        (pageParams.pageNumber + 1) * pageParams.pageSize,
+      ),
     );
   }, [pageParams]);
 
@@ -238,7 +244,7 @@ function OrdersPage() {
             >
               <CustomTitle
                 text={[
-                  { text: "Form ABC", highlight: false },
+                  { text: formName, highlight: false },
                   { text: "/", highlight: false },
                   { text: t("header_orders"), highlight: true },
                 ]}
@@ -275,7 +281,9 @@ function OrdersPage() {
           <Grid item xs={12}>
             <CustomBackgroundCard sizeX="auto" sizeY="auto" padding={-4}>
               <CustomTable
-                data={data}
+                showCheckbox
+                highlightOnHover
+                data={responses}
                 table={table}
                 columns={columns}
                 pageParams={pageParams}
@@ -289,6 +297,16 @@ function OrdersPage() {
             </CustomBackgroundCard>
           </Grid>
         </Grid>
+        {openDetailDialog && (
+          <DialogOrderDetails
+            form={form}
+            response={item}
+            openDialog={openDetailDialog}
+            handleCloseDialog={() => {
+              setOpenDetailDialog(false);
+            }}
+          />
+        )}
       </Grid>
     </Box>
   );

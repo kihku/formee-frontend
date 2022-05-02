@@ -3,6 +3,7 @@ import { Pageable } from "models/baseModels";
 import React from "react";
 import { Column, TableInstance } from "react-table";
 import { COLORS } from "styles";
+import CustomCartFooter from "./cartFooter";
 import CustomTableBody from "./tableBody";
 import CustomTableFooter from "./tableFooter";
 import CustomTableHeader from "./tableHeader";
@@ -14,6 +15,9 @@ export interface CustomTableProps<D extends object> {
   pageParams?: Pageable;
   onChangePageNumber?: (value: number) => void;
   onChangePageSize?: (value: number) => void;
+  showCheckbox?: boolean;
+  highlightOnHover?: boolean;
+  isCart?: boolean;
 }
 
 export const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -37,6 +41,9 @@ const CustomTable = <D extends object>({
   onChangePageNumber,
   onChangePageSize,
   data,
+  showCheckbox,
+  highlightOnHover,
+  isCart,
 }: CustomTableProps<D>) => {
   const [loading, setLoading] = React.useState<boolean>(true);
 
@@ -67,7 +74,7 @@ const CustomTable = <D extends object>({
   return (
     <TableContainer sx={{}}>
       <Table stickyHeader aria-label="sticky table" sx={{ overflowX: "hidden" }} {...getTableProps()}>
-        <CustomTableHeader headerGroups={headerGroups} />
+        <CustomTableHeader headerGroups={headerGroups} showCheckbox={Boolean(showCheckbox)} />
         <CustomTableBody
           startIndex={getStartIndex}
           data={data}
@@ -76,9 +83,11 @@ const CustomTable = <D extends object>({
           loading={loading}
           prepareRow={prepareRow}
           getTableBodyProps={getTableBodyProps}
+          showCheckbox={Boolean(showCheckbox)}
+          highlightOnHover={Boolean(highlightOnHover)}
         />
       </Table>
-      {pageParams && onChangePageNumber && onChangePageSize && (
+      {!isCart && pageParams && onChangePageNumber && onChangePageSize && (
         <CustomTableFooter
           pageParams={pageParams}
           onChangePage={onChangePageNumber}
@@ -86,6 +95,7 @@ const CustomTable = <D extends object>({
           loading={loading}
         />
       )}
+      {isCart && <CustomCartFooter />}
     </TableContainer>
   );
 };

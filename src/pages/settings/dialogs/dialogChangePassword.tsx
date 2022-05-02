@@ -38,7 +38,7 @@ const DialogChangePassword = (props: DialogChangePasswordProps) => {
       label: "New password",
       name: "newPassword",
       type: "password",
-      helplerText:
+      helperText:
         "Password must have at least 8 characters, 1 upper case, 1 lower case, 1 number, and 1 special character",
       xs: 12,
       required: true,
@@ -74,7 +74,7 @@ const DialogChangePassword = (props: DialogChangePasswordProps) => {
         <Box>
           <Grid container>
             <CreateFields formik={formik} fields={fields} />
-            <Grid item xs={12} style={{ display: "flex", justifyContent: "flex-end" }}>
+            <Grid item xs={12} sx={{ display: "flex", justifyContent: "flex-end" }}>
               <Box sx={{ display: "flex", gap: 1.5, paddingX: "10px", marginBottom: 1 }}>
                 <CustomButton
                   text="Save"

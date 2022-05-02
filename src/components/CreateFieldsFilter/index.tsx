@@ -3,7 +3,6 @@ import { CustomChip } from "components/CustomChip";
 import { FilterFieldGeneral, FormikType } from "models/baseModels";
 import { useEffect, useState } from "react";
 import { COLORS } from "styles";
-import ExpandLessRoundedIcon from "@mui/icons-material/ExpandLessRounded";
 import ExpandMoreRoundedIcon from "@mui/icons-material/ExpandMoreRounded";
 import StringUtils from "utils/stringUtils";
 
@@ -62,7 +61,11 @@ export const CreateFieldsFilter = <T extends object, K extends object>({ fields,
                   />
                 )}
               </Box>
-              <IconButton>{expanded[index] ? <ExpandLessRoundedIcon /> : <ExpandMoreRoundedIcon />}</IconButton>
+              <IconButton>
+                <ExpandMoreRoundedIcon
+                  sx={{ transform: expanded[index] ? "rotate(180deg)" : "rotate(0)", transition: "all 0.15s linear" }}
+                />
+              </IconButton>
             </Box>
             <Collapse in={expanded[index]} timeout={400}>
               <Box sx={{ paddingY: 0.25 }}>

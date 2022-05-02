@@ -1,4 +1,4 @@
-import { TableBody, TableRow, LinearProgress, TableCell, Box, Checkbox } from "@mui/material";
+import { TableBody, TableRow, LinearProgress, Box, Checkbox } from "@mui/material";
 import React from "react";
 import { Column, Row, TableBodyPropGetter, TableBodyProps } from "react-table";
 import { COLORS } from "styles";
@@ -12,6 +12,8 @@ export interface CustomTableBodyProps<D extends object> {
   loading: boolean;
   startIndex: () => number;
   data?: Array<D>;
+  showCheckbox?: boolean;
+  highlightOnHover?: boolean;
 }
 
 const CustomTableBody = <D extends object>({
@@ -22,6 +24,8 @@ const CustomTableBody = <D extends object>({
   loading,
   startIndex,
   data,
+  showCheckbox,
+  highlightOnHover,
 }: CustomTableBodyProps<D>) => {
   return (
     <TableBody {...getTableBodyProps()}>
@@ -29,16 +33,23 @@ const CustomTableBody = <D extends object>({
         rows.map((row, i) => {
           let dataRow: any = row.original;
           let style: React.CSSProperties = dataRow["style"]
-            ? ({ ...dataRow["style"], ":hover": { backgroundColor: COLORS.primaryBackground } } as React.CSSProperties)
-            : ({ ":hover": { backgroundColor: COLORS.primaryBackground } } as React.CSSProperties);
+            ? ({
+                ...dataRow["style"],
+                ":hover": highlightOnHover ? { backgroundColor: COLORS.primaryBackground } : {},
+              } as React.CSSProperties)
+            : ({
+                ":hover": highlightOnHover ? { backgroundColor: COLORS.primaryBackground } : {},
+              } as React.CSSProperties);
           prepareRow(row);
           return (
             <TableRow sx={style} {...row.getRowProps()}>
-              <StyledTableCell component="th" scope="row" align="center" width="3%" sx={{}}>
-                <Box>
-                  <Checkbox disableRipple size="small" />
-                </Box>
-              </StyledTableCell>
+              {Boolean(showCheckbox) && (
+                <StyledTableCell component="th" scope="row" align="center" width="3%" sx={{}}>
+                  <Box>
+                    <Checkbox disableRipple size="small" />
+                  </Box>
+                </StyledTableCell>
+              )}
               <StyledTableCell scope="row" align="center" sx={{}}>
                 {i + 1 + startIndex()}
               </StyledTableCell>

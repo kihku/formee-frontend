@@ -88,7 +88,8 @@ export type IconType =
   | "phone"
   | "zoomOut"
   | "zoomIn"
-  | "google";
+  | "google"
+  | "download";
 
 interface IconProps {
   name: IconType;
@@ -100,7 +101,7 @@ interface IconProps {
 // https://mui.com/material-ui/material-icons/?theme=Rounded
 
 export const CustomIcon = ({ name, size, color }: IconProps) => {
-  const iconSize = size ?? 50;
+  const iconSize = size ?? 24;
   const iconColor = color ?? COLORS.lightText;
   const iconStyle = { width: iconSize, height: iconSize, fill: iconColor, overflow: "hidden" };
 
@@ -121,6 +122,7 @@ export const CustomIcon = ({ name, size, color }: IconProps) => {
     case "visibleEye":
       return <VisibilityRoundedIcon sx={iconStyle} />;
     //Form - order
+    case "download":
     case "import":
       return <FileDownloadRoundedIcon sx={iconStyle} />;
     case "export":

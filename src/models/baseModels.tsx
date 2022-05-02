@@ -1,5 +1,6 @@
 import { SxProps, Theme } from "@mui/material";
 import { IconType } from "components/CustomIcon";
+import { ComponentType } from "constants/forms";
 import { FormikErrors } from "formik";
 import { ReactNode } from "react";
 
@@ -7,9 +8,10 @@ export interface CustomOption {
   title: string;
   value: any;
   icon?: IconType;
-  iconColor?: string;
+  color?: string;
   checkedIcon?: IconType;
-  checkedIconColor?: string;
+  checkedColor?: string;
+  backgroundColor?: string;
   disableRipple?: boolean;
   component?: ReactNode;
 }
@@ -44,7 +46,7 @@ export interface FieldGeneral<T, K> {
 
   // text field
   type?: "text" | "number" | "password";
-  helplerText?: string;
+  helperText?: string;
   handleOnClickHelperText?: () => void;
 
   // select
@@ -62,6 +64,24 @@ export interface FilterFieldGeneral<T, K> {
 
   // text field
   type: "text" | "checkbox" | "picker";
+
+  // select
+  options?: K[];
+  fieldValue?: keyof K;
+  fieldString?: keyof K;
+}
+
+export interface FormFieldGeneral<T, K> {
+  index: number;
+  label: string;
+  placeholder?: string;
+  disabled?: boolean;
+  required?: boolean;
+  formik?: FormikType<T>;
+
+  // text field
+  type: ComponentType;
+  helperText?: string;
 
   // select
   options?: K[];

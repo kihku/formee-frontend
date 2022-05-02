@@ -14,7 +14,7 @@ export interface FieldsArray<T, K> {
 export const CreateFields = <T extends object, K extends object>({ fields, formik }: FieldsArray<T, K>) => {
   return (
     <>
-      {fields.map(({ Component, label, name, xs, helplerText, ...rest }, index) => {
+      {fields.map(({ Component, label, name, xs, helperText, ...rest }, index) => {
         if (!xs) {
           return null;
         }
@@ -35,7 +35,7 @@ export const CreateFields = <T extends object, K extends object>({ fields, formi
         return (
           <Grid item xs={xs} key={index} sx={{ marginBottom: 2, paddingX: "10px" }}>
             {Component && (
-              <Component {...rest} formik={formik} label={label} name={name} helperText={helplerText && helplerText} />
+              <Component {...rest} formik={formik} label={label} name={name} helperText={helperText && helperText} />
             )}
           </Grid>
         );

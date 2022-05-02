@@ -9,7 +9,7 @@ import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { COLORS } from "styles";
 import * as Yup from "yup";
-import DialogChangePassword from "../dialog/dialogChangePassword";
+import DialogChangePassword from "../dialogs/dialogChangePassword";
 
 interface AccountSettingsProps {
   tab: string;
@@ -74,7 +74,7 @@ function AccountSettings(props: AccountSettingsProps) {
     {
       label: t("settings_account_password"),
       name: "password",
-      helplerText: t("settings_account_password_change"),
+      helperText: t("settings_account_password_change"),
       handleOnClickHelperText: () => {
         setOpenDialog(true);
       },
