@@ -30,3 +30,12 @@ export interface FormValidationDTO {
   controlValue?: any;
   errorMessgage?: string;
 }
+
+export interface CommentDTO {
+  id: string;
+  orderId: string;
+  createdBy: string;
+  createDate: Date;
+  content: string;
+  isDefault: boolean;
+}

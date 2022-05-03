@@ -39,6 +39,7 @@ interface CustomTextFieldProps {
   defaultValue?: any;
   required?: boolean;
   disabled?: boolean;
+  multiline?: boolean;
   type?: "text" | "number" | "password" | "date";
   handleOnChange?: (event: any) => void;
   handleOnClickHelperText?: () => void;
@@ -53,6 +54,7 @@ export const CustomTextField = ({
   defaultValue,
   required,
   disabled,
+  multiline,
   type,
   handleOnClickHelperText,
 }: CustomTextFieldProps) => {
@@ -102,6 +104,7 @@ export const CustomTextField = ({
         type={type}
         required={required}
         disabled={disabled}
+        multiline={multiline}
         placeholder={placeholder}
         defaultValue={defaultValue ?? defaultValue}
         onChange={handleChange}

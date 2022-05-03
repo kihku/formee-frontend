@@ -1,10 +1,10 @@
-import { Box, Dialog, DialogContent, DialogTitle, Grid, IconButton, Tooltip } from "@mui/material";
+import { Avatar, Box, Dialog, DialogContent, DialogTitle, Divider, Grid, IconButton, Tooltip } from "@mui/material";
 import CreateFields, { CreateFieldsProps } from "components/CreateFields";
 import { CustomButton } from "components/CustomButton";
 import { CustomTextField } from "components/CustomTextField";
 import { CustomTitle } from "components/CustomTitle";
 import { useFormik } from "formik";
-import { FormDTO, FormResponseDTO } from "models/form";
+import { CommentDTO, FormDTO, FormResponseDTO } from "models/form";
 import { initDataUser, UserDTO } from "models/user";
 import { useTranslation } from "react-i18next";
 import EditRoundedIcon from "@mui/icons-material/EditRounded";
@@ -18,6 +18,7 @@ import { FormSelect } from "components/CreateFieldsForm/FormFields/FormSelect";
 import { orderStatusList } from "constants/constants";
 import { useState } from "react";
 import { FormCart } from "components/CreateFieldsForm/FormFields/FormCart";
+import { HistoryItem } from "../components/historyItem";
 
 export interface DialogOrderDetailsProps {
   form: FormDTO;
@@ -115,17 +116,73 @@ const DialogOrderDetails = (props: DialogOrderDetailsProps) => {
       </DialogTitle>
 
       <DialogContent dividers>
-        <Box>
-          <Grid container sx={{ paddingTop: 1 }}>
-            <Grid item xs={9} sx={{ paddingX: 1.5, paddingTop: 1.5 }}>
-              <CreateFieldsForm formik={formik} fields={fields} />
-            </Grid>
-            <Grid item xs={3} sx={{ paddingY: 1.5, paddingLeft: 3 }}>
-              <Box sx={{ fontWeight: 600, fontSize: 20 }}>History</Box>
-              <Box sx={{}}>gg</Box>
-            </Grid>
+        <Grid container>
+          <Grid item xs={9} sx={{ paddingX: 1.5, paddingTop: 1.5 }}>
+            <CreateFieldsForm formik={formik} fields={fields} />
           </Grid>
-        </Box>
+          <Divider />
+          <Grid
+            item
+            xs={3}
+            sx={{
+              paddingLeft: 3,
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "space-between",
+            }}
+          >
+            <Box>
+              <Box sx={{ fontWeight: 600, fontSize: 20, paddingY: 1.5 }}>History</Box>
+              <Box>
+                <HistoryItem
+                  direction="left"
+                  comments={[
+                    {
+                      content: "Order created.",
+                      createdBy: "TD",
+                      createDate: new Date("5/2/2022"),
+                      isDefault: true,
+                    } as CommentDTO,
+                    {
+                      content: "Confirm order?",
+                      createdBy: "TD",
+                      createDate: new Date("5/2/2022"),
+                      isDefault: true,
+                    } as CommentDTO,
+                  ]}
+                />
+                <HistoryItem
+                  direction="right"
+                  comments={[
+                    {
+                      content: "Order confirmed.",
+                      createdBy: "AZ",
+                      createDate: new Date("5/3/2022"),
+                      isDefault: true,
+                    } as CommentDTO,
+                    {
+                      content: "Please call me before shipping.",
+                      createdBy: "AZ",
+                      createDate: new Date("5/3/2022"),
+                      isDefault: false,
+                    } as CommentDTO,
+                  ]}
+                />
+              </Box>
+            </Box>
+            <Box
+              sx={{
+                paddingRight: 1,
+                paddingTop: 2,
+                display: "flex",
+                flexDirection: "row",
+              }}
+            >
+              <Avatar sx={{ backgroundColor: COLORS.primaryLight, marginRight: 2 }}>{"TD"}</Avatar>
+              <CustomTextField multiline />
+            </Box>
+          </Grid>
+        </Grid>
       </DialogContent>
     </Dialog>
   );
