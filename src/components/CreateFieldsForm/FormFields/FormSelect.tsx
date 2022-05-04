@@ -53,7 +53,6 @@ export const FormSelect = ({ index, placeholder, formik, required, disabled, opt
             return (
               <option value={option.value} key={key}>
                 {option.title}
-                {/* <CustomChip text={option.title} backgroundColor={option.backgroundColor} textColor={option.color} /> */}
               </option>
             );
           })}

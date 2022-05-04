@@ -15,6 +15,11 @@ export interface FormResponseDTO {
 
 export interface FormLayoutDTO {
   id: string;
+  sections: FormSectionDTO[];
+}
+
+export interface FormSectionDTO {
+  title: string;
   components: FormComponentDTO[];
 }
 

@@ -69,6 +69,18 @@ export const Header = () => {
         />
         <CustomChip
           clickable
+          text={t("header_form")}
+          backgroundColor={
+            window.location.href === "http://localhost:3000/form/create" ? COLORS.primaryBackground : COLORS.white
+          }
+          textColor={window.location.href === "http://localhost:3000/form/create" ? COLORS.primary : COLORS.text}
+          size={18}
+          handleOnClick={() => {
+            navigate("/form/create");
+          }}
+        />
+        <CustomChip
+          clickable
           backgroundColor={
             window.location.href === "http://localhost:3000/orders" ? COLORS.primaryBackground : COLORS.white
           }

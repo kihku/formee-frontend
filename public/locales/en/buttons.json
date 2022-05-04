@@ -3,6 +3,7 @@
     "button_clear": "Clear",
     "button_import": "Import",
     "button_export": "Export",
-    "button_save": "SAVE CHANGES",
-    "button_log_out": "LOG OUT"
+    "button_save": "Save changes",
+    "button_log_out": "LOG OUT",
+    "button_new_order": "New order"
 }

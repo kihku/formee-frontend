@@ -1,22 +1,16 @@
 import { Avatar, Box, Dialog, DialogContent, DialogTitle, Divider, Grid, IconButton, Tooltip } from "@mui/material";
-import CreateFields, { CreateFieldsProps } from "components/CreateFields";
-import { CustomButton } from "components/CustomButton";
 import { CustomTextField } from "components/CustomTextField";
 import { CustomTitle } from "components/CustomTitle";
 import { useFormik } from "formik";
 import { CommentDTO, FormDTO, FormResponseDTO } from "models/form";
-import { initDataUser, UserDTO } from "models/user";
 import { useTranslation } from "react-i18next";
-import EditRoundedIcon from "@mui/icons-material/EditRounded";
 import * as Yup from "yup";
 import { CustomIcon } from "components/CustomIcon";
 import { COLORS } from "styles";
-import { CustomCheckbox } from "components/CustomCheckbox";
 import CreateFieldsForm, { CreateFieldsFormProps } from "components/CreateFieldsForm";
 import { FormTextField } from "components/CreateFieldsForm/FormFields/FormTextField";
 import { FormSelect } from "components/CreateFieldsForm/FormFields/FormSelect";
 import { orderStatusList } from "constants/constants";
-import { useState } from "react";
 import { FormCart } from "components/CreateFieldsForm/FormFields/FormCart";
 import { HistoryItem } from "../components/historyItem";
 
@@ -42,22 +36,24 @@ const DialogOrderDetails = (props: DialogOrderDetailsProps) => {
 
   const getFields = (): CreateFieldsFormProps<any, any>[] => {
     let result: CreateFieldsFormProps<any, any>[] = [];
-    props.form.layout.components.forEach((component, index) => {
-      result.push({
-        // disabled: !isEditing,
-        index: index,
-        type: component.type,
-        label: component.title,
-        options: component.type === "STATUS" ? orderStatusList : [],
-        required: component.validation.some(val => val.type === "REQUIRED"),
-        Component:
-          component.type === "TEXT"
-            ? FormTextField
-            : component.type === "STATUS"
-            ? FormSelect
-            : component.type === "CART"
-            ? FormCart
-            : undefined,
+    props.form.layout.sections.forEach(section => {
+      section.components.forEach((component, index) => {
+        result.push({
+          // disabled: !isEditing,
+          index: index,
+          type: component.type,
+          label: component.title,
+          options: component.type === "STATUS" ? orderStatusList : [],
+          required: component.validation.some(val => val.type === "REQUIRED"),
+          Component:
+            component.type === "TEXT"
+              ? FormTextField
+              : component.type === "STATUS"
+              ? FormSelect
+              : component.type === "CART"
+              ? FormCart
+              : undefined,
+        });
       });
     });
     return result;
@@ -118,7 +114,12 @@ const DialogOrderDetails = (props: DialogOrderDetailsProps) => {
       <DialogContent dividers>
         <Grid container>
           <Grid item xs={9} sx={{ paddingX: 1.5, paddingTop: 1.5 }}>
-            <CreateFieldsForm formik={formik} fields={fields} />
+            <CreateFieldsForm
+              enableEditing={false}
+              formik={formik}
+              fields={fields}
+              sections={props.form.layout.sections}
+            />
           </Grid>
           <Divider />
           <Grid

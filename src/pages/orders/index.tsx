@@ -6,11 +6,11 @@ import * as Yup from "yup";
 import CreateFieldsFilter, { CreateFieldsFilterProps } from "components/CreateFieldsFilter";
 import { useFormik } from "formik";
 import { CustomCheckbox } from "components/CustomCheckbox";
-import { exampleForm, exampleLayout, exampleResponses, orderStatusList } from "constants/constants";
+import { exampleForm, exampleResponses, orderStatusList } from "constants/constants";
 import { CustomOption, Pageable } from "models/baseModels";
 import { CustomButton } from "components/CustomButton";
 import { useEffect, useMemo, useState } from "react";
-import { FormDTO, FormLayoutDTO, FormResponseDTO } from "models/form";
+import { FormDTO, FormResponseDTO } from "models/form";
 import { CellProps, Column, useTable } from "react-table";
 import DateUtils from "utils/dateUtils";
 import CustomTable from "components/CustomTable";
@@ -98,37 +98,40 @@ function OrdersPage() {
 
   const getColumns = (): Column<FormResponseDTO>[] => {
     let result: Column<FormResponseDTO>[] = [];
-    form.layout.components.map((component, index) => {
-      if (component.showOnTable) {
-        result.push({
-          Header: component.title,
-          accessor: String(index),
-          maxWidth: 10,
-          Cell: ({ row }: CellProps<FormResponseDTO, {}>) => {
-            switch (component.type) {
-              case "TEXT":
-                return (
-                  <Box display="flex" justifyContent="center">
-                    {row.original.response[index]}
-                  </Box>
-                );
-              case "STATUS":
-                return (
-                  <Box display="flex" justifyContent="center">
-                    <CustomChip
-                      text={orderStatusList.find(item => item.value === row.original.response[index])?.title}
-                      backgroundColor={
-                        orderStatusList.find(item => item.value === row.original.response[index])?.backgroundColor
-                      }
-                      textColor={orderStatusList.find(item => item.value === row.original.response[index])?.color}
-                    />
-                  </Box>
-                );
-            }
-          },
-        } as Column<FormResponseDTO>);
-      }
+    form.layout.sections.forEach(section => {
+      section.components.forEach((component, index) => {
+        if (component.showOnTable) {
+          result.push({
+            Header: component.title,
+            accessor: String(index),
+            maxWidth: 10,
+            Cell: ({ row }: CellProps<FormResponseDTO, {}>) => {
+              switch (component.type) {
+                case "TEXT":
+                  return (
+                    <Box display="flex" justifyContent="center">
+                      {row.original.response[index]}
+                    </Box>
+                  );
+                case "STATUS":
+                  return (
+                    <Box display="flex" justifyContent="center">
+                      <CustomChip
+                        text={orderStatusList.find(item => item.value === row.original.response[index])?.title}
+                        backgroundColor={
+                          orderStatusList.find(item => item.value === row.original.response[index])?.backgroundColor
+                        }
+                        textColor={orderStatusList.find(item => item.value === row.original.response[index])?.color}
+                      />
+                    </Box>
+                  );
+              }
+            },
+          } as Column<FormResponseDTO>);
+        }
+      });
     });
+    // form.layout.components
     return result;
   };
 
@@ -245,7 +248,7 @@ function OrdersPage() {
               <CustomTitle
                 text={[
                   { text: formName, highlight: false },
-                  { text: "/", highlight: false },
+                  { text: "/", highlight: true },
                   { text: t("header_orders"), highlight: true },
                 ]}
               />

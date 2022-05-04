@@ -31,37 +31,53 @@ export const orderStatusList: CustomOption[] = [
 
 export const exampleLayout: FormLayoutDTO = {
   id: "123",
-  components: [
+  sections: [
     {
-      title: "Customer Name",
-      type: "TEXT",
-      validation: [{ type: "REQUIRED", errorMessgage: "Customer name must not be empty" }],
-      showOnTable: true,
+      title: "Customer Information",
+      components: [
+        {
+          title: "Customer Name",
+          type: "TEXT",
+          validation: [{ type: "REQUIRED", errorMessgage: "Customer name must not be empty" }],
+          showOnTable: true,
+        },
+        {
+          title: "Contact Number",
+          type: "TEXT",
+          validation: [],
+          showOnTable: false,
+        },
+        {
+          title: "Shipping Address",
+          type: "TEXT",
+          validation: [{ type: "REQUIRED", errorMessgage: "Shipping address must not be empty" }],
+          showOnTable: true,
+        },
+        {
+          title: "Status",
+          type: "STATUS",
+          validation: [],
+          showOnTable: true,
+        },
+        {
+          title: "Order Details",
+          type: "CART",
+          validation: [],
+          showOnTable: false,
+        },
+      ],
     },
-    {
-      title: "Contact Number",
-      type: "TEXT",
-      validation: [],
-      showOnTable: false,
-    },
-    {
-      title: "Shipping Address",
-      type: "TEXT",
-      validation: [{ type: "REQUIRED", errorMessgage: "Shipping address must not be empty" }],
-      showOnTable: true,
-    },
-    {
-      title: "Status",
-      type: "STATUS",
-      validation: [],
-      showOnTable: true,
-    },
-    {
-      title: "Order Details",
-      type: "CART",
-      validation: [],
-      showOnTable: false,
-    },
+    // {
+    //   title: "B. Order Details",
+    //   components: [
+    //     {
+    //       title: "Order Details",
+    //       type: "CART",
+    //       validation: [],
+    //       showOnTable: false,
+    //     },
+    //   ],
+    // },
   ],
 };
 

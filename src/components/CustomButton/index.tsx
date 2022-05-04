@@ -34,7 +34,7 @@ export const CustomButton = ({
   };
 
   const buttonStyle = {
-    paddingX: isType("rounded") ? 4 : 2.5,
+    paddingX: isType("rounded") ? 3 : 2.5,
     paddingY: 1,
     borderRadius: isType("rounded") ? 10 : 1.5,
     textTransform: "none",

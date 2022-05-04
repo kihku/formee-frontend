@@ -42,6 +42,7 @@ import PhoneRoundedIcon from "@mui/icons-material/PhoneRounded";
 import ZoomOutMapRoundedIcon from "@mui/icons-material/ZoomOutMapRounded";
 import ZoomInMapRoundedIcon from "@mui/icons-material/ZoomInMapRounded";
 import GoogleIcon from "@mui/icons-material/Google";
+import DeleteIcon from "@mui/icons-material/Delete";
 import { COLORS } from "styles";
 
 export type IconType =
@@ -89,7 +90,8 @@ export type IconType =
   | "zoomOut"
   | "zoomIn"
   | "google"
-  | "download";
+  | "download"
+  | "delete";
 
 interface IconProps {
   name: IconType;
@@ -209,5 +211,7 @@ export const CustomIcon = ({ name, size, color }: IconProps) => {
     //social media
     case "google":
       return <GoogleIcon sx={iconStyle} />;
+    case "delete":
+      return <DeleteIcon sx={iconStyle} />;
   }
 };
