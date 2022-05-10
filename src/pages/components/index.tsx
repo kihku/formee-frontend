@@ -87,7 +87,7 @@ function ComponentsPage() {
         />
       </Grid>
       <Grid item xs={12}>
-        <CustomFormCard name={"food order"} />
+        {/* <CustomFormCard name={"food order"} /> */}
       </Grid>
     </Grid>
   );

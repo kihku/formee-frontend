@@ -1,39 +1,62 @@
-import { Box, Card, CardActionArea, CardContent, CardMedia, Typography } from "@mui/material";
+import { Box, Card, CardActionArea, CardMedia, Typography } from "@mui/material";
+import { CustomChip } from "components/CustomChip";
+import { FormDTO } from "models/form";
+import { useNavigate } from "react-router-dom";
 import { COLORS } from "styles";
 
 interface FormCardProps {
-  image?: string;
-  name: string;
+  item: FormDTO;
+  handleOnClick?: () => void;
 }
 
-export const CustomFormCard = ({ name, image }: FormCardProps) => {
+export const CustomFormCard = ({ item, handleOnClick }: FormCardProps) => {
+  const navigate = useNavigate();
+
   const cardstyle = {
     borderRadius: 5,
-    border:"2.5px solid "+COLORS.primary,
-   
+    border: "2.5px solid " + COLORS.primary,
+    maxWidth: 400,
+    maxHeight: 200,
   };
-  const namestyle ={
-      margin: "15px",
-  }
+
   return (
-    <Box sx={{
-        display:"flex",
+    <Box
+      sx={{
+        display: "flex",
         //alignItems:"center",
-        flexDirection:"column",
-        maxWidth: 400,
-        maxHeight: 250,
-    }}>
+        flexDirection: "column",
+      }}
+    >
       <Card elevation={0} sx={cardstyle}>
-        <CardActionArea>
+        <CardActionArea
+          onClick={() => {
+            handleOnClick ? handleOnClick() : navigate("/form/create");
+          }}
+        >
           <CardMedia
             component="img"
-            height="300px"
-            image={image ? image : "/images/ImageNotFound.svg"}
+            height="250px"
+            image={item.image ? item.image : "/images/Ramen-amico.svg"}
             alt="form image"
           />
         </CardActionArea>
       </Card>
-      <Typography fontSize={20} sx={namestyle}>{name}</Typography>
+      <Box>
+        <Box sx={{ marginY: 2, gap: 1, display: "flex", flexDirection: "row", flexWrap: "wrap", alignItems: "center" }}>
+          {item.tags &&
+            item.tags.map((tag, key) => {
+              return (
+                <CustomChip
+                  key={key}
+                  text={tag}
+                  textColor={tag === "New" ? COLORS.orange : COLORS.green}
+                  backgroundColor={tag === "New" ? COLORS.orangeBackground : COLORS.greenBackground}
+                />
+              );
+            })}
+        </Box>
+        <Typography fontSize={20}>{item.name}</Typography>
+      </Box>
     </Box>
   );
 };

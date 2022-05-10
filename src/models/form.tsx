@@ -2,7 +2,11 @@ import { ComponentType, ValidationType } from "constants/forms";
 
 export interface FormDTO {
   id: string;
+  // shopId: string;
   name: string;
+  image?: string;
+  description?: string;
+  tags?: string[];
   layout: FormLayoutDTO;
 }
 

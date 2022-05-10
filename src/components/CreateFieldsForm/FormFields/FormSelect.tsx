@@ -19,7 +19,7 @@ export const FormSelect = ({ index, placeholder, formik, required, disabled, opt
 
   const renderValue = () => {
     if (formik) {
-    //   console.log("value", index, formik.values["response"].at(index));
+      //   console.log("value", index, formik.values["response"].at(index));
       setValue(formik.values["response"] && formik.values["response"].at(index));
     }
   };
@@ -47,7 +47,7 @@ export const FormSelect = ({ index, placeholder, formik, required, disabled, opt
 
   return (
     <FormControl variant="standard" sx={{ width: "auto" }}>
-      <NativeSelect value={value} onChange={handleChange} input={<StyledInput />}>
+      <NativeSelect disabled={disabled} value={value} onChange={handleChange} input={<StyledInput />}>
         {options &&
           options.map((option, key) => {
             return (

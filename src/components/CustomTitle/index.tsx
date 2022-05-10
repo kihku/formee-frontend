@@ -1,8 +1,9 @@
-import { Box } from "@mui/material";
+import { Box, SxProps } from "@mui/material";
 import { TextItem } from "models/textItem";
 import { COLORS } from "styles";
 interface CustomTitleProps {
   text: TextItem[];
+  style?: SxProps;
 }
 
 export const CustomTitle = (props: CustomTitleProps) => {
@@ -21,6 +22,7 @@ export const CustomTitle = (props: CustomTitleProps) => {
               fontWeight: item.highlight ? 700 : 400,
               color: COLORS.text,
               paddingRight: 0.75,
+              ...props.style,
             }}
           >
             {item.text}

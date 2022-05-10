@@ -83,15 +83,6 @@ const DialogOrderDetails = (props: DialogOrderDetailsProps) => {
                 { text: t("order") + " #" + props.response.id, highlight: true },
               ]}
             />
-            {/* <Tooltip title={t("order_edit")}>
-              <IconButton
-                onClick={() => {
-                  setIsEditing(true);
-                }}
-              >
-                <CustomIcon name="edit" />
-              </IconButton>
-            </Tooltip> */}
           </Box>
           <Box sx={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
             <Tooltip title={t("order_download")}>

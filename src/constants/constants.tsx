@@ -7,6 +7,13 @@ export const genderOptions: CustomOption[] = [
   { title: "Female", value: 1 },
 ];
 
+export const formTypeOptions: CustomOption[] = [
+  { title: "Food", value: 0 },
+  { title: "Fashion", value: 1 },
+  { title: "Drinks", value: 2 },
+  { title: "Handmade", value: 3 },
+];
+
 export const testOptions: CustomOption[] = [
   {
     title: "Favorite",
@@ -253,4 +260,20 @@ export const exampleResponses: FormResponseDTO[] = [
   //   statusColor: COLORS.green,
   //   statusBackgroundColor: COLORS.greenBackground,
   // },
+];
+
+export const exampleTemplates1: FormDTO[] = [
+  { id: "1", name: "Clothes", layout: exampleLayout, tags: ["Fashion"] },
+  { id: "2", name: "Cakes", layout: exampleLayout, tags: ["Food"] },
+  { id: "3", name: "Lunch", layout: exampleLayout, tags: ["Food"] },
+  { id: "4", name: "Stationery", layout: exampleLayout, tags: ["School"] },
+  { id: "5", name: "Puzzles", layout: exampleLayout, tags: ["Toys"] },
+];
+
+export const exampleTemplates2: FormDTO[] = [
+  { id: "1", name: "Ramen Order Form", layout: exampleLayout, tags: ["Food", "New"], description: "" },
+  { id: "2", name: "Pasta Order Form", layout: exampleLayout, tags: ["Food", "New"] },
+  { id: "3", name: "Chicken Order Form", layout: exampleLayout, tags: ["Food"] },
+  { id: "4", name: "Fish Order Form", layout: exampleLayout, tags: ["Food"] },
+  { id: "5", name: "Cake Order Form", layout: exampleLayout, tags: ["Food"] },
 ];

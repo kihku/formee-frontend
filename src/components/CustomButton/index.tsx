@@ -1,4 +1,4 @@
-import { Button } from "@mui/material";
+import { Button, SxProps } from "@mui/material";
 import { IconType } from "components/CustomIcon";
 import { CustomIcon } from "components/CustomIcon";
 import { useTranslation } from "react-i18next";
@@ -13,6 +13,7 @@ interface CustomButtonProps {
   startIcon?: IconType;
   endIcon?: IconType;
   type: ButtonType;
+  style?: SxProps;
   handleOnClick?: () => void;
   handleOnClickMenu?: (e: any) => void;
 }
@@ -24,6 +25,7 @@ export const CustomButton = ({
   startIcon,
   endIcon,
   type,
+  style,
   handleOnClick,
   handleOnClickMenu,
 }: CustomButtonProps) => {
@@ -46,6 +48,7 @@ export const CustomButton = ({
     ":hover": {
       border: isType("outlined") ? `solid 2px ${color ? color : ""}` : "",
     },
+    ...style,
   };
 
   return (

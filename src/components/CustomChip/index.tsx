@@ -1,4 +1,4 @@
-import { Chip } from "@mui/material";
+import { Chip, SxProps } from "@mui/material";
 
 interface CustomChipProps {
   text: string | React.ReactNode;
@@ -8,6 +8,7 @@ interface CustomChipProps {
   clickable?: boolean;
   rounded?: boolean;
   handleOnClick?: () => void;
+  style?: SxProps;
 }
 
 export const CustomChip = ({
@@ -18,6 +19,7 @@ export const CustomChip = ({
   clickable,
   rounded,
   handleOnClick,
+  style,
 }: CustomChipProps) => {
   return (
     <Chip
@@ -31,6 +33,7 @@ export const CustomChip = ({
         paddingX: rounded ? 0 : 1,
         cursor: clickable ? "pointer" : "default",
         borderRadius: rounded ? 50 : "auto",
+        ...style,
       }}
     ></Chip>
   );
