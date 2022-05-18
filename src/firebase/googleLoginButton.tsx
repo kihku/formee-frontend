@@ -9,8 +9,9 @@ import { IconButton } from "@mui/material";
 import { CustomIcon } from "components/CustomIcon";
 import { COLORS } from "styles";
 import { useNavigate } from "react-router-dom";
+import AXIOS_INSTANCE from "apis/baseService";
 
-const axios = require('axios').default;
+const axios = require("axios").default;
 // TODO: Replace the following with your app's Firebase project configuration
 // See: https://firebase.google.com/docs/web/learn-more#config-object
 const firebaseConfig = {
@@ -36,25 +37,40 @@ export const GoogleLoginButton = () => {
 
   return (
     <IconButton
-      sx={{ marginRight: "10px", color:COLORS.primary, border: "1px solid "+COLORS.lightText, }}
+      sx={{ marginRight: "10px", color: COLORS.primary, border: "1px solid " + COLORS.lightText }}
       onClick={() => {
         signInWithPopup(auth, provider)
           .then(result => {
             // This gives you a Google Access Token. You can use it to access the Google API.
             const credential = GoogleAuthProvider.credentialFromResult(result);
             if (credential !== null) {
-              const token = credential.accessToken;
-              console.log(token);
+              // const token = credential.accessToken;
+              // console.log(token);
+              // console.log(result.user.getIdToken());
               if (result.user.photoURL !== null) {
                 dispatch(updateAvatar(result.user.photoURL));
               }
             }
-            result.user.getIdToken(true).then(idToken => {
-                axios.post("http://localhost:8080/login",{},{headers:{token: idToken}});
-            })
-            .then(response => {
-              navigate("/home");
-            })
+            result.user
+              .getIdToken(true)
+              .then(idToken => {
+                console.log("token", idToken);
+                AXIOS_INSTANCE.post(
+                  "http://localhost:8080/authentication/login",
+                  {},
+                  {
+                    headers: {
+                      token: idToken,
+                      "Content-Type": "application/json",
+                      "Access-Control-Allow-Origin": "*",
+                      // "Authorization": `Bearer ${idToken}`,
+                    },
+                  },
+                );
+              })
+              .then(response => {
+                navigate("/home");
+              });
           })
           .catch(error => {
             // Handle Errors here.

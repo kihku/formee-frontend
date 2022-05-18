@@ -1,8 +1,8 @@
 import axios from "axios";
 
 export const URL_PROFILE = {
-  DEV: "http://localhost:8088", // local
-  PROD: "http://127.0.0.1:8088", // server
+  DEV: "https://localhost:8080", // local
+  PROD: "http://127.0.0.1:8080", // server
 };
 
 axios.defaults.baseURL = URL_PROFILE.DEV;
@@ -12,6 +12,7 @@ const AXIOS_INSTANCE = axios.create({
   timeout: 10000 * 120,
   headers: {
     "Content-Type": "application/json",
+    "Access-Control-Allow-Origin": "*"
   },
 });
 
