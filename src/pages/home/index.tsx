@@ -65,9 +65,9 @@ function HomePage() {
         >
           {exampleTemplates1.map((template, key) => {
             return (
-              <Zoom in style={{ transformOrigin: "50% 50% 0" }} {...{ timeout: 500 }}>
+              <Zoom key={key} in style={{ transformOrigin: "50% 50% 0" }} {...{ timeout: 500 }}>
                 <div>
-                  <CustomFormCard key={key} item={template} />
+                  <CustomFormCard item={template} />
                 </div>
               </Zoom>
             );
@@ -98,9 +98,9 @@ function HomePage() {
         >
           {exampleTemplates2.map((template, key) => {
             return (
-              <Zoom in style={{ transformOrigin: "50% 50% 0" }} {...{ timeout: 500 }}>
+              <Zoom key={key} in style={{ transformOrigin: "50% 50% 0" }} {...{ timeout: 500 }}>
                 <div>
-                  <CustomFormCard key={key} item={template} />
+                  <CustomFormCard  item={template} />
                 </div>
               </Zoom>
             );

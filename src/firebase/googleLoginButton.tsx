@@ -10,8 +10,9 @@ import { CustomIcon } from "components/CustomIcon";
 import { COLORS } from "styles";
 import { useNavigate } from "react-router-dom";
 import AXIOS_INSTANCE from "apis/baseService";
+import { getCookie, setCookie } from "utils/cookieUtils";
 
-const axios = require("axios").default;
+// const axios = require("axios").default;
 // TODO: Replace the following with your app's Firebase project configuration
 // See: https://firebase.google.com/docs/web/learn-more#config-object
 const firebaseConfig = {
@@ -54,33 +55,33 @@ export const GoogleLoginButton = () => {
             result.user
               .getIdToken(true)
               .then(idToken => {
-                console.log("token", idToken);
+                setCookie("USER_TOKEN", idToken);
                 AXIOS_INSTANCE.post(
-                  "http://localhost:8080/authentication/login",
+                  "http://localhost:8080/api/authentication/login",
                   {},
                   {
                     headers: {
                       token: idToken,
                       "Content-Type": "application/json",
-                      "Access-Control-Allow-Origin": "*",
-                      // "Authorization": `Bearer ${idToken}`,
                     },
                   },
                 );
               })
               .then(response => {
+                console.log("token", getCookie("USER_TOKEN"));
                 navigate("/home");
               });
           })
           .catch(error => {
-            // Handle Errors here.
-            const errorCode = error.code;
-            const errorMessage = error.message;
-            // The email of the user's account used.
-            const email = error.email;
-            // The AuthCredential type that was used.
-            const credential = GoogleAuthProvider.credentialFromError(error);
-            // ...
+            console.log(error);
+            // // Handle Errors here.
+            // const errorCode = error.code;
+            // const errorMessage = error.message;
+            // // The email of the user's account used.
+            // const email = error.email;
+            // // The AuthCredential type that was used.
+            // const credential = GoogleAuthProvider.credentialFromError(error);
+            // // ...
           });
       }}
     >
