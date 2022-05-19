@@ -67,7 +67,7 @@ export const Header = () => {
             navigate("/home");
           }}
         />
-        <CustomChip
+        {/* <CustomChip
           clickable
           text={t("header_form")}
           backgroundColor={
@@ -78,7 +78,7 @@ export const Header = () => {
           handleOnClick={() => {
             navigate("/form/create");
           }}
-        />
+        /> */}
         <CustomChip
           clickable
           backgroundColor={
@@ -103,7 +103,7 @@ export const Header = () => {
             navigate("/report");
           }}
         />
-        <CustomChip
+        {/* <CustomChip
           clickable
           backgroundColor={
             window.location.href === "http://localhost:3000/components" ? COLORS.primaryBackground : COLORS.white
@@ -114,7 +114,7 @@ export const Header = () => {
           handleOnClick={() => {
             navigate("/components");
           }}
-        />
+        /> */}
       </Grid>
       <Grid
         item
