@@ -1,42 +1,55 @@
-import axios from "axios";
+export interface Pagination<T extends Iterable<any>> {
+    page: number;
+    size: number;
+    total: number;
+    rows: T;
+}
 
-export const URL_PROFILE = {
-  DEV: "https://localhost:8080", // local
-  PROD: "http://127.0.0.1:8080", // server
-};
+export interface PageRequest {
+    pageSize: number;
+    pageNumber: number;
+    keywords?: string;
+    active?: any;
+    direction?: string;
+    sortBy?: string;
+    keywordsButton?: string;
+}
 
-axios.defaults.baseURL = URL_PROFILE.DEV;
+export interface BaseResponse {
+    isSuccess: boolean;
+    message: string;
+    data?: any;
+    description?: any;
+}
 
-const AXIOS_INSTANCE = axios.create({
-  baseURL: URL_PROFILE.DEV,
-  timeout: 10000 * 120,
-  headers: {
-    "Content-Type": "application/json",
-    "Access-Control-Allow-Origin": "*"
-  },
-});
+export interface DataResponse<T> {
+    code: string;
+    description: string;
+    errors: string;
+    message: string;
+    result?: T;
+    meta?: string;
+}
 
-AXIOS_INSTANCE.interceptors.request.use(
-  config => {
-    console.log("config", config);
-    return config;
-  },
-  error => {},
-);
+export interface BaseReponseI<T> {
+    isSuccess: boolean;
+    message: string;
+    data: T;
+}
 
-AXIOS_INSTANCE.interceptors.response.use(
-  response => {
-    if (!response.data) {
-      return Promise.reject({ message: "An error occured" });
-    }
-    return response;
-  },
-  error => {
-    if (!error.response) {
-      return Promise.reject({ message: "An error occured" });
-    }
-    return error.response;
-  },
-);
+export class BaseService {
+    protected getRequestHeaders = () => {
+        return {
+            headers: {
+                "Content-Type": "application/json",
+            },
+        };
+    };
+}
 
-export default AXIOS_INSTANCE;
+export enum ResponseCode {
+	CONFLICT = "409",
+	NOT_FOUND = "404",
+	SUCCESS = "200",
+	BAD_REQUEST = "400",
+}

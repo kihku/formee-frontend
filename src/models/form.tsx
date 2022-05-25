@@ -1,30 +1,32 @@
+import { CreateFieldsFormProps } from "components/CreateFieldsForm";
 import { ComponentType, ValidationType } from "constants/forms";
 
 export interface FormDTO {
-  id: string;
+  uuid: string;
   // userId: string;
   name: string;
   image?: string;
   description?: string;
   tags?: string[];
-  layout: FormLayoutDTO;
+  layoutJson: string;
+  sections?: CreateFieldsFormProps<any, any>[];
 }
 
 export interface FormResponseDTO {
-  id: string;
+  uuid: string;
   formId: string;
   createdDate: Date;
-  response: any[]; // layout and response must be of the same length in order to map the answers to the components
+  response: any; // layout and response must be of the same length in order to map the answers to the components
 }
 
 export interface FormLayoutDTO {
-  id: string;
-  sections: FormSectionDTO[];
+  // id: string;
+  sections: CreateFieldsFormProps<any, any>[];
 }
 
 export interface FormSectionDTO {
   title: string;
-  components: FormComponentDTO[];
+  components: CreateFieldsFormProps<any, any>[];
 }
 
 export interface FormComponentDTO {

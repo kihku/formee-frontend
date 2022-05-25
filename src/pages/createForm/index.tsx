@@ -101,60 +101,60 @@ function CreateFormPage() {
   const getFields = (): CreateFieldsFormProps<any, any>[] => {
     let result: CreateFieldsFormProps<any, any>[] = [];
     let index = 0;
-    formikFields.values.sections.forEach(section => {
-      section.components.forEach(component => {
-        result.push({
-          index: index,
-          type: component.type,
-          label: component.title,
-          options: component.type === "STATUS" ? orderStatusList : [],
-          required: component.validation.some(val => val.type === "REQUIRED"),
-          Component:
-            component.type === "TEXT"
-              ? FormTextField
-              : component.type === "STATUS"
-              ? FormSelect
-              : component.type === "CART"
-              ? FormCart
-              : undefined,
-        });
-        index++;
-      });
-    });
+    // formikFields.values.sections.forEach(section => {
+    //   section.components.forEach(component => {
+    //     result.push({
+    //       index: index,
+    //       type: component.type,
+    //       label: component.title,
+    //       options: component.type === "STATUS" ? orderStatusList : [],
+    //       required: component.validation.some(val => val.type === "REQUIRED"),
+    //       Component:
+    //         component.type === "TEXT"
+    //           ? FormTextField
+    //           : component.type === "STATUS"
+    //           ? FormSelect
+    //           : component.type === "CART"
+    //           ? FormCart
+    //           : undefined,
+    //     });
+    //     index++;
+    //   });
+    // });
     return result;
   };
 
   const fields: CreateFieldsFormProps<any, any>[] = getFields();
 
-  const handleNewField = () => {
-    formikFields.setFieldValue(
-      "sections",
-      formikFields.values.sections.map((item, index) => {
-        if (index === 0) {
-          return {
-            ...item,
-            components: [
-              ...item.components,
-              {
-                title: "Untitled field",
-                type: "TEXT",
-                validation: [],
-                showOnTable: true,
-              },
-            ],
-          };
-        }
-        return item;
-      }),
-    );
-  };
+  // const handleNewField = () => {
+  //   formikFields.setFieldValue(
+  //     "sections",
+  //     formikFields.values.sections.map((item, index) => {
+  //       if (index === 0) {
+  //         return {
+  //           ...item,
+  //           components: [
+  //             ...item.components,
+  //             {
+  //               title: "Untitled field",
+  //               type: "TEXT",
+  //               validation: [],
+  //               showOnTable: true,
+  //             },
+  //           ],
+  //         };
+  //       }
+  //       return item;
+  //     }),
+  //   );
+  // };
 
-  const handleNewSection = () => {
-    formikFields.setFieldValue("sections", [
-      ...formikFields.values.sections,
-      { title: "Untitled Section", components: [] },
-    ]);
-  };
+  // const handleNewSection = () => {
+  //   formikFields.setFieldValue("sections", [
+  //     ...formikFields.values.sections,
+  //     { title: "Untitled Section", components: [] },
+  //   ]);
+  // };
 
   return (
     <Box>
@@ -196,14 +196,14 @@ function CreateFormPage() {
           </Grid>
           <Grid item xs={12}>
             <CustomBackgroundCard sizeX="auto" sizeY="auto">
-              <CreateFieldsForm
+              {/* <CreateFieldsForm
                 enableEditing
                 formik={formik}
                 fields={fields}
                 sections={formikFields.values.sections}
                 handleNewField={handleNewField}
                 handleNewSection={handleNewSection}
-              />
+              /> */}
             </CustomBackgroundCard>
           </Grid>
         </Grid>

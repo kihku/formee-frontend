@@ -36,26 +36,26 @@ const DialogOrderDetails = (props: DialogOrderDetailsProps) => {
 
   const getFields = (): CreateFieldsFormProps<any, any>[] => {
     let result: CreateFieldsFormProps<any, any>[] = [];
-    props.form.layout.sections.forEach(section => {
-      section.components.forEach((component, index) => {
-        result.push({
-          // disabled: !isEditing,
-          index: index,
-          type: component.type,
-          label: component.title,
-          options: component.type === "STATUS" ? orderStatusList : [],
-          required: component.validation.some(val => val.type === "REQUIRED"),
-          Component:
-            component.type === "TEXT"
-              ? FormTextField
-              : component.type === "STATUS"
-              ? FormSelect
-              : component.type === "CART"
-              ? FormCart
-              : undefined,
-        });
-      });
-    });
+    // props.form.layoutJSON.sections.forEach(section => {
+    //   section.components.forEach((component, index) => {
+    //     result.push({
+    //       // disabled: !isEditing,
+    //       index: index,
+    //       type: component.type,
+    //       label: component.title,
+    //       options: component.type === "STATUS" ? orderStatusList : [],
+    //       required: component.validation.some(val => val.type === "REQUIRED"),
+    //       Component:
+    //         component.type === "TEXT"
+    //           ? FormTextField
+    //           : component.type === "STATUS"
+    //           ? FormSelect
+    //           : component.type === "CART"
+    //           ? FormCart
+    //           : undefined,
+    //     });
+    //   });
+    // });
     return result;
   };
 
@@ -80,7 +80,7 @@ const DialogOrderDetails = (props: DialogOrderDetailsProps) => {
               text={[
                 { text: props.form.name, highlight: false },
                 { text: "/", highlight: false },
-                { text: t("order") + " #" + props.response.id, highlight: true },
+                { text: t("order") + " #" + props.response.uuid, highlight: true },
               ]}
             />
           </Box>
@@ -105,12 +105,12 @@ const DialogOrderDetails = (props: DialogOrderDetailsProps) => {
       <DialogContent dividers>
         <Grid container>
           <Grid item xs={9} sx={{ paddingX: 1.5, paddingTop: 1.5 }}>
-            <CreateFieldsForm
+            {/* <CreateFieldsForm
               enableEditing={false}
               formik={formik}
               fields={fields}
-              sections={props.form.layout.sections}
-            />
+              sections={props.form.layoutJSON.sections}
+            /> */}
           </Grid>
           <Divider />
           <Grid

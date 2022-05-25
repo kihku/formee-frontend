@@ -9,7 +9,7 @@ import { IconButton } from "@mui/material";
 import { CustomIcon } from "components/CustomIcon";
 import { COLORS } from "styles";
 import { useNavigate } from "react-router-dom";
-import AXIOS_INSTANCE from "apis/baseService";
+import AXIOS_INSTANCE from "apis/axiosClient";
 import { getCookie, setCookie } from "utils/cookieUtils";
 
 // const axios = require("axios").default;

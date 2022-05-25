@@ -13,14 +13,7 @@ interface FormTextFieldProps {
   handleOnChange?: (event: any) => void;
 }
 
-export const FormTextField = ({
-  index,
-  placeholder,
-  formik,
-  required,
-  disabled,
-  type,
-}: FormTextFieldProps) => {
+export const FormTextField = ({ index, placeholder, formik, required, disabled, type }: FormTextFieldProps) => {
   const [value, setValue] = useState<string>("");
 
   const renderValue = () => {
@@ -31,12 +24,17 @@ export const FormTextField = ({
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    // console.log(
+    //   index,
+    //   formik.values["response"] && formik.values["response"].slice(0, index),
+    //   formik.values["response"] && formik.values["response"].slice(index + 1),
+    // );
     formik &&
       formik.setFieldValue &&
       formik.setFieldValue("response", [
-        ...formik.values["response"].slice(0, index),
+        ...(formik.values["response"] ? formik.values["response"].slice(0, index) : []),
         e.target.value,
-        ...formik.values["response"].slice(index + 1),
+        ...(formik.values["response"] ? formik.values["response"].slice(index + 1) : []),
       ]);
     setValue(e.target.value);
   };

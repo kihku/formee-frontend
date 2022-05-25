@@ -28,12 +28,7 @@ const DialogFormTemplate = ({ item, openDialog, handleCloseDialog }: DialogFormT
   const validationSchema = Yup.object().shape({});
 
   const formik = useFormik({
-    initialValues: {
-      id: "",
-      formId: "",
-      createdDate: new Date(),
-      response: ["", "", "", "PENDING", []],
-    } as FormResponseDTO,
+    initialValues: {} as FormResponseDTO,
     onSubmit: handleSubmitForm,
     validationSchema: validationSchema,
     validateOnChange: false,
@@ -41,26 +36,26 @@ const DialogFormTemplate = ({ item, openDialog, handleCloseDialog }: DialogFormT
 
   const getFields = (): CreateFieldsFormProps<any, any>[] => {
     let result: CreateFieldsFormProps<any, any>[] = [];
-    item.layout.sections.forEach(section => {
-      section.components.forEach((component, index) => {
-        result.push({
-          disabled: true,
-          index: index,
-          type: component.type,
-          label: component.title,
-          options: component.type === "STATUS" ? orderStatusList : [],
-          required: component.validation.some(val => val.type === "REQUIRED"),
-          Component:
-            component.type === "TEXT"
-              ? FormTextField
-              : component.type === "STATUS"
-              ? FormSelect
-              : component.type === "CART"
-              ? FormCart
-              : undefined,
-        });
-      });
-    });
+    // item.layoutJSON.sections.forEach(section => {
+    //   section.components.forEach((component, index) => {
+    //     result.push({
+    //       disabled: true,
+    //       index: index,
+    //       type: component.type,
+    //       label: component.title,
+    //       options: component.type === "STATUS" ? orderStatusList : [],
+    //       required: component.validation.some(val => val.type === "REQUIRED"),
+    //       Component:
+    //         component.type === "TEXT"
+    //           ? FormTextField
+    //           : component.type === "STATUS"
+    //           ? FormSelect
+    //           : component.type === "CART"
+    //           ? FormCart
+    //           : undefined,
+    //     });
+    //   });
+    // });
     return result;
   };
 
@@ -119,7 +114,7 @@ const DialogFormTemplate = ({ item, openDialog, handleCloseDialog }: DialogFormT
             </Box>
 
             <Box sx={{ marginY: 3 }}>
-              <CreateFieldsForm enableEditing={false} formik={formik} fields={fields} sections={item.layout.sections} />
+              {/* <CreateFieldsForm enableEditing={false} formik={formik} fields={fields} sections={item.layoutJSON.sections} /> */}
             </Box>
           </Grid>
           <Grid

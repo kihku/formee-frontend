@@ -1,13 +1,35 @@
 import { Box, Typography, Zoom } from "@mui/material";
+import { TemplateService } from "apis/template/templateService";
 import { CustomBackgroundCard } from "components/CustomBackgroundCard";
 import { CustomFormCard } from "components/CustomFormCard";
-import { exampleTemplates1, exampleTemplates2 } from "constants/constants";
+// import { exampleTemplates1, exampleTemplates2 } from "constants/constants";
 import { FormDTO } from "models/form";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { COLORS } from "styles";
 
 function HomePage() {
   const navigate = useNavigate();
+
+  const [templates, setTemplates] = useState<FormDTO[]>([]);
+  const [recentTemplates, setRecentTemplates] = useState<FormDTO[]>([]);
+
+  const getFormTemplates = async () => {
+    await new TemplateService().getTemplateGallery().then(response => {
+      setTemplates(response.result);
+    });
+  };
+
+  const getRecentTemplates = async () => {
+    await new TemplateService().getRecentTemplates("littledetective37@gmail.com").then(response => {
+      setRecentTemplates(response.result);
+    });
+  };
+
+  useEffect(() => {
+    getFormTemplates();
+    getRecentTemplates();
+  }, []);
 
   return (
     <Box
@@ -57,13 +79,12 @@ function HomePage() {
             display: "flex",
             flexDirection: "row",
             alignItems: "center",
-            //justifyContent: "center",
             gap: "3%",
             paddingX: "4%",
             paddingTop: "2%",
           }}
         >
-          {exampleTemplates1.map((template, key) => {
+          {templates.map((template, key) => {
             return (
               <Zoom key={key} in style={{ transformOrigin: "50% 50% 0" }} {...{ timeout: 500 }}>
                 <div>
@@ -88,19 +109,17 @@ function HomePage() {
           sx={{
             display: "flex",
             flexDirection: "row",
-
             alignItems: "center",
-            //justifyContent: "center",
             gap: "3%",
             paddingX: "4%",
-            paddingY: "2%",
+            paddingTop: "2%",
           }}
         >
-          {exampleTemplates2.map((template, key) => {
+          {recentTemplates.map((template, key) => {
             return (
               <Zoom key={key} in style={{ transformOrigin: "50% 50% 0" }} {...{ timeout: 500 }}>
                 <div>
-                  <CustomFormCard  item={template} />
+                  <CustomFormCard item={template} />
                 </div>
               </Zoom>
             );

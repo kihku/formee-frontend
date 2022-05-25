@@ -3,5 +3,6 @@
     "order_edit": "Edit order",
     "order_download": "Download order",
     "order_link": "Share order link",
-    "template_link": "Share template link"
+    "template_link": "Share template link",
+    "order_new": "Create new order"
 }

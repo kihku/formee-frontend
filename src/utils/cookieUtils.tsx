@@ -5,7 +5,7 @@ const cookies = new Cookies();
 export function setCookie(
     cookieName: string,
     cookieValue: string,
-    expriedAt: Date = new Date(new Date().setDate(new Date().getDate() + 1)),
+    expriedAt: Date = new Date(new Date().setDate(new Date().getDate() + 30)),
 ) {
     cookies.set(cookieName, cookieValue, {
         path: "/",

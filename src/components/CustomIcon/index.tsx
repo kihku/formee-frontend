@@ -43,6 +43,7 @@ import ZoomOutMapRoundedIcon from "@mui/icons-material/ZoomOutMapRounded";
 import ZoomInMapRoundedIcon from "@mui/icons-material/ZoomInMapRounded";
 import GoogleIcon from "@mui/icons-material/Google";
 import DeleteIcon from "@mui/icons-material/Delete";
+import FactCheckRoundedIcon from "@mui/icons-material/FactCheckRounded";
 import { COLORS } from "styles";
 
 export type IconType =
@@ -91,7 +92,8 @@ export type IconType =
   | "zoomIn"
   | "google"
   | "download"
-  | "delete";
+  | "delete"
+  | "manage";
 
 interface IconProps {
   name: IconType;
@@ -213,5 +215,7 @@ export const CustomIcon = ({ name, size, color }: IconProps) => {
       return <GoogleIcon sx={iconStyle} />;
     case "delete":
       return <DeleteIcon sx={iconStyle} />;
+    case "manage":
+      return <FactCheckRoundedIcon sx={iconStyle} />;
   }
 };

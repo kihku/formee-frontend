@@ -30,13 +30,19 @@ export const CustomFormCard = ({ item, handleOnClick }: FormCardProps) => {
       <Card elevation={0} sx={cardstyle}>
         <CardActionArea
           onClick={() => {
-            handleOnClick ? handleOnClick() : navigate("/form/create");
+            handleOnClick
+              ? handleOnClick()
+              : navigate("/order/create", {
+                  state: {
+                    formId: item.uuid,
+                  },
+                });
           }}
         >
           <CardMedia
             component="img"
             height="250px"
-            image={item.image ? item.image : "/images/Ramen-amico.svg"}
+            image={item.image ? `data:image/png;base64,${item.image}` : "/images/Ramen-amico.svg"}
             alt="form image"
           />
         </CardActionArea>

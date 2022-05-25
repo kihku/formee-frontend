@@ -9,6 +9,7 @@ import "./App.css";
 import { COLORS } from "styles";
 import "./i18n";
 import GeneralErrorPage from "pages/generalError";
+import OrderTrackingPage from "pages/tracking";
 
 export const CustomLoadingSpinner = () => {
   return (
@@ -26,6 +27,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Navigate to="/login" />} />
             <Route path="/login" element={<LoginPage />} />
+            <Route path="/tracking/*" element={<OrderTrackingPage />} />
             {PUBLIC_ROUTES.map((page, key) => {
               return (
                 <Route key={key} path={page.path} element={<Layout title={page.title}>{page.component}</Layout>} />

@@ -6,7 +6,7 @@ import * as Yup from "yup";
 import CreateFieldsFilter, { CreateFieldsFilterProps } from "components/CreateFieldsFilter";
 import { useFormik } from "formik";
 import { CustomCheckbox } from "components/CustomCheckbox";
-import { exampleForm, exampleResponses, orderStatusList } from "constants/constants";
+import { orderStatusList } from "constants/constants";
 import { CustomOption, Pageable } from "models/baseModels";
 import { CustomButton } from "components/CustomButton";
 import { useEffect, useMemo, useState } from "react";
@@ -18,13 +18,16 @@ import { CustomBackgroundCard } from "components/CustomBackgroundCard";
 import { CustomChip } from "components/CustomChip";
 import { useTranslation } from "react-i18next";
 import DialogOrderDetails from "./dialogs/dialogDetails";
+import { useLocation } from "react-router-dom";
+import { TemplateService } from "apis/template/templateService";
+import { OrderService } from "apis/orderService/orderService";
 
 function OrdersPage() {
-  const formName = "Form ABC";
+  const location = useLocation();
   const { t } = useTranslation(["commons", "buttons"]);
 
-  const [form, setForm] = useState<FormDTO>(exampleForm);
-  const [responses, setResponses] = useState<FormResponseDTO[]>(exampleResponses);
+  const [form, setForm] = useState<FormDTO>({} as FormDTO);
+  const [responses, setResponses] = useState<FormResponseDTO[]>([]);
   const [item, setItem] = useState<FormResponseDTO>({} as FormResponseDTO);
   const [openDetailDialog, setOpenDetailDialog] = useState<boolean>(false);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -54,104 +57,110 @@ function OrdersPage() {
   });
 
   const fields: CreateFieldsFilterProps<any, CustomOption>[] = [
-    {
-      label: "Order status",
-      name: "status",
-      type: "checkbox",
-      options: orderStatusList,
-      Component: () => {
-        return (
-          <CustomCheckbox
-            size={20}
-            options={orderStatusList}
-            chosenValues={formik.values.status}
-            handleOnChange={e => {
-              if (formik.values.status.every(item => item !== e.target.value)) {
-                formik.setFieldValue("status", [...formik.values.status, e.target.value]);
-              } else {
-                formik.setFieldValue(
-                  "status",
-                  formik.values.status.filter(item => item !== e.target.value),
-                );
-              }
-            }}
-          />
-        );
-      },
-    },
-    {
-      label: "Created date",
-      name: "createdDate",
-      type: "picker",
-      Component: () => {
-        return (
-          <CustomTextField
-            type="date"
-            handleOnChange={e => {
-              formik.setFieldValue("createdDate", e.target.value);
-            }}
-          />
-        );
-      },
-    },
+    // {
+    //   label: "Order status",
+    //   name: "status",
+    //   type: "checkbox",
+    //   options: orderStatusList,
+    //   Component: () => {
+    //     return (
+    //       <CustomCheckbox
+    //         size={20}
+    //         options={orderStatusList}
+    //         chosenValues={formik.values.status}
+    //         handleOnChange={e => {
+    //           if (formik.values.status.every(item => item !== e.target.value)) {
+    //             formik.setFieldValue("status", [...formik.values.status, e.target.value]);
+    //           } else {
+    //             formik.setFieldValue(
+    //               "status",
+    //               formik.values.status.filter(item => item !== e.target.value),
+    //             );
+    //           }
+    //         }}
+    //       />
+    //     );
+    //   },
+    // },
+    // {
+    //   label: "Created date",
+    //   name: "createdDate",
+    //   type: "picker",
+    //   Component: () => {
+    //     return (
+    //       <CustomTextField
+    //         type="date"
+    //         handleOnChange={e => {
+    //           formik.setFieldValue("createdDate", e.target.value);
+    //         }}
+    //       />
+    //     );
+    //   },
+    // },
   ];
 
   const getColumns = (): Column<FormResponseDTO>[] => {
     let result: Column<FormResponseDTO>[] = [];
-    form.layout.sections.forEach(section => {
-      section.components.forEach((component, index) => {
-        if (component.showOnTable) {
-          result.push({
-            Header: component.title,
-            accessor: String(index),
-            maxWidth: 10,
-            Cell: ({ row }: CellProps<FormResponseDTO, {}>) => {
-              switch (component.type) {
-                case "TEXT":
-                  return (
-                    <Box display="flex" justifyContent="center">
-                      {row.original.response[index]}
-                    </Box>
-                  );
-                case "STATUS":
-                  return (
-                    <Box display="flex" justifyContent="center">
-                      <CustomChip
-                        text={orderStatusList.find(item => item.value === row.original.response[index])?.title}
-                        backgroundColor={
-                          orderStatusList.find(item => item.value === row.original.response[index])?.backgroundColor
-                        }
-                        textColor={orderStatusList.find(item => item.value === row.original.response[index])?.color}
-                      />
-                    </Box>
-                  );
-              }
-            },
-          } as Column<FormResponseDTO>);
-        }
+    let index = 0;
+    if (form.layoutJson) {
+      let layout: any = JSON.parse(String(form.layoutJson));
+      layout.sections.forEach((section: any) => {
+        section.components.forEach((component: any) => {
+          if (component.showOnTable) {
+            let idx = index;
+            result.push({
+              Header: component.title,
+              accessor: String(idx),
+              maxWidth: 10,
+              Cell: ({ row }: CellProps<FormResponseDTO, {}>) => {
+                switch (component.type) {
+                  case "TEXT":
+                    return (
+                      <Box display="flex" justifyContent="center">
+                        {row.original.response[idx]}
+                      </Box>
+                    );
+                  case "STATUS":
+                    return (
+                      <Box display="flex" justifyContent="center">
+                        <CustomChip
+                          text={orderStatusList.find(item => item.value === row.original.response[idx])?.title}
+                          backgroundColor={
+                            orderStatusList.find(item => item.value === row.original.response[idx])?.backgroundColor
+                          }
+                          textColor={orderStatusList.find(item => item.value === row.original.response[idx])?.color}
+                        />
+                      </Box>
+                    );
+                }
+              },
+            } as Column<FormResponseDTO>);
+          }
+          ++index;
+        });
       });
-    });
-    // form.layout.components
+    }
     return result;
   };
 
   const tableContent: Column<FormResponseDTO>[] = [
     {
       Header: "Order ID",
-      accessor: "id",
+      accessor: "uuid",
       maxWidth: 10,
       Cell: ({ row }: CellProps<FormResponseDTO, {}>) => {
         return (
-          <Tooltip title={t("table_view_details")}>
+          <Tooltip title={"Copy tracking link"}>
             <Box
               display="flex"
               justifyContent="center"
               sx={{ textDecoration: "underline", cursor: "pointer" }}
               onClick={() => {
-                handleOpenDetailDialog(row.original);
+                navigator.clipboard.writeText(`localhost:3000/tracking/${row.original.uuid}`);
+                // handleOpenDetailDialog(row.original);
               }}
             >
-              {row.original.id}
+              {row.original.uuid}
             </Box>
           </Tooltip>
         );
@@ -172,7 +181,7 @@ function OrdersPage() {
     },
   ];
 
-  const columns = useMemo(() => tableContent, []);
+  const columns = useMemo(() => tableContent, [form]);
 
   const table = useTable({
     columns,
@@ -188,19 +197,46 @@ function OrdersPage() {
     setOpenDetailDialog(true);
   };
 
+  const getFormTemplate = async (formId: string) => {
+    await new TemplateService().getTemplateById(formId).then(response => {
+      if (response.result) {
+        setForm(response.result);
+        // formik.setFieldValue("formId", response.result.uuid);
+      }
+    });
+  };
+
+  const getOrders = async () => {
+    await new OrderService().getOrdersByUsername("littledetective37@gmail.com").then(response => {
+      if (response.result) {
+        setResponses(
+          response.result.map(item => {
+            return { ...item, response: JSON.parse(item.response) };
+          }),
+        );
+        setPageParams({ ...pageParams, total: response.result.length });
+      }
+    });
+  };
+
+  // console.log("responses", responses);
+
   useEffect(() => {
-    setResponses(exampleResponses);
-    setPageParams({ ...pageParams, total: exampleResponses.length });
+    getOrders();
   }, []);
 
   useEffect(() => {
     setResponses(
-      exampleResponses.slice(
-        pageParams.pageNumber * pageParams.pageSize,
-        (pageParams.pageNumber + 1) * pageParams.pageSize,
-      ),
+      responses.slice(pageParams.pageNumber * pageParams.pageSize, (pageParams.pageNumber + 1) * pageParams.pageSize),
     );
   }, [pageParams]);
+
+  useEffect(() => {
+    if (location.state) {
+      let state: any = location.state;
+      getFormTemplate(String(state.formId));
+    }
+  }, []);
 
   return (
     <Box>
@@ -235,7 +271,7 @@ function OrdersPage() {
           </Grid>
         </Grid>
         <Grid item xs={9.5} sx={{ padding: 5 }}>
-          <Grid item xs={12} sx={{ fontWeight: 800, fontSize: "30px", marginBottom: 4 }}>
+          <Grid item xs={12} sx={{ fontWeight: 800, fontSize: "25px", marginBottom: 4 }}>
             <Box
               sx={{
                 display: "flex",
@@ -247,8 +283,8 @@ function OrdersPage() {
             >
               <CustomTitle
                 text={[
-                  { text: formName, highlight: false },
-                  { text: "/", highlight: true },
+                  // { text: form.name, highlight: false },
+                  // { text: "/", highlight: true },
                   { text: t("header_orders"), highlight: true },
                 ]}
               />

@@ -11,7 +11,7 @@ export interface CreateFieldsFormProps<T, K> extends FormFieldGeneral<T, K> {
 }
 
 export interface FieldsArray<T, K> {
-  fields: CreateFieldsFormProps<T, K>[];
+  fields?: CreateFieldsFormProps<T, K>[];
   formik?: FormikType<T>;
   sections: FormSectionDTO[];
   enableEditing: boolean;
@@ -29,16 +29,16 @@ export const CreateFieldsForm = <T extends object, K extends object>({
 }: FieldsArray<T, K>) => {
   return (
     <>
-      {sections.map((section, key) => {
+      {sections && sections.map((section, key) => {
         return (
-          <Grid container>
+          <Grid container key={key}>
             <Grid item xs={12}>
               <FormSection index={key} title={section.title} />
             </Grid>
             <Grid item xs={12}>
-              {fields.map(({ Component, label, index, helperText, ...rest }, key) => {
+              {section.components.map(({ Component, label, index, helperText, ...rest }, idx) => {
                 return (
-                  <Grid container>
+                  <Grid container key={idx}>
                     <Grid item xs={2.5}>
                       <InputLabel>{label}</InputLabel>
                       <FormHelperText

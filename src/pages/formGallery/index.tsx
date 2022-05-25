@@ -7,7 +7,7 @@ import { CustomFormCard } from "components/CustomFormCard";
 import { CustomSelect } from "components/CustomSelect";
 import { CustomTextField } from "components/CustomTextField";
 import { CustomTitle } from "components/CustomTitle";
-import { exampleLayout, exampleTemplates1, exampleTemplates2, formTypeOptions } from "constants/constants";
+import { formTypeOptions } from "constants/constants";
 import { useFormik } from "formik";
 import { CustomOption } from "models/baseModels";
 import { FormDTO } from "models/form";
@@ -116,7 +116,7 @@ function FormGalleryPage() {
                     gap: "3%",
                   }}
                 >
-                  {exampleTemplates1.map((template, key) => {
+                  {/* {exampleTemplates1.map((template, key) => {
                     return (
                       <Zoom in style={{ transformOrigin: "50% 50% 0" }} {...{ timeout: 500 }}>
                         <div>
@@ -130,7 +130,7 @@ function FormGalleryPage() {
                         </div>
                       </Zoom>
                     );
-                  })}
+                  })} */}
                 </Box>
               </Box>
 
@@ -145,7 +145,7 @@ function FormGalleryPage() {
                     gap: "3%",
                   }}
                 >
-                  {exampleTemplates2.map((template, key) => {
+                  {/* {exampleTemplates2.map((template, key) => {
                     return (
                       <Zoom in style={{ transformOrigin: "50% 50% 0" }} {...{ timeout: 500 }}>
                         <div>
@@ -159,7 +159,7 @@ function FormGalleryPage() {
                         </div>
                       </Zoom>
                     );
-                  })}
+                  })} */}
                 </Box>
               </Box>
             </CustomBackgroundCard>
