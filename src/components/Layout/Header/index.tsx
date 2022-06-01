@@ -124,8 +124,8 @@ export const Header = () => {
           flexDirection: "row-reverse",
           justifyContent: "end",
           alignItems: "center",
-          maxHeight: "8vh",
-          paddingY: "3vh",
+          // maxHeight: "8vh",
+          paddingY: "2vh",
           gap: 0.5,
         }}
       >

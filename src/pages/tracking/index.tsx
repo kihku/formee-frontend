@@ -1,6 +1,5 @@
 import { Box, Grid } from "@mui/material";
 import { CustomTitle } from "components/CustomTitle";
-import { COLORS } from "styles";
 import * as Yup from "yup";
 import { useFormik } from "formik";
 import { FormDTO, FormResponseDTO, FormSectionDTO } from "models/form";
@@ -11,15 +10,12 @@ import { orderStatusList } from "constants/constants";
 import { FormTextField } from "components/CreateFieldsForm/FormFields/FormTextField";
 import { FormSelect } from "components/CreateFieldsForm/FormFields/FormSelect";
 import { FormCart } from "components/CreateFieldsForm/FormFields/FormCart";
-import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { TemplateService } from "apis/template/templateService";
-import { CustomButton } from "components/CustomButton";
 import { OrderService } from "apis/orderService/orderService";
+import CommonUtils from "utils/commonUtils";
 
 function OrderTrackingPage() {
-  const location = useLocation();
-  const navigate = useNavigate();
   const { t } = useTranslation(["forms", "buttons", "orders"]);
 
   const [form, setForm] = useState<FormDTO>({} as FormDTO);
@@ -68,10 +64,6 @@ function OrderTrackingPage() {
         });
         result.push(sectionDTO);
       });
-      //   formik.setFieldValue(
-      //     "response",
-      //     Array.from({ length: index }, () => ""),
-      //   );
     }
     setFields(result);
   };
@@ -80,7 +72,6 @@ function OrderTrackingPage() {
     await new TemplateService().getTemplateById(formId).then(response => {
       if (response.result) {
         setForm(response.result);
-        // formik.setFieldValue("formId", response.result.uuid);
       }
     });
   };
@@ -88,7 +79,6 @@ function OrderTrackingPage() {
   const getOrderResponse = async (orderId: string) => {
     await new OrderService().getOrderById(orderId).then(response => {
       if (response.result) {
-        // debugger;
         setFormResponse({ ...response.result, response: JSON.parse(response.result.response) });
         formik.setValues({ ...response.result, response: JSON.parse(response.result.response) });
         setFormId(response.result.formId);
@@ -96,11 +86,13 @@ function OrderTrackingPage() {
     });
   };
 
-  console.log("response", formik.values);
+  // console.log("response", formik.values);
 
   useEffect(() => {
     if (window.location.href) {
-      getOrderResponse(String(window.location.href.split("/").at(-1)));
+      let encodedId: string = String(window.location.href.split("/").at(-1));
+      let orderId: string = CommonUtils.decodeUUID(encodedId);
+      getOrderResponse(orderId);
     }
   }, []);
 
@@ -114,7 +106,7 @@ function OrderTrackingPage() {
 
   return (
     <Box>
-      <Grid container sx={{ minHeight: "95vh" }}>
+      <Grid container>
         <Grid item xs={12} sx={{ padding: 5 }}>
           <Grid item xs={12} sx={{ fontWeight: 800, fontSize: "25px", marginBottom: 4 }}>
             <Box
@@ -123,16 +115,9 @@ function OrderTrackingPage() {
                 justifyContent: "space-between",
                 width: "100%",
                 alignItems: "center",
-                // cursor: "pointer",
               }}
             >
-              <CustomTitle
-                text={[
-                  { text: String(form.name) + " Tracking", highlight: true },
-                  //   { text: "/", highlight: true },
-                  //   { text: t("orders:order_new"), highlight: true },
-                ]}
-              />
+              <CustomTitle text={[{ text: String(form.name) + " Tracking", highlight: true }]} />
             </Box>
           </Grid>
           <Grid item xs={12}>

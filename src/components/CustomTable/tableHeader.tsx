@@ -10,8 +10,8 @@ export interface CustomTableHeaderProps<D extends object> {
 const CustomTableHeader = <D extends object>({ headerGroups, showCheckbox }: CustomTableHeaderProps<D>) => {
   return (
     <TableHead>
-      {headerGroups.map(headerGroup => (
-        <TableRow {...headerGroup.getHeaderGroupProps()} sx={{ borderRadius: "5px 10px 15px 20px" }}>
+      {headerGroups.map((headerGroup, key) => (
+        <TableRow {...headerGroup.getHeaderGroupProps()} sx={{ borderRadius: "5px 10px 15px 20px" }} key={key}>
           {Boolean(showCheckbox) && (
             <StyledTableCell
               component="th"
@@ -35,6 +35,7 @@ const CustomTableHeader = <D extends object>({ headerGroups, showCheckbox }: Cus
           {headerGroup.headers.map((column, index) => {
             return (
               <StyledTableCell
+                key={index}
                 component="th"
                 scope="row"
                 align="center"

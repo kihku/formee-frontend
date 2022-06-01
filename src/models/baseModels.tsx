@@ -14,6 +14,7 @@ export interface CustomOption {
   backgroundColor?: string;
   disableRipple?: boolean;
   component?: ReactNode;
+  parentValue?: any;
 }
 
 export interface Pageable {

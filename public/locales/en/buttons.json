@@ -2,7 +2,7 @@
     "button_apply": "Apply",
     "button_clear": "Clear",
     "button_import": "Import",
-    "button_export": "Export",
+    "button_export": "Export to Excel",
     "button_save": "Save changes",
     "button_log_out": "LOG OUT",
     "button_new_order": "New order"

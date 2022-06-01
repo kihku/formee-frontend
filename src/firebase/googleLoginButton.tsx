@@ -1,4 +1,3 @@
-import { CustomButton } from "components/CustomButton";
 import { initializeApp } from "firebase/app";
 import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 
@@ -9,8 +8,8 @@ import { IconButton } from "@mui/material";
 import { CustomIcon } from "components/CustomIcon";
 import { COLORS } from "styles";
 import { useNavigate } from "react-router-dom";
-import AXIOS_INSTANCE from "apis/axiosClient";
 import { getCookie, setCookie } from "utils/cookieUtils";
+import { UserService } from "apis/userService/userService";
 
 // const axios = require("axios").default;
 // TODO: Replace the following with your app's Firebase project configuration
@@ -45,43 +44,22 @@ export const GoogleLoginButton = () => {
             // This gives you a Google Access Token. You can use it to access the Google API.
             const credential = GoogleAuthProvider.credentialFromResult(result);
             if (credential !== null) {
-              // const token = credential.accessToken;
-              // console.log(token);
-              // console.log(result.user.getIdToken());
               if (result.user.photoURL !== null) {
                 dispatch(updateAvatar(result.user.photoURL));
               }
             }
-            result.user
-              .getIdToken(true)
-              .then(idToken => {
-                setCookie("USER_TOKEN", idToken);
-                AXIOS_INSTANCE.post(
-                  "http://localhost:8080/api/authentication/login",
-                  {},
-                  {
-                    headers: {
-                      token: idToken,
-                      "Content-Type": "application/json",
-                    },
-                  },
-                );
-              })
-              .then(response => {
+            result.user.getIdToken(true).then(idToken => {
+              setCookie("USER_TOKEN", idToken);
+              setCookie("USER_ID", result.user.uid);
+              new UserService().login(idToken).then(response => {
                 console.log("token", getCookie("USER_TOKEN"));
+                console.log("id", getCookie("USER_ID"));
                 navigate("/home");
               });
+            });
           })
           .catch(error => {
             console.log(error);
-            // // Handle Errors here.
-            // const errorCode = error.code;
-            // const errorMessage = error.message;
-            // // The email of the user's account used.
-            // const email = error.email;
-            // // The AuthCredential type that was used.
-            // const credential = GoogleAuthProvider.credentialFromError(error);
-            // // ...
           });
       }}
     >

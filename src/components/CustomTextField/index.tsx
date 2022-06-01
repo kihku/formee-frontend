@@ -110,6 +110,7 @@ export const CustomTextField = ({
         onChange={handleChange}
         inputProps={{
           autoComplete: "new-password",
+          min: 0,
           form: {
             autoComplete: "off",
           },

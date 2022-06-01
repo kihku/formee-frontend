@@ -1,5 +1,5 @@
 import { Box, Dialog, DialogContent, DialogTitle, Divider, Grid, IconButton, Tooltip, Typography } from "@mui/material";
-import CreateFieldsForm, { CreateFieldsFormProps } from "components/CreateFieldsForm";
+import CreateFieldsForm from "components/CreateFieldsForm";
 import { FormCart } from "components/CreateFieldsForm/FormFields/FormCart";
 import { FormSelect } from "components/CreateFieldsForm/FormFields/FormSelect";
 import { FormTextField } from "components/CreateFieldsForm/FormFields/FormTextField";
@@ -8,12 +8,16 @@ import { CustomIcon } from "components/CustomIcon";
 import { CustomTitle } from "components/CustomTitle";
 import { orderStatusList } from "constants/constants";
 import { useFormik } from "formik";
-import { FormDTO, FormResponseDTO } from "models/form";
+import { FormDTO, FormResponseDTO, FormSectionDTO } from "models/form";
 import { useTranslation } from "react-i18next";
 import { COLORS } from "styles";
 import * as Yup from "yup";
-import { CustomChip } from "components/CustomChip";
 import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { TemplateService } from "apis/template/templateService";
+import { CustomTextField } from "components/CustomTextField";
+import { FormService } from "apis/formService/formService";
+import { getCookie } from "utils/cookieUtils";
 
 export interface DialogFormTemplateProps {
   item: FormDTO;
@@ -25,41 +29,62 @@ const DialogFormTemplate = ({ item, openDialog, handleCloseDialog }: DialogFormT
   const navigate = useNavigate();
   const { t } = useTranslation(["orders"]);
 
+  const [form, setForm] = useState<FormDTO>({} as FormDTO);
+  const [formId, setFormId] = useState<string>("");
+  const [fields, setFields] = useState<FormSectionDTO[]>([]);
+
   const validationSchema = Yup.object().shape({});
 
   const formik = useFormik({
-    initialValues: {} as FormResponseDTO,
+    initialValues: { uuid: "", response: [] } as any,
     onSubmit: handleSubmitForm,
     validationSchema: validationSchema,
     validateOnChange: false,
   });
 
-  const getFields = (): CreateFieldsFormProps<any, any>[] => {
-    let result: CreateFieldsFormProps<any, any>[] = [];
-    // item.layoutJSON.sections.forEach(section => {
-    //   section.components.forEach((component, index) => {
-    //     result.push({
-    //       disabled: true,
-    //       index: index,
-    //       type: component.type,
-    //       label: component.title,
-    //       options: component.type === "STATUS" ? orderStatusList : [],
-    //       required: component.validation.some(val => val.type === "REQUIRED"),
-    //       Component:
-    //         component.type === "TEXT"
-    //           ? FormTextField
-    //           : component.type === "STATUS"
-    //           ? FormSelect
-    //           : component.type === "CART"
-    //           ? FormCart
-    //           : undefined,
-    //     });
-    //   });
-    // });
-    return result;
-  };
+  const formNameFormik = useFormik({
+    initialValues: { name: "" } as any,
+    onSubmit: handleSubmitFormName,
+    validationSchema: validationSchema,
+    validateOnChange: false,
+  });
 
-  const fields: CreateFieldsFormProps<any, any>[] = getFields();
+  const getFields = () => {
+    let result: FormSectionDTO[] = [];
+    let cartIndex: any[] = [];
+    let index = 0;
+    if (form.layoutJson) {
+      let layout: any = JSON.parse(String(form.layoutJson));
+      layout.sections.forEach((section: any) => {
+        let sectionDTO: FormSectionDTO = { title: String(section.title), components: [] };
+        section.components.forEach((component: any) => {
+          component.type === "CART" && cartIndex.push(index);
+          sectionDTO.components.push({
+            index: index,
+            type: component.type,
+            label: component.title,
+            options: component.type === "STATUS" ? orderStatusList : [],
+            required: component.validation.some((val: any) => val.type === "REQUIRED"),
+            Component:
+              component.type === "TEXT"
+                ? FormTextField
+                : component.type === "STATUS"
+                ? FormSelect
+                : component.type === "CART"
+                ? FormCart
+                : undefined,
+          });
+          index++;
+        });
+        result.push(sectionDTO);
+      });
+      formik.setFieldValue(
+        "response",
+        Array.from({ length: index }, (item, index) => (cartIndex.includes(index) ? [] : "")),
+      );
+    }
+    setFields(result);
+  };
 
   function closeDialog() {
     formik.resetForm();
@@ -70,6 +95,50 @@ const DialogFormTemplate = ({ item, openDialog, handleCloseDialog }: DialogFormT
     console.log("values", values);
   }
 
+  async function handleSubmitFormName(values: FormDTO) {
+    console.log("values", values);
+  }
+
+  const getFormTemplate = async (formId: string) => {
+    await new TemplateService().getTemplateById(formId).then(response => {
+      if (response.result) {
+        setForm(response.result);
+      }
+    });
+  };
+
+  const createNewForm = async () => {
+    let userId = getCookie("USER_ID");
+    await new FormService()
+      .createForm({
+        userId: userId,
+        layoutJson: form.layoutJson,
+        templateId: form.uuid,
+        name: formNameFormik.values.name,
+      } as FormDTO)
+      .then(response => {
+        if (response.result) {
+          navigate("/order/create", {
+            state: {
+              formId: response.result.uuid,
+            },
+          });
+        }
+      });
+  };
+
+  useEffect(() => {
+    setFormId(item.uuid);
+  }, []);
+
+  useEffect(() => {
+    formId && getFormTemplate(formId);
+  }, [formId]);
+
+  useEffect(() => {
+    getFields();
+  }, [form]);
+
   return (
     <Dialog fullWidth maxWidth="xl" open={openDialog} onClose={closeDialog}>
       <DialogTitle>
@@ -77,7 +146,7 @@ const DialogFormTemplate = ({ item, openDialog, handleCloseDialog }: DialogFormT
           <Box sx={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
             <CustomTitle
               text={[
-                { text: "Gallery", highlight: false },
+                { text: "Template", highlight: false },
                 { text: "/", highlight: false },
                 { text: item.name, highlight: true },
               ]}
@@ -101,20 +170,17 @@ const DialogFormTemplate = ({ item, openDialog, handleCloseDialog }: DialogFormT
           <Grid item xs={8} sx={{ paddingX: 1.5, paddingTop: 1.5 }}>
             <Box sx={{ width: "100%", maxHeight: 200 }}>
               <img
-                src={"/images/Ramen-amico.svg"}
-                alt="Template"
+                src={item.image ? `data:image/png;base64,${item.image}` : "/images/Ramen-amico.svg"}
+                alt={item.name}
                 style={{
                   objectFit: "cover",
                   width: "100%",
                   height: 200,
-                  // border: `1.5px solid ${COLORS.primary}`,
-                  // borderRadius: 15,
                 }}
               />
             </Box>
-
             <Box sx={{ marginY: 3 }}>
-              {/* <CreateFieldsForm enableEditing={false} formik={formik} fields={fields} sections={item.layoutJSON.sections} /> */}
+              <CreateFieldsForm enableEditing={false} formik={formik} sections={fields} />
             </Box>
           </Grid>
           <Grid
@@ -133,48 +199,25 @@ const DialogFormTemplate = ({ item, openDialog, handleCloseDialog }: DialogFormT
                 top: 10,
               }}
             >
-              <Box sx={{ display: "flex", flexDirection: "column" }}>
+              <Box sx={{ display: "flex", flexDirection: "column", gap: 1.5 }}>
                 <Typography fontSize={35} fontWeight={600}>
                   {item.name}
                 </Typography>
-                <Box
-                  sx={{
-                    marginY: 2,
-                    gap: 1,
-                    display: "flex",
-                    flexDirection: "row",
-                    flexWrap: "wrap",
-                    alignItems: "center",
-                  }}
-                >
-                  {item.tags &&
-                    item.tags.map((tag, key) => {
-                      return (
-                        <CustomChip
-                          key={key}
-                          text={tag}
-                          textColor={tag === "New" ? COLORS.orange : COLORS.green}
-                          backgroundColor={tag === "New" ? COLORS.orangeBackground : COLORS.greenBackground}
-                        />
-                      );
-                    })}
-                </Box>
+                <CustomTextField name="name" placeholder="Enter form name" formik={formNameFormik} />
                 <CustomButton
                   text={"Use this template"}
                   type={"default"}
                   endIcon={"rightArrow"}
                   style={{ marginY: 1, fontSize: 16, fontWeight: 400 }}
                   handleOnClick={() => {
-                    navigate("/form/create");
+                    createNewForm();
                   }}
                 />
-                <Divider sx={{ marginY: 2 }} />
+                <Divider sx={{ marginY: 1 }} />
                 <Typography>
                   Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
                   dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-                  aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum
-                  dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui
-                  officia deserunt mollit anim id est laborum.
+                  aliquip ex ea commodo consequat
                 </Typography>
               </Box>
             </Box>

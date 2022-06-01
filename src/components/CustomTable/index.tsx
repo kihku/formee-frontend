@@ -18,6 +18,7 @@ export interface CustomTableProps<D extends object> {
   showCheckbox?: boolean;
   highlightOnHover?: boolean;
   isCart?: boolean;
+  onAddCart?: () => void;
 }
 
 export const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -44,6 +45,7 @@ const CustomTable = <D extends object>({
   showCheckbox,
   highlightOnHover,
   isCart,
+  onAddCart,
 }: CustomTableProps<D>) => {
   const [loading, setLoading] = React.useState<boolean>(true);
 
@@ -85,6 +87,8 @@ const CustomTable = <D extends object>({
           getTableBodyProps={getTableBodyProps}
           showCheckbox={Boolean(showCheckbox)}
           highlightOnHover={Boolean(highlightOnHover)}
+          isCart={isCart}
+          onAddCart={onAddCart}
         />
       </Table>
       {!isCart && pageParams && onChangePageNumber && onChangePageSize && (
@@ -95,7 +99,6 @@ const CustomTable = <D extends object>({
           loading={loading}
         />
       )}
-      {isCart && <CustomCartFooter />}
     </TableContainer>
   );
 };

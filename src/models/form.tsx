@@ -3,7 +3,8 @@ import { ComponentType, ValidationType } from "constants/forms";
 
 export interface FormDTO {
   uuid: string;
-  // userId: string;
+  userId?: string;
+  templateId?: string;
   name: string;
   image?: string;
   description?: string;

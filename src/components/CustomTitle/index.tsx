@@ -14,11 +14,11 @@ export const CustomTitle = (props: CustomTitleProps) => {
           <Box
             key={key}
             sx={{
-              ":hover": {
-                color: item.highlight ? COLORS.text : COLORS.primary,
-                textDecoration: item.highlight ? "" : "underline",
-                cursor: item.highlight ? "auto" : "pointer",
-              },
+              // ":hover": {
+              //   color: item.highlight ? COLORS.text : COLORS.primary,
+              //   textDecoration: item.highlight ? "" : "underline",
+              //   cursor: item.highlight ? "auto" : "pointer",
+              // },
               fontWeight: item.highlight ? 700 : 400,
               color: COLORS.text,
               paddingRight: 0.75,

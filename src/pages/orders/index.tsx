@@ -1,4 +1,4 @@
-import { Box, Grid, Menu, MenuItem, Tooltip } from "@mui/material";
+import { Box, Grid, IconButton, Menu, MenuItem, Tooltip } from "@mui/material";
 import { CustomTextField } from "components/CustomTextField";
 import { CustomTitle } from "components/CustomTitle";
 import { COLORS } from "styles";
@@ -21,6 +21,7 @@ import DialogOrderDetails from "./dialogs/dialogDetails";
 import { useLocation } from "react-router-dom";
 import { TemplateService } from "apis/template/templateService";
 import { OrderService } from "apis/orderService/orderService";
+import CommonUtils from "utils/commonUtils";
 
 function OrdersPage() {
   const location = useLocation();
@@ -116,7 +117,7 @@ function OrdersPage() {
                 switch (component.type) {
                   case "TEXT":
                     return (
-                      <Box display="flex" justifyContent="center">
+                      <Box display="flex" justifyContent="left">
                         {row.original.response[idx]}
                       </Box>
                     );
@@ -144,28 +145,6 @@ function OrdersPage() {
   };
 
   const tableContent: Column<FormResponseDTO>[] = [
-    {
-      Header: "Order ID",
-      accessor: "uuid",
-      maxWidth: 10,
-      Cell: ({ row }: CellProps<FormResponseDTO, {}>) => {
-        return (
-          <Tooltip title={"Copy tracking link"}>
-            <Box
-              display="flex"
-              justifyContent="center"
-              sx={{ textDecoration: "underline", cursor: "pointer" }}
-              onClick={() => {
-                navigator.clipboard.writeText(`localhost:3000/tracking/${row.original.uuid}`);
-                // handleOpenDetailDialog(row.original);
-              }}
-            >
-              {row.original.uuid}
-            </Box>
-          </Tooltip>
-        );
-      },
-    },
     ...getColumns(),
     {
       Header: "Created Date",
@@ -176,6 +155,29 @@ function OrdersPage() {
           <Box display="flex" justifyContent="center">
             {DateUtils.toDDMMYYYY(row.original.createdDate)}
           </Box>
+        );
+      },
+    },
+    {
+      Header: "Actions",
+      accessor: "uuid",
+      maxWidth: 10,
+      Cell: ({ row }: CellProps<FormResponseDTO, {}>) => {
+        return (
+          <Tooltip title={"Copy tracking link"}>
+            <Box
+              display="flex"
+              justifyContent="center"
+              sx={{}}
+              onClick={() => {
+                navigator.clipboard.writeText(`localhost:3000/tracking/${CommonUtils.encodeUUID(row.original.uuid)}`);
+                // handleOpenDetailDialog(row.original);
+              }}
+            >
+              {/* {CommonUtils.encodeUUID(row.original.uuid)} */}
+              <IconButton></IconButton>
+            </Box>
+          </Tooltip>
         );
       },
     },
@@ -289,12 +291,12 @@ function OrdersPage() {
                 ]}
               />
               <Box sx={{ display: "flex", gap: 1.5 }}>
-                <CustomButton
+                {/* <CustomButton
                   text="button_import"
                   type="rounded-outlined"
                   startIcon="import"
                   color={COLORS.lightText}
-                />
+                /> */}
                 <CustomButton
                   text="button_export"
                   type="rounded-outlined"
@@ -302,7 +304,7 @@ function OrdersPage() {
                   color={COLORS.lightText}
                   handleOnClickMenu={handleOpenMenu}
                 />
-                <Menu
+                {/* <Menu
                   anchorEl={anchorEl}
                   open={openMenuExport}
                   onClose={handleCloseMenu}
@@ -313,7 +315,7 @@ function OrdersPage() {
                   <MenuItem onClick={() => {}}>Export to Excel</MenuItem>
                   <MenuItem onClick={() => {}}>Export to Word</MenuItem>
                   <MenuItem onClick={() => {}}>Export to PDF</MenuItem>
-                </Menu>
+                </Menu> */}
               </Box>
             </Box>
           </Grid>

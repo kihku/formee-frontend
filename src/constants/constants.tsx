@@ -36,244 +36,166 @@ export const orderStatusList: CustomOption[] = [
   { title: "Cancelled", value: "CANCELLED", color: COLORS.red, backgroundColor: COLORS.redBackground },
 ];
 
-// export const exampleLayout: FormLayoutDTO = {
-//   // id: "123",
-//   sections: [
-//     {
-//       title: "Customer Information",
-//       components: [
-//         {
-//           title: "Customer Name",
-//           type: "TEXT",
-//           validation: [{ type: "REQUIRED", errorMessgage: "Customer name must not be empty" }],
-//           showOnTable: true,
-//         },
-//         {
-//           title: "Contact Number",
-//           type: "TEXT",
-//           validation: [],
-//           showOnTable: false,
-//         },
-//         {
-//           title: "Shipping Address",
-//           type: "TEXT",
-//           validation: [{ type: "REQUIRED", errorMessgage: "Shipping address must not be empty" }],
-//           showOnTable: true,
-//         },
-//         {
-//           title: "Status",
-//           type: "STATUS",
-//           validation: [],
-//           showOnTable: true,
-//         },
-//         {
-//           title: "Order Details",
-//           type: "CART",
-//           validation: [],
-//           showOnTable: false,
-//         },
-//       ],
-//     },
-//     // {
-//     //   title: "B. Order Details",
-//     //   components: [
-//     //     {
-//     //       title: "Order Details",
-//     //       type: "CART",
-//     //       validation: [],
-//     //       showOnTable: false,
-//     //     },
-//     //   ],
-//     // },
-//   ],
-// };
+export const tinhThanhVN: CustomOption[] = [
+  {
+    title: "Chọn Tỉnh/Thành phố",
+    value: "default",
+  },
+  {
+    title: "Thành phố Hồ Chí Minh",
+    value: "TPHCM",
+  },
+  {
+    title: "Hà Nội",
+    value: "HN",
+  },
+];
 
-// export const exampleForm: FormDTO = {
-//   uuid: "ABC",
-//   name: "Form ABC",
-//   layoutJSON: exampleLayout,
-// };
+export const quanHuyenVN: CustomOption[] = [
+  {
+    title: "Chọn Quận/Huyện",
+    value: "default",
+  },
+  {
+    title: "Quận 1",
+    value: "Q1",
+    parentValue: "TPHCM"
+  },
+  {
+    title: "Quận 2",
+    value: "Q2",
+    parentValue: "TPHCM"
+  },
+  {
+    title: "Quận 3",
+    value: "Q3",
+    parentValue: "TPHCM"
+  },
+  {
+    title: "Quận 4",
+    value: "Q4",
+    parentValue: "TPHCM"
+  },
+  {
+    title: "Quận 5",
+    value: "Q5",
+    parentValue: "TPHCM"
+  },
+  {
+    title: "Quận 6",
+    value: "Q6",
+    parentValue: "TPHCM"
+  },
+  {
+    title: "Quận 7",
+    value: "Q7",
+    parentValue: "TPHCM"
+  },
+  {
+    title: "Quận 8",
+    value: "Q8",
+    parentValue: "TPHCM"
+  },
+  {
+    title: "Quận 9",
+    value: "Q9",
+    parentValue: "TPHCM"
+  },
+  {
+    title: "Quận 10",
+    value: "Q10",
+    parentValue: "TPHCM"
+  },
+  {
+    title: "Quận 11",
+    value: "Q11",
+    parentValue: "TPHCM"
+  },
+  {
+    title: "Quận 12",
+    value: "Q12",
+    parentValue: "TPHCM"
+  },
+];
 
-// export const exampleResponses: FormResponseDTO[] = [
-//   {
-//     id: "5BLIRI9RZH",
-//     formId: "ABC",
-//     createdDate: new Date(),
-//     response: [
-//       "Trần Bảo Long",
-//       "+84564243269",
-//       "227 Nguyễn Văn Cừ, P.4, Q.5, TPHCM",
-//       "PENDING",
-//       [
-//         { productName: "Chocolate Mousse", unitPrice: 45000, quantity: 1 },
-//         { productName: "Tiramisu", unitPrice: 40000, quantity: 2 },
-//       ],
-//     ],
-//   },
-//   {
-//     id: "KTBUEHU2FI",
-//     formId: "ABC",
-//     createdDate: new Date(),
-//     response: [
-//       "Võ Thanh Vũ",
-//       "+84555562671",
-//       "280 An Dương Vương, P.4, Q.5, TPHCM",
-//       "PREPARING",
-//       [
-//         { productName: "Chocolate Mousse", unitPrice: 45000, quantity: 1 },
-//         { productName: "Tiramisu", unitPrice: 40000, quantity: 2 },
-//       ],
-//     ],
-//   },
-//   {
-//     id: "3J3S2CDF61",
-//     formId: "ABC",
-//     createdDate: new Date(),
-//     response: [
-//       "Ngô Bích Hà",
-//       "+84355571387",
-//       "20 Lý Tự Trọng, P.Bến Nghé, Q.1, TPHCM",
-//       "ON_THE_WAY",
-//       [
-//         { productName: "Chocolate Mousse", unitPrice: 45000, quantity: 1 },
-//         { productName: "Tiramisu", unitPrice: 40000, quantity: 2 },
-//       ],
-//     ],
-//   },
-//   {
-//     id: "K8S63YIN77",
-//     formId: "ABC",
-//     createdDate: new Date(),
-//     response: [
-//       "Lê Nhã Hương",
-//       "+84355542737",
-//       "649 Hoàng Văn Thụ, P.4, Q.Tân Bình, TPHCM",
-//       "COMPLETED",
-//       [
-//         { productName: "Chocolate Mousse", unitPrice: 45000, quantity: 1 },
-//         { productName: "Tiramisu", unitPrice: 40000, quantity: 2 },
-//       ],
-//     ],
-//   },
-//   {
-//     id: "1E4JAOCISC",
-//     formId: "ABC",
-//     createdDate: new Date(),
-//     response: [
-//       "Lương Quốc Mạnh",
-//       "+84855571621",
-//       "235 Nguyễn Văn Cừ, P.Nguyễn Cư Trinh, Q.1, TPHCM",
-//       "CANCELLED",
-//       [
-//         { productName: "Chocolate Mousse", unitPrice: 45000, quantity: 1 },
-//         { productName: "Tiramisu", unitPrice: 40000, quantity: 2 },
-//       ],
-//     ],
-//   },
-//   // {
-//   //   id: "V7OL6C3DCU",
-//   //   customerName: "Nguyễn Trọng Dũng",
-//   //   phoneNumber: "+84555511395",
-//   //   total: "936.500đ",
-//   //   createdDate: new Date(),
-//   //   status: "Completed",
-//   //   statusColor: COLORS.green,
-//   //   statusBackgroundColor: COLORS.greenBackground,
-//   // },
-//   // {
-//   //   id: "ZQ84510D2C",
-//   //   customerName: "Vũ Thanh Ngân",
-//   //   phoneNumber: "+84555546989",
-//   //   total: "492.000đ",
-//   //   createdDate: new Date(),
-//   //   status: "Cancelled",
-//   //   statusColor: COLORS.red,
-//   //   statusBackgroundColor: COLORS.redBackground,
-//   // },
-//   // {
-//   //   id: "SJO8SJ2O09",
-//   //   customerName: "Hoàng Ngọc Loan",
-//   //   phoneNumber: "+84210192830",
-//   //   total: "275.000đ",
-//   //   createdDate: new Date(),
-//   //   status: "On the way",
-//   //   statusColor: COLORS.blue,
-//   //   statusBackgroundColor: COLORS.blueBackground,
-//   // },
-//   // {
-//   //   id: "5BLIRI9RZH",
-//   //   customerName: "Trần Bảo Long",
-//   //   phoneNumber: "+84564243269",
-//   //   total: "270.000đ",
-//   //   createdDate: new Date(),
-//   //   status: "Pending",
-//   //   statusColor: COLORS.primary,
-//   //   statusBackgroundColor: COLORS.primaryBackground,
-//   // },
-//   // {
-//   //   id: "KTBUEHU2FI",
-//   //   customerName: "Võ Thanh Vũ",
-//   //   phoneNumber: "+84555562671",
-//   //   total: "300.000đ",
-//   //   createdDate: new Date(),
-//   //   status: "Pending",
-//   //   statusColor: COLORS.primary,
-//   //   statusBackgroundColor: COLORS.primaryBackground,
-//   // },
-//   // {
-//   //   id: "3J3S2CDF61",
-//   //   customerName: "Ngô Bích Hà",
-//   //   phoneNumber: "+84355571387",
-//   //   total: "120.000đ",
-//   //   createdDate: new Date(),
-//   //   status: "Preparing",
-//   //   statusColor: COLORS.orange,
-//   //   statusBackgroundColor: COLORS.orangeBackground,
-//   // },
-//   // {
-//   //   id: "K8S63YIN77",
-//   //   customerName: "Lê Nhã Hương",
-//   //   phoneNumber: "+84355542737",
-//   //   total: "50.000đ",
-//   //   createdDate: new Date(),
-//   //   status: "On the way",
-//   //   statusColor: COLORS.blue,
-//   //   statusBackgroundColor: COLORS.blueBackground,
-//   // },
-//   // {
-//   //   id: "1E4JAOCISC",
-//   //   customerName: "Lương Quốc Mạnh",
-//   //   phoneNumber: "+84855571621",
-//   //   total: "1.398.000đ",
-//   //   createdDate: new Date(),
-//   //   status: "Completed",
-//   //   statusColor: COLORS.green,
-//   //   statusBackgroundColor: COLORS.greenBackground,
-//   // },
-//   // {
-//   //   id: "V7OL6C3DCU",
-//   //   customerName: "Nguyễn Trọng Dũng",
-//   //   phoneNumber: "+84555511395",
-//   //   total: "936.500đ",
-//   //   createdDate: new Date(),
-//   //   status: "Completed",
-//   //   statusColor: COLORS.green,
-//   //   statusBackgroundColor: COLORS.greenBackground,
-//   // },
-// ];
-
-// export const exampleTemplates1: FormDTO[] = [
-//   { id: "1", name: "Clothes", layout: exampleLayout, tags: ["Fashion"] },
-//   { id: "2", name: "Cakes", layout: exampleLayout, tags: ["Food"] },
-//   { id: "3", name: "Lunch", layout: exampleLayout, tags: ["Food"] },
-//   { id: "4", name: "Stationery", layout: exampleLayout, tags: ["School"] },
-//   { id: "5", name: "Puzzles", layout: exampleLayout, tags: ["Toys"] },
-// ];
-
-// export const exampleTemplates2: FormDTO[] = [
-//   { id: "1", name: "Ramen Order Form", layout: exampleLayout, tags: ["Food", "New"], description: "" },
-//   { id: "2", name: "Pasta Order Form", layout: exampleLayout, tags: ["Food", "New"] },
-//   { id: "3", name: "Chicken Order Form", layout: exampleLayout, tags: ["Food"] },
-//   { id: "4", name: "Fish Order Form", layout: exampleLayout, tags: ["Food"] },
-//   { id: "5", name: "Cake Order Form", layout: exampleLayout, tags: ["Food"] },
-// ];
+export const phuongXaVN: CustomOption[] = [
+  {
+    title: "Chọn Phường/Xã",
+    value: "default",
+  },
+  {
+    title: "Phường 1",
+    value: "P1",
+    parentValue: "Q4"
+  },
+  {
+    title: "Phường 2",
+    value: "P2",
+    parentValue: "Q4"
+  },
+  {
+    title: "Phường 3",
+    value: "P4",
+    parentValue: "Q4"
+  },
+  {
+    title: "Phường 4",
+    value: "P4",
+    parentValue: "TPHCM_Q4"
+  },
+  {
+    title: "Phường 5",
+    value: "P5",
+    parentValue: "Q4"
+  },
+  {
+    title: "Phường 6",
+    value: "P6",
+    parentValue: "Q4"
+  },
+  {
+    title: "Phường 7",
+    value: "P7",
+    parentValue: "Q4"
+  },
+  {
+    title: "Phường 8",
+    value: "P8",
+    parentValue: "Q4"
+  },
+  {
+    title: "Phường 9",
+    value: "P9",
+    parentValue: "Q4"
+  },
+  {
+    title: "Phường 10",
+    value: "P10",
+    parentValue: "Q4"
+  },
+  {
+    title: "Phường 11",
+    value: "P11",
+    parentValue: "Q4"
+  },
+  {
+    title: "Phường 12",
+    value: "P12",
+    parentValue: "Q4"
+  },
+  {
+    title: "Phường 13",
+    value: "P13",
+    parentValue: "Q4"
+  },
+  {
+    title: "Phường 14",
+    value: "P14",
+    parentValue: "Q4"
+  },
+  {
+    title: "Phường 15",
+    value: "P15",
+    parentValue: "Q4"
+  },
+];

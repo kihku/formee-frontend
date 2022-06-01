@@ -1,8 +1,9 @@
-import { TableBody, TableRow, LinearProgress, Box, Checkbox } from "@mui/material";
+import { TableBody, TableRow, LinearProgress, Box, Checkbox, IconButton, Typography } from "@mui/material";
 import React from "react";
 import { Column, Row, TableBodyPropGetter, TableBodyProps } from "react-table";
 import { COLORS } from "styles";
 import { StyledTableCell } from ".";
+import AddRoundedIcon from "@mui/icons-material/AddRounded";
 
 export interface CustomTableBodyProps<D extends object> {
   columns: Array<Column<D>>;
@@ -14,6 +15,8 @@ export interface CustomTableBodyProps<D extends object> {
   data?: Array<D>;
   showCheckbox?: boolean;
   highlightOnHover?: boolean;
+  isCart?: boolean;
+  onAddCart?: () => void;
 }
 
 const CustomTableBody = <D extends object>({
@@ -26,6 +29,8 @@ const CustomTableBody = <D extends object>({
   data,
   showCheckbox,
   highlightOnHover,
+  isCart,
+  onAddCart,
 }: CustomTableBodyProps<D>) => {
   return (
     <TableBody {...getTableBodyProps()}>
@@ -82,6 +87,26 @@ const CustomTableBody = <D extends object>({
           </StyledTableCell>
         </TableRow>
       )}
+      {/* {isCart && (
+        <TableRow>
+          <StyledTableCell scope="row" colSpan={columns.length + 2} sx={{ textAlign: "center" }}>
+            <Box sx={{ display: "flex", flexDirection: "row", justifyContent: "center", alignItems: "center" }}>
+              <Typography
+                sx={{
+                  cursor: "pointer",
+                  color: COLORS.lightText,
+                  ":hover": {
+                    textDecoration: "underline",
+                  },
+                }}
+                onClick={onAddCart}
+              >
+                {"+  Thêm mới"}
+              </Typography>
+            </Box>
+          </StyledTableCell>
+        </TableRow>
+      )} */}
     </TableBody>
   );
 };

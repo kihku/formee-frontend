@@ -2,8 +2,8 @@ import { Box, Typography, Zoom } from "@mui/material";
 import { TemplateService } from "apis/template/templateService";
 import { CustomBackgroundCard } from "components/CustomBackgroundCard";
 import { CustomFormCard } from "components/CustomFormCard";
-// import { exampleTemplates1, exampleTemplates2 } from "constants/constants";
 import { FormDTO } from "models/form";
+import DialogFormTemplate from "pages/formGallery/dialogTemplate";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { COLORS } from "styles";
@@ -13,6 +13,8 @@ function HomePage() {
 
   const [templates, setTemplates] = useState<FormDTO[]>([]);
   const [recentTemplates, setRecentTemplates] = useState<FormDTO[]>([]);
+  const [chosenItem, setChosenItem] = useState<FormDTO>({} as FormDTO);
+  const [openTemplateDialog, setOpenTemplateDialog] = useState<boolean>(false);
 
   const getFormTemplates = async () => {
     await new TemplateService().getTemplateGallery().then(response => {
@@ -24,6 +26,11 @@ function HomePage() {
     await new TemplateService().getRecentTemplates("littledetective37@gmail.com").then(response => {
       setRecentTemplates(response.result);
     });
+  };
+
+  const handleOpenDialog = (item: FormDTO) => {
+    setChosenItem(item);
+    setOpenTemplateDialog(true);
   };
 
   useEffect(() => {
@@ -39,8 +46,6 @@ function HomePage() {
         justifyContent: "center",
         paddingX: 5,
         paddingY: 5,
-        // width: "100vw",
-        // height: "100vh",
       }}
     >
       <CustomBackgroundCard sizeX={"100%"} sizeY={"auto"} padding={-2}>
@@ -88,7 +93,12 @@ function HomePage() {
             return (
               <Zoom key={key} in style={{ transformOrigin: "50% 50% 0" }} {...{ timeout: 500 }}>
                 <div>
-                  <CustomFormCard item={template} />
+                  <CustomFormCard
+                    item={template}
+                    handleOnClick={() => {
+                      handleOpenDialog(template);
+                    }}
+                  />
                 </div>
               </Zoom>
             );
@@ -126,6 +136,15 @@ function HomePage() {
           })}
         </Box>
       </CustomBackgroundCard>
+      {openTemplateDialog && (
+        <DialogFormTemplate
+          item={chosenItem}
+          openDialog={openTemplateDialog}
+          handleCloseDialog={() => {
+            setOpenTemplateDialog(false);
+          }}
+        />
+      )}
     </Box>
   );
 }

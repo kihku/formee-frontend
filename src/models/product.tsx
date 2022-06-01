@@ -1,8 +1,11 @@
 export interface ProductDTO {
-  productId: string;
-  productName: string;
-  unitPrice: number;
-  quantity?: number;
+  uuid: string;
+  formId?: string;
+  userId?: string;
+  name: string;
+  productPrice: number;
+  quantity: number;
+  selected?: boolean;
 }
 
 export interface CartDTO {

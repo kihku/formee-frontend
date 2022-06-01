@@ -13,9 +13,10 @@ import { FormSelect } from "components/CreateFieldsForm/FormFields/FormSelect";
 import { FormCart } from "components/CreateFieldsForm/FormFields/FormCart";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { TemplateService } from "apis/template/templateService";
 import { CustomButton } from "components/CustomButton";
 import { OrderService } from "apis/orderService/orderService";
+import { FormService } from "apis/formService/formService";
+import { FormAddress } from "components/CreateFieldsForm/FormFields/FormAddress";
 
 function CreateOrderPage() {
   const location = useLocation();
@@ -43,12 +44,14 @@ function CreateOrderPage() {
 
   const getFields = () => {
     let result: FormSectionDTO[] = [];
+    let cartIndex: any[] = [];
     let index = 0;
     if (form.layoutJson) {
       let layout: any = JSON.parse(String(form.layoutJson));
       layout.sections.forEach((section: any) => {
         let sectionDTO: FormSectionDTO = { title: String(section.title), components: [] };
         section.components.forEach((component: any) => {
+          component.type === "CART" && cartIndex.push(index);
           sectionDTO.components.push({
             index: index,
             type: component.type,
@@ -62,6 +65,8 @@ function CreateOrderPage() {
                 ? FormSelect
                 : component.type === "CART"
                 ? FormCart
+                : component.type === "ADDRESS"
+                ? FormAddress
                 : undefined,
           });
           index++;
@@ -70,14 +75,16 @@ function CreateOrderPage() {
       });
       formik.setFieldValue(
         "response",
-        Array.from({ length: index }, () => ""),
+        Array.from({ length: index }, (item, index) => (cartIndex.includes(index) ? [] : "")),
       );
     }
     setFields(result);
   };
 
-  const getFormTemplate = async (formId: string) => {
-    await new TemplateService().getTemplateById(formId).then(response => {
+  // console.log("formik", formik.values.response);
+
+  const getForm = async (formId: string) => {
+    await new FormService().getFormById(formId).then(response => {
       if (response.result) {
         setForm(response.result);
         formik.setFieldValue("formId", response.result.uuid);
@@ -85,12 +92,12 @@ function CreateOrderPage() {
     });
   };
 
-  //   console.log("form", form);
+  // console.log("form", form);
 
   useEffect(() => {
     if (location.state) {
       let state: any = location.state;
-      getFormTemplate(String(state.formId));
+      getForm(String(state.formId));
     }
   }, []);
 
@@ -109,7 +116,6 @@ function CreateOrderPage() {
                 justifyContent: "space-between",
                 width: "100%",
                 alignItems: "center",
-                cursor: "pointer",
               }}
             >
               <CustomTitle
@@ -139,11 +145,20 @@ function CreateOrderPage() {
           <Grid item xs={12}>
             <CustomBackgroundCard sizeX="auto" sizeY="auto">
               <CreateFieldsForm enableEditing={false} formik={formik} sections={fields} />
-              <Grid item xs={12} sx={{ display: "flex", justifyContent: "flex-end", gap: 2 }}>
+              <Grid item xs={12} sx={{ display: "flex", justifyContent: "flex-end", gap: 2, marginTop: 2 }}>
+                <CustomButton
+                  text="Reset quantity"
+                  type="rounded-outlined"
+                  startIcon="refresh-partial"
+                  color={COLORS.lightText}
+                  handleOnClick={() => {
+                    // reset quantities
+                  }}
+                />
                 <CustomButton
                   text="Reset order"
                   type="rounded-outlined"
-                  startIcon="reset"
+                  startIcon="refresh"
                   color={COLORS.lightText}
                   handleOnClick={() => {
                     formik.setFieldValue(
@@ -153,9 +168,9 @@ function CreateOrderPage() {
                   }}
                 />
                 <CustomButton
-                  text="Save order"
+                  text="Preview order"
                   type="rounded-outlined"
-                  startIcon="save"
+                  startIcon="preview"
                   color={COLORS.primary}
                   handleOnClick={() => {
                     formik.handleSubmit();
