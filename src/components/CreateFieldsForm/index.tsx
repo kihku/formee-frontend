@@ -18,6 +18,7 @@ export interface FieldsArray<T, K> {
   enableEditing: boolean;
   handleNewField?: () => void;
   handleNewSection?: () => void;
+  disabled?: boolean;
 }
 
 export const CreateFieldsForm = <T extends object, K extends object>({
@@ -27,6 +28,7 @@ export const CreateFieldsForm = <T extends object, K extends object>({
   enableEditing,
   handleNewField,
   handleNewSection,
+  disabled,
 }: FieldsArray<T, K>) => {
   return (
     <>
@@ -63,7 +65,13 @@ export const CreateFieldsForm = <T extends object, K extends object>({
                           sx={{ marginBottom: 2, paddingX: "10px" }}
                         >
                           {Component && (
-                            <Component {...rest} formik={formik} helperText={helperText && helperText} index={index} />
+                            <Component
+                              {...rest}
+                              formik={formik}
+                              helperText={helperText && helperText}
+                              index={index}
+                              disabled={disabled}
+                            />
                           )}
                         </Grid>
                       )}
@@ -75,7 +83,13 @@ export const CreateFieldsForm = <T extends object, K extends object>({
                           sx={{ marginBottom: 2, paddingX: "10px" }}
                         >
                           {Component && (
-                            <Component {...rest} formik={formik} helperText={helperText && helperText} index={index} />
+                            <Component
+                              {...rest}
+                              formik={formik}
+                              helperText={helperText && helperText}
+                              index={index}
+                              disabled={disabled}
+                            />
                           )}
                         </Grid>
                       )}

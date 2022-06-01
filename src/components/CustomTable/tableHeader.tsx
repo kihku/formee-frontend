@@ -16,7 +16,7 @@ const CustomTableHeader = <D extends object>({ headerGroups, showCheckbox }: Cus
             <StyledTableCell
               component="th"
               scope="row"
-              align="center"
+              align="left"
               width="3%"
               sx={{
                 borderRadius: "10px 0px 0px 0px",
@@ -27,8 +27,8 @@ const CustomTableHeader = <D extends object>({ headerGroups, showCheckbox }: Cus
               </Box>
             </StyledTableCell>
           )}
-          <StyledTableCell component="th" scope="row" align="center" width="3%" sx={{}}>
-            <Box component="span" textAlign="center">
+          <StyledTableCell component="th" scope="row" align="left" width="3%" sx={{}}>
+            <Box component="span" textAlign="left">
               #
             </Box>
           </StyledTableCell>
@@ -38,7 +38,7 @@ const CustomTableHeader = <D extends object>({ headerGroups, showCheckbox }: Cus
                 key={index}
                 component="th"
                 scope="row"
-                align="center"
+                align="left"
                 sx={{
                   whiteSpace: "nowrap",
                   textOverflow: "ellipsis",
@@ -47,7 +47,7 @@ const CustomTableHeader = <D extends object>({ headerGroups, showCheckbox }: Cus
                 }}
                 width={`${column.maxWidth}%`}
               >
-                <Box component="span" textAlign="center">
+                <Box component="span" textAlign="left">
                   {column.render("Header")}
                 </Box>
               </StyledTableCell>

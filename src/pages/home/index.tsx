@@ -1,4 +1,5 @@
 import { Box, Typography, Zoom } from "@mui/material";
+import { FormService } from "apis/formService/formService";
 import { TemplateService } from "apis/template/templateService";
 import { CustomBackgroundCard } from "components/CustomBackgroundCard";
 import { CustomFormCard } from "components/CustomFormCard";
@@ -7,12 +8,14 @@ import DialogFormTemplate from "pages/formGallery/dialogTemplate";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { COLORS } from "styles";
+import { getCookie } from "utils/cookieUtils";
 
 function HomePage() {
   const navigate = useNavigate();
+  const userId = getCookie("USER_ID");
 
   const [templates, setTemplates] = useState<FormDTO[]>([]);
-  const [recentTemplates, setRecentTemplates] = useState<FormDTO[]>([]);
+  const [recentForms, setRecentForms] = useState<FormDTO[]>([]);
   const [chosenItem, setChosenItem] = useState<FormDTO>({} as FormDTO);
   const [openTemplateDialog, setOpenTemplateDialog] = useState<boolean>(false);
 
@@ -22,9 +25,9 @@ function HomePage() {
     });
   };
 
-  const getRecentTemplates = async () => {
-    await new TemplateService().getRecentTemplates("littledetective37@gmail.com").then(response => {
-      setRecentTemplates(response.result);
+  const getRecentForms = async () => {
+    await new FormService().getRecentForms(userId).then(response => {
+      setRecentForms(response.result);
     });
   };
 
@@ -35,7 +38,7 @@ function HomePage() {
 
   useEffect(() => {
     getFormTemplates();
-    getRecentTemplates();
+    getRecentForms();
   }, []);
 
   return (
@@ -61,7 +64,7 @@ function HomePage() {
           <Typography sx={{ marginTop: "2%", fontSize: "25px", fontWeight: 600, color: COLORS.primary }}>
             Start a new order
           </Typography>
-          <Typography
+          {/* <Typography
             sx={{
               marginTop: "2%",
               marginRight: "2%",
@@ -77,7 +80,7 @@ function HomePage() {
             }}
           >
             View gallery
-          </Typography>
+          </Typography> */}
         </Box>
         <Box
           sx={{
@@ -122,10 +125,10 @@ function HomePage() {
             alignItems: "center",
             gap: "3%",
             paddingX: "4%",
-            paddingTop: "2%",
+            paddingY: "2%",
           }}
         >
-          {recentTemplates.map((template, key) => {
+          {recentForms.map((template, key) => {
             return (
               <Zoom key={key} in style={{ transformOrigin: "50% 50% 0" }} {...{ timeout: 500 }}>
                 <div>

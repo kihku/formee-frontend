@@ -3,7 +3,6 @@ import React from "react";
 import { Column, Row, TableBodyPropGetter, TableBodyProps } from "react-table";
 import { COLORS } from "styles";
 import { StyledTableCell } from ".";
-import AddRoundedIcon from "@mui/icons-material/AddRounded";
 
 export interface CustomTableBodyProps<D extends object> {
   columns: Array<Column<D>>;
@@ -17,6 +16,7 @@ export interface CustomTableBodyProps<D extends object> {
   highlightOnHover?: boolean;
   isCart?: boolean;
   onAddCart?: () => void;
+  onClickRow?: (row: any) => void;
 }
 
 const CustomTableBody = <D extends object>({
@@ -31,6 +31,7 @@ const CustomTableBody = <D extends object>({
   highlightOnHover,
   isCart,
   onAddCart,
+  onClickRow,
 }: CustomTableBodyProps<D>) => {
   return (
     <TableBody {...getTableBodyProps()}>
@@ -47,15 +48,21 @@ const CustomTableBody = <D extends object>({
               } as React.CSSProperties);
           prepareRow(row);
           return (
-            <TableRow sx={style} {...row.getRowProps()}>
+            <TableRow
+              sx={style}
+              {...row.getRowProps()}
+              onClick={() => {
+                onClickRow && onClickRow(row);
+              }}
+            >
               {Boolean(showCheckbox) && (
-                <StyledTableCell component="th" scope="row" align="center" width="3%" sx={{}}>
+                <StyledTableCell component="th" scope="row" align="left" width="3%" sx={{}}>
                   <Box>
                     <Checkbox disableRipple size="small" />
                   </Box>
                 </StyledTableCell>
               )}
-              <StyledTableCell scope="row" align="center" sx={{}}>
+              <StyledTableCell scope="row" align="left" sx={{}}>
                 {i + 1 + startIndex()}
               </StyledTableCell>
               {row.cells.map((cell, index) => {
@@ -82,7 +89,7 @@ const CustomTableBody = <D extends object>({
         })}
       {loading && (
         <TableRow>
-          <StyledTableCell scope="row" colSpan={columns.length + 2} sx={{ textAlign: "center" }}>
+          <StyledTableCell scope="row" colSpan={columns.length + 2} sx={{ textAlign: "left" }}>
             <LinearProgress />
           </StyledTableCell>
         </TableRow>

@@ -30,4 +30,17 @@ export class FormService extends BaseService {
       });
     return data;
   };
+
+  getRecentForms = async (userId: string): Promise<any> => {
+    let data: any = {};
+    await AXIOS_INSTANCE.get(`${this.url}/recent/${userId}`, this.getRequestHeaders())
+      .then(response => {
+        data = response.data;
+      })
+      .catch(error => {
+        console.log(error);
+        return Promise.reject(error);
+      });
+    return data;
+  };
 }

@@ -47,7 +47,12 @@ export const FormSelect = ({ index, placeholder, formik, required, disabled, opt
 
   return (
     <FormControl variant="standard" sx={{ width: "auto" }}>
-      <NativeSelect disabled={disabled} value={value} onChange={handleChange} input={<StyledInput />}>
+      <NativeSelect
+        disabled={disabled}
+        value={value}
+        onChange={handleChange}
+        input={<StyledInput disabled={disabled} />}
+      >
         {options &&
           options.map((option, key) => {
             return (

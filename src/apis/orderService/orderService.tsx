@@ -18,9 +18,9 @@ export class OrderService extends BaseService {
     return data;
   };
 
-  getOrdersByUsername = async (username: string): Promise<DataResponse<FormResponseDTO[]>> => {
+  getOrdersByFormId = async (formId: string): Promise<DataResponse<FormResponseDTO[]>> => {
     let data: any = {};
-    await AXIOS_INSTANCE.get(`${this.url}/${username}`, this.getRequestHeaders())
+    await AXIOS_INSTANCE.get(`${this.url}/${formId}`, this.getRequestHeaders())
       .then(response => {
         data = response.data;
       })

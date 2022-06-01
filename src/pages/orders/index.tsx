@@ -11,7 +11,7 @@ import { CustomOption, Pageable } from "models/baseModels";
 import { CustomButton } from "components/CustomButton";
 import { useEffect, useMemo, useState } from "react";
 import { FormDTO, FormResponseDTO } from "models/form";
-import { CellProps, Column, useTable } from "react-table";
+import { CellProps, Column, useRowSelect, useTable } from "react-table";
 import DateUtils from "utils/dateUtils";
 import CustomTable from "components/CustomTable";
 import { CustomBackgroundCard } from "components/CustomBackgroundCard";
@@ -22,6 +22,7 @@ import { useLocation } from "react-router-dom";
 import { TemplateService } from "apis/template/templateService";
 import { OrderService } from "apis/orderService/orderService";
 import CommonUtils from "utils/commonUtils";
+import { FormService } from "apis/formService/formService";
 
 function OrdersPage() {
   const location = useLocation();
@@ -115,6 +116,7 @@ function OrdersPage() {
               maxWidth: 10,
               Cell: ({ row }: CellProps<FormResponseDTO, {}>) => {
                 switch (component.type) {
+                  case "ADDRESS":
                   case "TEXT":
                     return (
                       <Box display="flex" justifyContent="left">
@@ -123,7 +125,7 @@ function OrdersPage() {
                     );
                   case "STATUS":
                     return (
-                      <Box display="flex" justifyContent="center">
+                      <Box display="flex" justifyContent="left">
                         <CustomChip
                           text={orderStatusList.find(item => item.value === row.original.response[idx])?.title}
                           backgroundColor={
@@ -152,55 +154,72 @@ function OrdersPage() {
       maxWidth: 10,
       Cell: ({ row }: CellProps<FormResponseDTO, {}>) => {
         return (
-          <Box display="flex" justifyContent="center">
+          <Box display="flex" justifyContent="left">
             {DateUtils.toDDMMYYYY(row.original.createdDate)}
           </Box>
         );
       },
     },
     {
-      Header: "Actions",
+      Header: "Order ID",
       accessor: "uuid",
       maxWidth: 10,
       Cell: ({ row }: CellProps<FormResponseDTO, {}>) => {
         return (
-          <Tooltip title={"Copy tracking link"}>
-            <Box
-              display="flex"
-              justifyContent="center"
-              sx={{}}
-              onClick={() => {
-                navigator.clipboard.writeText(`localhost:3000/tracking/${CommonUtils.encodeUUID(row.original.uuid)}`);
-                // handleOpenDetailDialog(row.original);
-              }}
-            >
-              {/* {CommonUtils.encodeUUID(row.original.uuid)} */}
-              <IconButton></IconButton>
-            </Box>
-          </Tooltip>
+          <Box display="flex" justifyContent="left">
+            {CommonUtils.encodeUUID(row.original.uuid)}
+          </Box>
         );
       },
     },
+    // {
+    //   Header: "Actions",
+    //   accessor: "uuid",
+    //   maxWidth: 10,
+    //   Cell: ({ row }: CellProps<FormResponseDTO, {}>) => {
+    //     return (
+    //       <Tooltip title={"Copy tracking link"}>
+    //         <Box
+    //           display="flex"
+    //           justifyContent="center"
+    //           sx={{}}
+    // onClick={() => {
+    //   navigator.clipboard.writeText(`localhost:3000/tracking/${CommonUtils.encodeUUID(row.original.uuid)}`);
+    //             // handleOpenDetailDialog(row.original);
+    //           }}
+    //         >
+    //           {/* {CommonUtils.encodeUUID(row.original.uuid)} */}
+    //           <IconButton></IconButton>
+    //         </Box>
+    //       </Tooltip>
+    //     );
+    //   },
+    // },
   ];
+
+  console.log(tableContent);
 
   const columns = useMemo(() => tableContent, [form]);
 
-  const table = useTable({
-    columns,
-    data: responses,
-  });
+  const table = useTable(
+    {
+      columns,
+      data: responses,
+    },
+    useRowSelect,
+  );
 
   async function handleSubmitForm(values: any) {
     console.log("values", values);
   }
 
-  const handleOpenDetailDialog = (item: FormResponseDTO) => {
+  const handleOpenDetailDialog = (items: FormResponseDTO) => {
     setItem(item);
     setOpenDetailDialog(true);
   };
 
-  const getFormTemplate = async (formId: string) => {
-    await new TemplateService().getTemplateById(formId).then(response => {
+  const getForm = async (formId: string) => {
+    await new FormService().getFormById(formId).then(response => {
       if (response.result) {
         setForm(response.result);
         // formik.setFieldValue("formId", response.result.uuid);
@@ -208,8 +227,8 @@ function OrdersPage() {
     });
   };
 
-  const getOrders = async () => {
-    await new OrderService().getOrdersByUsername("littledetective37@gmail.com").then(response => {
+  const getOrders = async (formId: string) => {
+    await new OrderService().getOrdersByFormId(formId).then(response => {
       if (response.result) {
         setResponses(
           response.result.map(item => {
@@ -224,10 +243,6 @@ function OrdersPage() {
   // console.log("responses", responses);
 
   useEffect(() => {
-    getOrders();
-  }, []);
-
-  useEffect(() => {
     setResponses(
       responses.slice(pageParams.pageNumber * pageParams.pageSize, (pageParams.pageNumber + 1) * pageParams.pageSize),
     );
@@ -236,7 +251,10 @@ function OrdersPage() {
   useEffect(() => {
     if (location.state) {
       let state: any = location.state;
-      getFormTemplate(String(state.formId));
+      let formId: string = String(state.formId);
+      getForm(formId).then(() => {
+        getOrders(formId);
+      });
     }
   }, []);
 
@@ -285,18 +303,12 @@ function OrdersPage() {
             >
               <CustomTitle
                 text={[
-                  // { text: form.name, highlight: false },
-                  // { text: "/", highlight: true },
+                  { text: form.name, highlight: false },
+                  { text: "/", highlight: true },
                   { text: t("header_orders"), highlight: true },
                 ]}
               />
               <Box sx={{ display: "flex", gap: 1.5 }}>
-                {/* <CustomButton
-                  text="button_import"
-                  type="rounded-outlined"
-                  startIcon="import"
-                  color={COLORS.lightText}
-                /> */}
                 <CustomButton
                   text="button_export"
                   type="rounded-outlined"
@@ -304,25 +316,13 @@ function OrdersPage() {
                   color={COLORS.lightText}
                   handleOnClickMenu={handleOpenMenu}
                 />
-                {/* <Menu
-                  anchorEl={anchorEl}
-                  open={openMenuExport}
-                  onClose={handleCloseMenu}
-                  onClick={handleCloseMenu}
-                  transformOrigin={{ horizontal: "right", vertical: "top" }}
-                  anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
-                >
-                  <MenuItem onClick={() => {}}>Export to Excel</MenuItem>
-                  <MenuItem onClick={() => {}}>Export to Word</MenuItem>
-                  <MenuItem onClick={() => {}}>Export to PDF</MenuItem>
-                </Menu> */}
               </Box>
             </Box>
           </Grid>
           <Grid item xs={12}>
-            <CustomBackgroundCard sizeX="auto" sizeY="auto" padding={-4}>
+            <CustomBackgroundCard sizeX="auto" sizeY="auto" padding={-2}>
               <CustomTable
-                showCheckbox
+                showCheckbox={false}
                 highlightOnHover
                 data={responses}
                 table={table}
@@ -333,6 +333,9 @@ function OrdersPage() {
                 }}
                 onChangePageSize={(value: number) => {
                   setPageParams(pageParams => ({ ...pageParams, pageNumber: 0, pageSize: value }));
+                }}
+                onClickRow={(row: any) => {
+                  navigator.clipboard.writeText(`localhost:3000/tracking/${CommonUtils.encodeUUID(row.original.uuid)}`);
                 }}
               />
             </CustomBackgroundCard>

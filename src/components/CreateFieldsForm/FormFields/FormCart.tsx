@@ -1,5 +1,5 @@
 import FormControl from "@mui/material/FormControl";
-import { Autocomplete, Box, Checkbox, IconButton } from "@mui/material";
+import { Autocomplete, Box, Checkbox, FormHelperText, IconButton } from "@mui/material";
 import { useEffect, useMemo, useState } from "react";
 import { ProductDTO } from "models/product";
 import { CellProps, Column, useTable } from "react-table";
@@ -14,21 +14,20 @@ interface FormCartProps {
   index: number;
   formik?: any;
   handleOnChange?: (event: any) => void;
+  disabled?: boolean;
 }
 
-export const FormCart = ({ index, formik }: FormCartProps) => {
+export const FormCart = ({ index, formik, disabled }: FormCartProps) => {
   const [value, setValue] = useState<ProductDTO[]>([]);
   const [products, setProducts] = useState<ProductDTO[]>([]);
 
   const renderValue = () => {
     if (formik) {
-      //   console.log("value", index, formik.values["response"].at(index));
       setValue(formik.values["response"] && formik.values["response"].at(index));
     }
   };
 
   const updateFormikCart = () => {
-    console.log("updating");
     formik &&
       formik.setFieldValue &&
       formik.setFieldValue("response", [
@@ -36,7 +35,6 @@ export const FormCart = ({ index, formik }: FormCartProps) => {
         value,
         ...formik.values["response"].slice(index + 1),
       ]);
-    // setValue(prev => [...prev, e.target.value]);
   };
 
   const cartTable: Column<ProductDTO>[] = [
@@ -46,10 +44,8 @@ export const FormCart = ({ index, formik }: FormCartProps) => {
       maxWidth: 10,
       Cell: ({ row }: CellProps<ProductDTO, {}>) => {
         return (
-          <Box display="flex" justifyContent="center">
-            <Box display="flex" justifyContent="center">
-              {row.original.name}
-            </Box>
+          <Box display="flex" justifyContent="left">
+            {row.original.name}
           </Box>
         );
       },
@@ -60,7 +56,7 @@ export const FormCart = ({ index, formik }: FormCartProps) => {
       maxWidth: 5,
       Cell: ({ row }: CellProps<ProductDTO, {}>) => {
         return (
-          <Box display="flex" justifyContent="center">
+          <Box display="flex" justifyContent="left">
             {row.original.productPrice}
           </Box>
         );
@@ -72,7 +68,7 @@ export const FormCart = ({ index, formik }: FormCartProps) => {
       maxWidth: 10,
       Cell: ({ row }: CellProps<ProductDTO, {}>) => {
         return (
-          <Box display="flex" justifyContent="center" alignItems="center" gap={1}>
+          <Box display="flex" justifyContent="left" alignItems="center" gap={1}>
             <IconButton
               onClick={() => {
                 setValue(prev =>
@@ -102,7 +98,7 @@ export const FormCart = ({ index, formik }: FormCartProps) => {
       maxWidth: 10,
       Cell: ({ row }: CellProps<ProductDTO, {}>) => {
         return (
-          <Box display="flex" justifyContent="center">
+          <Box display="flex" justifyContent="left">
             {row.original.productPrice * row.original.quantity}
           </Box>
         );
@@ -114,7 +110,7 @@ export const FormCart = ({ index, formik }: FormCartProps) => {
       maxWidth: 10,
       Cell: ({ row }: CellProps<ProductDTO, {}>) => {
         return (
-          <Box display="flex" justifyContent="center">
+          <Box display="flex" justifyContent="left">
             <IconButton onClick={() => handleRemoveCart(row.original)}>
               <CustomIcon name={"delete"} />
             </IconButton>
@@ -124,7 +120,60 @@ export const FormCart = ({ index, formik }: FormCartProps) => {
     },
   ];
 
-  const columns = useMemo(() => cartTable, []);
+  const cartTableDisabled: Column<ProductDTO>[] = [
+    {
+      Header: "Product Name",
+      accessor: "name",
+      maxWidth: 10,
+      Cell: ({ row }: CellProps<ProductDTO, {}>) => {
+        return (
+          <Box display="flex" justifyContent="left">
+            {row.original.name}
+          </Box>
+        );
+      },
+    },
+    {
+      Header: "Price",
+      accessor: "productPrice",
+      maxWidth: 5,
+      Cell: ({ row }: CellProps<ProductDTO, {}>) => {
+        return (
+          <Box display="flex" justifyContent="left">
+            {row.original.productPrice}
+            {" đ"}
+          </Box>
+        );
+      },
+    },
+    {
+      Header: "Quantity",
+      accessor: "quantity",
+      maxWidth: 10,
+      Cell: ({ row }: CellProps<ProductDTO, {}>) => {
+        return (
+          <Box display="flex" justifyContent="left" alignItems="center" gap={1}>
+            {row.original.quantity}
+          </Box>
+        );
+      },
+    },
+    {
+      Header: "Total",
+      accessor: undefined,
+      maxWidth: 10,
+      Cell: ({ row }: CellProps<ProductDTO, {}>) => {
+        return (
+          <Box display="flex" justifyContent="left">
+            {row.original.productPrice * row.original.quantity}
+            {" đ"}
+          </Box>
+        );
+      },
+    },
+  ];
+
+  const columns = useMemo(() => (disabled ? cartTableDisabled : cartTable), []);
 
   const table = useTable({
     columns,
@@ -141,7 +190,10 @@ export const FormCart = ({ index, formik }: FormCartProps) => {
 
   const createProduct = async (item: ProductDTO) => {
     await new ProductService().createProduct(item).then(response => {
-      response.result && setValue(prev => [...prev, { ...response.result, quantity: item.quantity }]);
+      if (response.result) {
+        setProducts(prev => [...prev, { ...response.result, quantity: 1 }]);
+        setValue(prev => [...prev, { ...response.result, quantity: item.quantity }]);
+      }
     });
   };
 
@@ -156,10 +208,6 @@ export const FormCart = ({ index, formik }: FormCartProps) => {
     });
   };
 
-  // useEffect(() => {
-  //   renderValue();
-  // }, [formik && formik.values]);
-
   useEffect(() => {
     renderValue();
     formik.values["formId"] && getProducts();
@@ -169,55 +217,80 @@ export const FormCart = ({ index, formik }: FormCartProps) => {
     updateFormikCart();
   }, [value]);
 
-  // console.log("new values", value);
+  // useEffect(() => {
+  //   formik.values["response"].at(index).length === 0 && setValue([]);
+  // }, [formik.values["response"]]);
+
+  console.log("values", formik.values["response"]);
 
   return (
     <FormControl variant="standard" sx={{ width: "100%" }}>
-      <Autocomplete
-        freeSolo
-        multiple
-        fullWidth
-        disableCloseOnSelect
-        options={products}
-        renderTags={() => null}
-        renderInput={params => {
-          const { InputLabelProps, InputProps, ...rest } = params;
-          return (
-            <StyledInput
-              {...params.InputProps}
-              {...rest}
-              onKeyDown={e => {
-                if (e.code === "Enter") {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  formik.values["formId"] &&
-                    createProduct({
-                      formId: formik.values["formId"],
-                      name: e.currentTarget.value.split("/").at(0),
-                      productPrice: Number(e.currentTarget.value.split("/").at(-2)),
-                      quantity: Number(e.currentTarget.value.split("/").at(-1)),
-                    } as ProductDTO);
-                }
-              }}
-            />
-          );
-        }}
-        getOptionLabel={option => option.name}
-        renderOption={(props, option, { selected }) => (
-          <li {...props}>
-            <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%" }}>
-              <Box sx={{ display: "flex", alignItems: "center" }}>
-                <Checkbox size="small" checked={selected} />
-                {option.name}
-              </Box>
-              <Box>{option.productPrice}</Box>
-            </Box>
-          </li>
-        )}
-        onChange={(event: any, newValue: any) => {
-          setValue(newValue);
-        }}
-      />
+      {!disabled && (
+        <Box>
+          <Autocomplete
+            freeSolo
+            multiple
+            fullWidth
+            disableCloseOnSelect
+            options={products}
+            renderTags={() => null}
+            renderInput={params => {
+              const { InputLabelProps, InputProps, ...rest } = params;
+              return (
+                <StyledInput
+                  {...params.InputProps}
+                  {...rest}
+                  onKeyDown={e => {
+                    console.log(e.code);
+                    if (e.code === "Enter") {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      formik.values["formId"] &&
+                        createProduct({
+                          formId: formik.values["formId"],
+                          name: e.currentTarget.value.split("/").at(0),
+                          productPrice: Number(e.currentTarget.value.split("/").at(-2)),
+                          quantity: Number(e.currentTarget.value.split("/").at(-1)),
+                        } as ProductDTO);
+                    } else if (e.code === "Backspace") {
+                      e.stopPropagation();
+                    }
+                  }}
+                />
+              );
+            }}
+            getOptionLabel={option => option.name}
+            renderOption={(props, option, { selected }) => (
+              <li {...props}>
+                <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%" }}>
+                  <Box sx={{ display: "flex", alignItems: "center" }}>
+                    <Checkbox size="small" checked={selected || value.some(value => value.uuid === option.uuid)} />
+                    {option.name}
+                  </Box>
+                  <Box>
+                    {option.productPrice}
+                    {" đ"}
+                  </Box>
+                </Box>
+              </li>
+            )}
+            onChange={(event: any, newValue: any) => {
+              setValue(newValue);
+            }}
+          />
+          <FormHelperText
+            sx={{
+              color: COLORS.lightText,
+              fontSize: 13,
+              cursor: "auto",
+              paddingTop: 0.75,
+            }}
+          >
+            {"Tạo sản phẩm mới với cú pháp {Tên sản phẩm/Giá thành/Số lượng} (ví dụ: Áo sơ mi/120000/1)"}
+          </FormHelperText>
+        </Box>
+      )}
+
       {value.length > 0 && (
         <Box sx={{ marginY: 2 }}>
           <CustomTable
@@ -228,7 +301,7 @@ export const FormCart = ({ index, formik }: FormCartProps) => {
             highlightOnHover={false}
             onAddCart={handleAddCart}
           />
-          <CustomCartFooter formik={formik} index={index} />
+          <CustomCartFooter formik={formik} index={index} disabled={disabled} />
         </Box>
       )}
     </FormControl>

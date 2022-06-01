@@ -14,9 +14,9 @@ import { FormCart } from "components/CreateFieldsForm/FormFields/FormCart";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { CustomButton } from "components/CustomButton";
-import { OrderService } from "apis/orderService/orderService";
 import { FormService } from "apis/formService/formService";
 import { FormAddress } from "components/CreateFieldsForm/FormFields/FormAddress";
+import DialogReviewOrder from "./dialogReview";
 
 function CreateOrderPage() {
   const location = useLocation();
@@ -25,14 +25,13 @@ function CreateOrderPage() {
 
   const [form, setForm] = useState<FormDTO>({} as FormDTO);
   const [fields, setFields] = useState<FormSectionDTO[]>([]);
+  const [openReviewDialog, setOpenReviewDialog] = useState<boolean>(false);
+  const [cartIndex, setCartIndex] = useState<number>(-1);
 
   const validationSchema = Yup.object().shape({});
 
   const handleSubmitForm = async (values: any) => {
-    console.log("values", values);
-    await new OrderService().createOrder({ ...values, response: JSON.stringify(values.response) }).then(response => {
-      console.log("result", response.result);
-    });
+    setOpenReviewDialog(true);
   };
 
   const formik = useFormik({
@@ -51,7 +50,10 @@ function CreateOrderPage() {
       layout.sections.forEach((section: any) => {
         let sectionDTO: FormSectionDTO = { title: String(section.title), components: [] };
         section.components.forEach((component: any) => {
-          component.type === "CART" && cartIndex.push(index);
+          if (component.type === "CART") {
+            cartIndex.push(index);
+            setCartIndex(index);
+          }
           sectionDTO.components.push({
             index: index,
             type: component.type,
@@ -144,9 +146,9 @@ function CreateOrderPage() {
           </Grid>
           <Grid item xs={12}>
             <CustomBackgroundCard sizeX="auto" sizeY="auto">
-              <CreateFieldsForm enableEditing={false} formik={formik} sections={fields} />
+              <CreateFieldsForm disabled={false} enableEditing={false} formik={formik} sections={fields} />
               <Grid item xs={12} sx={{ display: "flex", justifyContent: "flex-end", gap: 2, marginTop: 2 }}>
-                <CustomButton
+                {/* <CustomButton
                   text="Reset quantity"
                   type="rounded-outlined"
                   startIcon="refresh-partial"
@@ -154,7 +156,7 @@ function CreateOrderPage() {
                   handleOnClick={() => {
                     // reset quantities
                   }}
-                />
+                /> */}
                 <CustomButton
                   text="Reset order"
                   type="rounded-outlined"
@@ -163,14 +165,16 @@ function CreateOrderPage() {
                   handleOnClick={() => {
                     formik.setFieldValue(
                       "response",
-                      Array.from({ length: formik.values["response"].length }, () => ""),
+                      Array.from({ length: formik.values["response"].length }, (item, index) =>
+                        cartIndex === index ? [] : "",
+                      ),
                     );
                   }}
                 />
                 <CustomButton
-                  text="Preview order"
+                  text="Create order"
                   type="rounded-outlined"
-                  startIcon="preview"
+                  startIcon="add"
                   color={COLORS.primary}
                   handleOnClick={() => {
                     formik.handleSubmit();
@@ -180,6 +184,17 @@ function CreateOrderPage() {
             </CustomBackgroundCard>
           </Grid>
         </Grid>
+        {openReviewDialog && (
+          <DialogReviewOrder
+            formik={formik}
+            fields={fields}
+            form={form}
+            openDialog={openReviewDialog}
+            handleCloseDialog={() => {
+              setOpenReviewDialog(false);
+            }}
+          />
+        )}
       </Grid>
     </Box>
   );

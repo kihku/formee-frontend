@@ -11,9 +11,9 @@ import { FormTextField } from "components/CreateFieldsForm/FormFields/FormTextFi
 import { FormSelect } from "components/CreateFieldsForm/FormFields/FormSelect";
 import { FormCart } from "components/CreateFieldsForm/FormFields/FormCart";
 import { useEffect, useState } from "react";
-import { TemplateService } from "apis/template/templateService";
 import { OrderService } from "apis/orderService/orderService";
 import CommonUtils from "utils/commonUtils";
+import { FormService } from "apis/formService/formService";
 
 function OrderTrackingPage() {
   const { t } = useTranslation(["forms", "buttons", "orders"]);
@@ -52,7 +52,7 @@ function OrderTrackingPage() {
             options: component.type === "STATUS" ? orderStatusList : [],
             required: component.validation.some((val: any) => val.type === "REQUIRED"),
             Component:
-              component.type === "TEXT"
+              component.type === "TEXT" || component.type === "ADDRESS"
                 ? FormTextField
                 : component.type === "STATUS"
                 ? FormSelect
@@ -68,10 +68,11 @@ function OrderTrackingPage() {
     setFields(result);
   };
 
-  const getFormTemplate = async (formId: string) => {
-    await new TemplateService().getTemplateById(formId).then(response => {
+  const getForm = async (formId: string) => {
+    await new FormService().getFormById(formId).then(response => {
       if (response.result) {
         setForm(response.result);
+        // formik.setFieldValue("formId", response.result.uuid);
       }
     });
   };
@@ -97,7 +98,7 @@ function OrderTrackingPage() {
   }, []);
 
   useEffect(() => {
-    formId && getFormTemplate(formId);
+    formId && getForm(formId);
   }, [formId]);
 
   useEffect(() => {
@@ -122,7 +123,7 @@ function OrderTrackingPage() {
           </Grid>
           <Grid item xs={12}>
             <CustomBackgroundCard sizeX="auto" sizeY="auto">
-              <CreateFieldsForm enableEditing={false} formik={formik} sections={fields} />
+              <CreateFieldsForm disabled enableEditing={false} formik={formik} sections={fields} />
             </CustomBackgroundCard>
           </Grid>
         </Grid>

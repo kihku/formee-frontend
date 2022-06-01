@@ -16,7 +16,7 @@ const CustomTableFooter: React.FC<CustomTableFooterProps> = ({ pageParams, onCha
   const count = !isNaN(total) ? total : 0;
 
   return (
-    <Box sx={{ padding: 2, display: "flex", alignItems: "center", fontSize: 14 }}>
+    <Box sx={{ paddingTop: 2, display: "flex", alignItems: "center", fontSize: 14 }}>
       <Box sx={{ flexGrow: 1, display: "flex", alignItems: "center" }}>
         <Box sx={{ marginX: 1.5 }}>{t("table_rows_per_page")}</Box>
         <Box sx={{ paddingTop: 0.25 }}>
