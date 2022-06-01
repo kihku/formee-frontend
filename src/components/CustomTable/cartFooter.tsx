@@ -15,7 +15,7 @@ const CustomCartFooter: React.FC<CustomCartFooterProps> = ({ formik, index }: Cu
 
   const updateTotal = () => {
     let newTotal: number = 0;
-    let discountPercentage: number = Math.round((100 - discount) / 100);
+    let discountPercentage: number = (100 - discount) / 100;
     formik.values["response"].at(index).forEach((product: any) => {
       newTotal += product.productPrice * product.quantity;
     });
@@ -53,7 +53,9 @@ const CustomCartFooter: React.FC<CustomCartFooterProps> = ({ formik, index }: Cu
             </InputAdornment>
           }
           onChange={e => {
+            console.log(e.target.value);
             setDiscount(Number(e.target.value));
+            
           }}
         />
       </Box>
