@@ -335,7 +335,8 @@ function OrdersPage() {
                   setPageParams(pageParams => ({ ...pageParams, pageNumber: 0, pageSize: value }));
                 }}
                 onClickRow={(row: any) => {
-                  navigator.clipboard.writeText(`localhost:3000/tracking/${CommonUtils.encodeUUID(row.original.uuid)}`);
+                  // navigator.clipboard.writeText(`localhost:3000/tracking/${CommonUtils.encodeUUID(row.original.uuid)}`);
+                  navigator.clipboard.writeText(`https://formee.website/tracking/${CommonUtils.encodeUUID(row.original.uuid)}`);
                 }}
               />
             </CustomBackgroundCard>
