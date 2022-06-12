@@ -2,7 +2,7 @@ import { Avatar, Box, Dialog, DialogContent, DialogTitle, Divider, Grid, IconBut
 import { CustomTextField } from "components/CustomTextField";
 import { CustomTitle } from "components/CustomTitle";
 import { useFormik } from "formik";
-import { CommentDTO, FormDTO, FormResponseDTO } from "models/form";
+import { FormDTO, FormResponseDTO } from "models/form";
 import { useTranslation } from "react-i18next";
 import * as Yup from "yup";
 import { CustomIcon } from "components/CustomIcon";
@@ -113,7 +113,7 @@ const DialogOrderDetails = (props: DialogOrderDetailsProps) => {
             /> */}
           </Grid>
           <Divider />
-          <Grid
+          {/* <Grid
             item
             xs={3}
             sx={{
@@ -173,7 +173,7 @@ const DialogOrderDetails = (props: DialogOrderDetailsProps) => {
               <Avatar sx={{ backgroundColor: COLORS.primaryLight, marginRight: 2 }}>{"TD"}</Avatar>
               <CustomTextField multiline />
             </Box>
-          </Grid>
+          </Grid> */}
         </Grid>
       </DialogContent>
     </Dialog>

@@ -18,14 +18,20 @@ import { CustomBackgroundCard } from "components/CustomBackgroundCard";
 import { CustomChip } from "components/CustomChip";
 import { useTranslation } from "react-i18next";
 import DialogOrderDetails from "./dialogs/dialogDetails";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { TemplateService } from "apis/template/templateService";
 import { OrderService } from "apis/orderService/orderService";
 import CommonUtils from "utils/commonUtils";
 import { FormService } from "apis/formService/formService";
+import { useDispatch } from "react-redux";
+import { openNotification } from "redux/actions/notification";
+import { CustomIcon } from "components/CustomIcon";
+import { CustomSwitch } from "components/CustomSwitch";
 
 function OrdersPage() {
   const location = useLocation();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { t } = useTranslation(["commons", "buttons"]);
 
   const [form, setForm] = useState<FormDTO>({} as FormDTO);
@@ -147,6 +153,18 @@ function OrdersPage() {
   };
 
   const tableContent: Column<FormResponseDTO>[] = [
+    {
+      Header: "Order Name",
+      accessor: "orderName",
+      maxWidth: 10,
+      Cell: ({ row }: CellProps<FormResponseDTO, {}>) => {
+        return (
+          <Box display="flex" justifyContent="left">
+            {row.original.orderName}
+          </Box>
+        );
+      },
+    },
     ...getColumns(),
     {
       Header: "Created Date",
@@ -160,44 +178,56 @@ function OrdersPage() {
         );
       },
     },
-    {
-      Header: "Order ID",
-      accessor: "uuid",
-      maxWidth: 10,
-      Cell: ({ row }: CellProps<FormResponseDTO, {}>) => {
-        return (
-          <Box display="flex" justifyContent="left">
-            {CommonUtils.encodeUUID(row.original.uuid)}
-          </Box>
-        );
-      },
-    },
     // {
-    //   Header: "Actions",
+    //   Header: "Order ID",
     //   accessor: "uuid",
     //   maxWidth: 10,
     //   Cell: ({ row }: CellProps<FormResponseDTO, {}>) => {
     //     return (
-    //       <Tooltip title={"Copy tracking link"}>
-    //         <Box
-    //           display="flex"
-    //           justifyContent="center"
-    //           sx={{}}
-    // onClick={() => {
-    //   navigator.clipboard.writeText(`localhost:3000/tracking/${CommonUtils.encodeUUID(row.original.uuid)}`);
-    //             // handleOpenDetailDialog(row.original);
-    //           }}
-    //         >
-    //           {/* {CommonUtils.encodeUUID(row.original.uuid)} */}
-    //           <IconButton></IconButton>
-    //         </Box>
-    //       </Tooltip>
+    //       <Box display="flex" justifyContent="left">
+    //         {CommonUtils.encodeUUID(row.original.uuid)}
+    //       </Box>
     //     );
     //   },
     // },
+    {
+      Header: "Actions",
+      accessor: undefined,
+      maxWidth: 5,
+      Cell: ({ row }: CellProps<FormResponseDTO, {}>) => {
+        return (
+          <Box display="flex" justifyContent="left" sx={{}}>
+            <Tooltip title={"Edit order"}>
+              <IconButton
+                onClick={() => {
+                  navigate("/order/edit", {
+                    state: {
+                      // formId: form.uuid,
+                      orderId: row.original.uuid,
+                    },
+                  });
+                }}
+              >
+                <CustomIcon name="edit" />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title={"Copy order link"}>
+              <IconButton
+                onClick={() => {
+                  navigator.clipboard.writeText(`localhost:3000/tracking/${CommonUtils.encodeUUID(row.original.uuid)}`);
+                  dispatch(openNotification({ open: true, content: "Order link copied", severity: "success" }));
+                }}
+              >
+                <CustomIcon name="copyLink" />
+              </IconButton>
+            </Tooltip>
+          </Box>
+        );
+      },
+    },
   ];
 
-  console.log(tableContent);
+  // console.log(tableContent);
 
   const columns = useMemo(() => tableContent, [form]);
 
@@ -217,6 +247,23 @@ function OrdersPage() {
     setItem(item);
     setOpenDetailDialog(true);
   };
+
+  const handleUpdatePermission = async () => {
+    if (location.state) {
+      let state: any = location.state;
+      let formId: string = String(state.formId);
+      await new FormService().updatePermission(formId).then(response => {
+        if (Number(response.code) === 200) {
+          dispatch(openNotification({ open: true, content: response.message, severity: "success" }));
+          setForm(prev => {
+            return { ...prev, responsePermission: prev.responsePermission === "AllowAll" ? "OwnerOnly" : "AllowAll" };
+          });
+        }
+      });
+    }
+  };
+
+  // console.log("form", form);
 
   const getForm = async (formId: string) => {
     await new FormService().getFormById(formId).then(response => {
@@ -298,7 +345,7 @@ function OrdersPage() {
                 justifyContent: "space-between",
                 width: "100%",
                 alignItems: "center",
-                cursor: "pointer",
+                // cursor: "pointer",
               }}
             >
               <CustomTitle
@@ -308,9 +355,15 @@ function OrdersPage() {
                   { text: t("header_orders"), highlight: true },
                 ]}
               />
-              <Box sx={{ display: "flex", gap: 1.5 }}>
+              <Box sx={{ display: "flex", gap: 1.5, alignItems: "center" }}>
+                <CustomSwitch
+                  tooltipText="Cho phép khách hàng chỉnh sửa đơn hàng"
+                  handleOnChange={handleUpdatePermission}
+                  value={form.responsePermission === "AllowAll"}
+                  defaultChecked={form.responsePermission === "AllowAll"}
+                />
                 <CustomButton
-                  text="button_export"
+                  text="Xuất danh sách"
                   type="rounded-outlined"
                   startIcon="export"
                   color={COLORS.lightText}
@@ -336,7 +389,10 @@ function OrdersPage() {
                 }}
                 onClickRow={(row: any) => {
                   // navigator.clipboard.writeText(`localhost:3000/tracking/${CommonUtils.encodeUUID(row.original.uuid)}`);
-                  navigator.clipboard.writeText(`https://formee.website/tracking/${CommonUtils.encodeUUID(row.original.uuid)}`);
+                  // navigator.clipboard.writeText(
+                  //   `https://formee.website/tracking/${CommonUtils.encodeUUID(row.original.uuid)}`,
+                  // );
+                  // dispatch(openNotification({ open: true, content: "Order link copied", severity: "success" }));
                 }}
               />
             </CustomBackgroundCard>

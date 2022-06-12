@@ -12,7 +12,7 @@ i18n
   .use(initReactI18next)
   .init({
     // Standard language used
-    fallbackLng: "en",
+    fallbackLng: "vi",
     debug: false,
     //Detects and caches a cookie from the language provided
     detection: {

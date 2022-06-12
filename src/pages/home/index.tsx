@@ -1,4 +1,4 @@
-import { Box, Typography, Zoom } from "@mui/material";
+import { Box, Grid, Typography, Zoom } from "@mui/material";
 import { FormService } from "apis/formService/formService";
 import { TemplateService } from "apis/template/templateService";
 import { CustomBackgroundCard } from "components/CustomBackgroundCard";
@@ -6,12 +6,10 @@ import { CustomFormCard } from "components/CustomFormCard";
 import { FormDTO } from "models/form";
 import DialogFormTemplate from "pages/formGallery/dialogTemplate";
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { COLORS } from "styles";
 import { getCookie } from "utils/cookieUtils";
 
 function HomePage() {
-  const navigate = useNavigate();
   const userId = getCookie("USER_ID");
 
   const [templates, setTemplates] = useState<FormDTO[]>([]);
@@ -64,30 +62,10 @@ function HomePage() {
           <Typography sx={{ marginTop: "2%", fontSize: "25px", fontWeight: 600, color: COLORS.primary }}>
             Start a new order
           </Typography>
-          {/* <Typography
-            sx={{
-              marginTop: "2%",
-              marginRight: "2%",
-              fontSize: "18px",
-              color: COLORS.lightText,
-              cursor: "pointer",
-              ":hover": {
-                textDecoration: "underline",
-              },
-            }}
-            onClick={() => {
-              navigate("/gallery");
-            }}
-          >
-            View gallery
-          </Typography> */}
         </Box>
-        <Box
+        <Grid
+          container
           sx={{
-            display: "flex",
-            flexDirection: "row",
-            alignItems: "center",
-            gap: "3%",
             paddingX: "4%",
             paddingTop: "2%",
           }}
@@ -95,18 +73,18 @@ function HomePage() {
           {templates.map((template, key) => {
             return (
               <Zoom key={key} in style={{ transformOrigin: "50% 50% 0" }} {...{ timeout: 500 }}>
-                <div>
+                <Grid item xs={2} sx={{ paddingX: 1.5 }}>
                   <CustomFormCard
                     item={template}
                     handleOnClick={() => {
                       handleOpenDialog(template);
                     }}
                   />
-                </div>
+                </Grid>
               </Zoom>
             );
           })}
-        </Box>
+        </Grid>
         <Typography
           sx={{
             paddingX: "2%",
@@ -118,12 +96,9 @@ function HomePage() {
         >
           Recent
         </Typography>
-        <Box
+        <Grid
+          container
           sx={{
-            display: "flex",
-            flexDirection: "row",
-            alignItems: "center",
-            gap: "3%",
             paddingX: "4%",
             paddingY: "2%",
           }}
@@ -131,13 +106,13 @@ function HomePage() {
           {recentForms.map((template, key) => {
             return (
               <Zoom key={key} in style={{ transformOrigin: "50% 50% 0" }} {...{ timeout: 500 }}>
-                <div>
+                <Grid item xs={2} sx={{ paddingX: 1.5 }}>
                   <CustomFormCard item={template} />
-                </div>
+                </Grid>
               </Zoom>
             );
           })}
-        </Box>
+        </Grid>
       </CustomBackgroundCard>
       {openTemplateDialog && (
         <DialogFormTemplate

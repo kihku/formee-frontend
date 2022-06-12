@@ -18,6 +18,9 @@ import { TemplateService } from "apis/template/templateService";
 import { CustomTextField } from "components/CustomTextField";
 import { FormService } from "apis/formService/formService";
 import { getCookie } from "utils/cookieUtils";
+import { openNotification } from "redux/actions/notification";
+import { useDispatch } from "react-redux";
+import { FormAddress } from "components/CreateFieldsForm/FormFields/FormAddress";
 
 export interface DialogFormTemplateProps {
   item: FormDTO;
@@ -27,6 +30,7 @@ export interface DialogFormTemplateProps {
 
 const DialogFormTemplate = ({ item, openDialog, handleCloseDialog }: DialogFormTemplateProps) => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const { t } = useTranslation(["orders"]);
 
   const [form, setForm] = useState<FormDTO>({} as FormDTO);
@@ -34,6 +38,10 @@ const DialogFormTemplate = ({ item, openDialog, handleCloseDialog }: DialogFormT
   const [fields, setFields] = useState<FormSectionDTO[]>([]);
 
   const validationSchema = Yup.object().shape({});
+
+  const formNameValidationSchema = Yup.object().shape({
+    name: Yup.string().trim().required("Form name must not be empty"),
+  });
 
   const formik = useFormik({
     initialValues: { uuid: "", response: [] } as any,
@@ -45,8 +53,8 @@ const DialogFormTemplate = ({ item, openDialog, handleCloseDialog }: DialogFormT
   const formNameFormik = useFormik({
     initialValues: { name: "" } as any,
     onSubmit: handleSubmitFormName,
-    validationSchema: validationSchema,
-    validateOnChange: false,
+    validationSchema: formNameValidationSchema,
+    validateOnChange: true,
   });
 
   const getFields = () => {
@@ -58,9 +66,13 @@ const DialogFormTemplate = ({ item, openDialog, handleCloseDialog }: DialogFormT
       layout.sections.forEach((section: any) => {
         let sectionDTO: FormSectionDTO = { title: String(section.title), components: [] };
         section.components.forEach((component: any) => {
-          component.type === "CART" && cartIndex.push(index);
+          if (component.type === "CART") {
+            cartIndex.push(index);
+          }
           sectionDTO.components.push({
             index: index,
+            disabled: true,
+            xs: component.xs,
             type: component.type,
             label: component.title,
             options: component.type === "STATUS" ? orderStatusList : [],
@@ -72,6 +84,8 @@ const DialogFormTemplate = ({ item, openDialog, handleCloseDialog }: DialogFormT
                 ? FormSelect
                 : component.type === "CART"
                 ? FormCart
+                : component.type === "ADDRESS"
+                ? FormAddress
                 : undefined,
           });
           index++;
@@ -92,11 +106,11 @@ const DialogFormTemplate = ({ item, openDialog, handleCloseDialog }: DialogFormT
   }
 
   async function handleSubmitForm(values: FormResponseDTO) {
-    console.log("values", values);
+    // console.log("values", values);
   }
 
   async function handleSubmitFormName(values: FormDTO) {
-    console.log("values", values);
+    createNewForm();
   }
 
   const getFormTemplate = async (formId: string) => {
@@ -118,12 +132,16 @@ const DialogFormTemplate = ({ item, openDialog, handleCloseDialog }: DialogFormT
       } as FormDTO)
       .then(response => {
         if (response.result) {
+          dispatch(openNotification({ open: true, content: response.message, severity: "success" }));
           navigate("/order/create", {
             state: {
               formId: response.result.uuid,
             },
           });
         }
+      })
+      .catch(e => {
+        dispatch(openNotification({ open: true, content: e.message, severity: "error" }));
       });
   };
 
@@ -210,7 +228,7 @@ const DialogFormTemplate = ({ item, openDialog, handleCloseDialog }: DialogFormT
                   endIcon={"rightArrow"}
                   style={{ marginY: 1, fontSize: 16, fontWeight: 400 }}
                   handleOnClick={() => {
-                    createNewForm();
+                    formNameFormik.handleSubmit();
                   }}
                 />
                 <Divider sx={{ marginY: 1 }} />

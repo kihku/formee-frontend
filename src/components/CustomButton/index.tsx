@@ -53,6 +53,7 @@ export const CustomButton = ({
 
   return (
     <Button
+      disableElevation
       variant={isType("outlined") ? "outlined" : "contained"}
       size="medium"
       startIcon={

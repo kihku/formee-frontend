@@ -30,45 +30,70 @@ const CustomCartFooter: React.FC<CustomCartFooterProps> = ({ formik, index, disa
 
   return (
     <Grid item xs={12} sx={{ display: "flex", flexDirection: "column", textAlign: "end", gap: 2, paddingTop: 3 }}>
-      <Box sx={{ display: "flex", justifyContent: "space-between", fontWeight: 500 }}>
-        <Box>Subtotal</Box>
-        <Box>{subTotal}{" đ"}</Box>
-      </Box>
-      <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", fontWeight: 500 }}>
-        <Box>Discount</Box>
-        {disabled ? (
-          <Box>{discount + " %"}</Box>
-        ) : (
-          <StyledInput
-            type="number"
-            defaultValue={0}
+      <Grid container>
+        <Grid item xs={9}></Grid>
+        <Grid item xs={3} sx={{ marginY: 1 }}>
+          <Box sx={{ display: "flex", justifyContent: "space-between", fontWeight: 500 }}>
+            <Box>Tổng đơn hàng</Box>
+            <Box>
+              {subTotal}
+              {" đ"}
+            </Box>
+          </Box>
+        </Grid>
+
+        <Grid item xs={9}></Grid>
+        <Grid item xs={3} sx={{ marginY: 1 }}>
+          <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", fontWeight: 500 }}>
+            <Box>Giảm giá</Box>
+            {disabled ? (
+              <Box>{discount + " %"}</Box>
+            ) : (
+              <StyledInput
+                type="number"
+                defaultValue={0}
+                sx={{
+                  maxWidth: "7vw",
+                  "& .MuiInputBase-input": {
+                    textAlign: "center",
+                  },
+                }}
+                inputProps={{
+                  min: 0,
+                  max: 100,
+                }}
+                endAdornment={
+                  <InputAdornment position="end">
+                    <Typography sx={{ fontWeight: 500 }}>%</Typography>
+                  </InputAdornment>
+                }
+                onChange={e => {
+                  setDiscount(Number(e.target.value));
+                }}
+              />
+            )}
+          </Box>
+        </Grid>
+
+        <Grid item xs={9}></Grid>
+        <Grid item xs={3} sx={{ marginY: 1 }}>
+          <Box
             sx={{
-              maxWidth: "7vw",
-              "& .MuiInputBase-input": {
-                textAlign: "center",
-              },
+              display: "flex",
+              justifyContent: "space-between",
+              fontWeight: 600,
+              fontSize: 18,
+              color: COLORS.primary,
             }}
-            inputProps={{
-              min: 0,
-              max: 100,
-            }}
-            endAdornment={
-              <InputAdornment position="end">
-                <Typography sx={{ fontWeight: 500 }}>%</Typography>
-              </InputAdornment>
-            }
-            onChange={e => {
-              setDiscount(Number(e.target.value));
-            }}
-          />
-        )}
-      </Box>
-      <Box
-        sx={{ display: "flex", justifyContent: "space-between", fontWeight: 600, fontSize: 18, color: COLORS.primary }}
-      >
-        <Box>Total</Box>
-        <Box>{total - discount}{" đ"}</Box>
-      </Box>
+          >
+            <Box>Tổng tiền</Box>
+            <Box>
+              {total}
+              {" đ"}
+            </Box>
+          </Box>
+        </Grid>
+      </Grid>
     </Grid>
   );
 };

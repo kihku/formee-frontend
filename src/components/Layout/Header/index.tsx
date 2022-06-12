@@ -3,7 +3,7 @@ import { COLORS } from "styles";
 import { CustomIcon } from "components/CustomIcon";
 import { CustomAvatar } from "components/CustomAvatar";
 import { useSelector } from "react-redux";
-import { RootState } from "redux/rootReducer";
+import { RootState } from "redux/reducers/rootReducer";
 import { useNavigate } from "react-router-dom";
 import { CustomChip } from "components/CustomChip";
 import { useTranslation } from "react-i18next";
@@ -94,6 +94,18 @@ export const Header = () => {
         <CustomChip
           clickable
           backgroundColor={
+            window.location.href === "http://localhost:3000/products" ? COLORS.primaryBackground : COLORS.white
+          }
+          textColor={window.location.href === "http://localhost:3000/products" ? COLORS.primary : COLORS.text}
+          text={"Sản phẩm"}
+          size={18}
+          handleOnClick={() => {
+            navigate("/products");
+          }}
+        />
+        {/* <CustomChip
+          clickable
+          backgroundColor={
             window.location.href === "http://localhost:3000/report" ? COLORS.primaryBackground : COLORS.white
           }
           textColor={window.location.href === "http://localhost:3000/report" ? COLORS.primary : COLORS.text}
@@ -102,7 +114,7 @@ export const Header = () => {
           handleOnClick={() => {
             navigate("/report");
           }}
-        />
+        /> */}
         {/* <CustomChip
           clickable
           backgroundColor={

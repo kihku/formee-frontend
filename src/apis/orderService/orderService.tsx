@@ -35,10 +35,15 @@ export class OrderService extends BaseService {
     let data: any = {};
     await AXIOS_INSTANCE.get(`${this.url}/response/${orderId}`, this.getRequestHeaders())
       .then(response => {
-        data = response.data;
+        if (response.status === 200) {
+          data = response.data;
+        }
+        else {
+          throw new Error("");
+        }
       })
       .catch(error => {
-        console.log(error);
+        // console.log(error);
         return Promise.reject(error);
       });
     return data;

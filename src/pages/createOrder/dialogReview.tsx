@@ -2,7 +2,7 @@ import { Avatar, Box, Dialog, DialogContent, DialogTitle, Divider, Grid, IconBut
 import { CustomTextField } from "components/CustomTextField";
 import { CustomTitle } from "components/CustomTitle";
 import { useFormik } from "formik";
-import { CommentDTO, FormDTO, FormResponseDTO, FormSectionDTO } from "models/form";
+import { FormDTO, FormResponseDTO, FormSectionDTO } from "models/form";
 import { useTranslation } from "react-i18next";
 import * as Yup from "yup";
 import { CustomIcon } from "components/CustomIcon";
@@ -27,7 +27,7 @@ const DialogReviewOrder = ({ formik, fields, form, openDialog, handleCloseDialog
   }
 
   async function handleSubmitForm(values: FormResponseDTO) {
-    console.log("values", values);
+    // console.log("values", values);
     await new OrderService().createOrder({ ...values, response: JSON.stringify(values.response) }).then(response => {
     //   console.log("result", response.result);
       closeDialog();

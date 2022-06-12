@@ -23,7 +23,6 @@ export const CustomFormCard = ({ item, handleOnClick }: FormCardProps) => {
     <Box
       sx={{
         display: "flex",
-        //alignItems:"center",
         flexDirection: "column",
       }}
     >

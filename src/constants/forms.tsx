@@ -1,6 +1,6 @@
 import { CustomOption } from "models/baseModels";
 
-export type ComponentType = "IDENTITY" | "SELECT" | "STATUS" | "TEXT" | "NUMBER" | "CART" | "DATE";
+export type ComponentType = "IDENTITY" | "SELECT" | "STATUS" | "TEXT" | "NUMBER" | "CART" | "DATE" | "ADDRESS";
 
 export type ValidationType = "REQUIRED" | "GT" | "LT" | "MIN" | "MAX" | "LENGTH";
 

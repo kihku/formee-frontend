@@ -1,5 +1,7 @@
-import { Box, SxProps } from "@mui/material";
+import { Box, IconButton, SxProps } from "@mui/material";
+import { CustomIcon } from "components/CustomIcon";
 import { TextItem } from "models/textItem";
+import { useState } from "react";
 import { COLORS } from "styles";
 interface CustomTitleProps {
   text: TextItem[];
@@ -7,18 +9,15 @@ interface CustomTitleProps {
 }
 
 export const CustomTitle = (props: CustomTitleProps) => {
+  const [enableEdit, setEnableEdit] = useState<boolean>(false);
+
   return (
-    <Box sx={{ display: "flex", flexDirection: "row" }}>
+    <Box sx={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
       {props.text.map((item, key) => {
         return (
           <Box
             key={key}
             sx={{
-              // ":hover": {
-              //   color: item.highlight ? COLORS.text : COLORS.primary,
-              //   textDecoration: item.highlight ? "" : "underline",
-              //   cursor: item.highlight ? "auto" : "pointer",
-              // },
               fontWeight: item.highlight ? 700 : 400,
               color: COLORS.text,
               paddingRight: 0.75,
@@ -26,6 +25,11 @@ export const CustomTitle = (props: CustomTitleProps) => {
             }}
           >
             {item.text}
+            {key === 0 && item.editable && (
+              <IconButton sx={{ marginLeft: 0.75 }}>
+                <CustomIcon name="edit" />
+              </IconButton>
+            )}
           </Box>
         );
       })}

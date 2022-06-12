@@ -47,6 +47,7 @@ import FactCheckRoundedIcon from "@mui/icons-material/FactCheckRounded";
 import AutorenewRoundedIcon from "@mui/icons-material/AutorenewRounded";
 import AutoModeRoundedIcon from "@mui/icons-material/AutoModeRounded";
 import ManageSearchRoundedIcon from "@mui/icons-material/ManageSearchRounded";
+import ShareRoundedIcon from "@mui/icons-material/ShareRounded";
 import { COLORS } from "styles";
 
 export type IconType =
@@ -99,7 +100,8 @@ export type IconType =
   | "manage"
   | "refresh"
   | "refresh-partial"
-  | "preview";
+  | "preview"
+  | "share";
 
 interface IconProps {
   name: IconType;
@@ -229,5 +231,7 @@ export const CustomIcon = ({ name, size, color }: IconProps) => {
       return <AutoModeRoundedIcon sx={iconStyle} />;
     case "preview":
       return <ManageSearchRoundedIcon sx={iconStyle} />;
+    case "share":
+      return <ShareRoundedIcon sx={iconStyle} />;
   }
 };

@@ -1,4 +1,4 @@
-import { SxProps, Theme } from "@mui/material";
+import { GridSize, SxProps, Theme } from "@mui/material";
 import { IconType } from "components/CustomIcon";
 import { ComponentType } from "constants/forms";
 import { FormikErrors } from "formik";
@@ -49,6 +49,7 @@ export interface FieldGeneral<T, K> {
   type?: "text" | "number" | "password";
   helperText?: string;
   handleOnClickHelperText?: () => void;
+  multiline?: boolean;
 
   // select
   options?: K[];
@@ -78,7 +79,9 @@ export interface FormFieldGeneral<T, K> {
   placeholder?: string;
   disabled?: boolean;
   required?: boolean;
+  isEditing?: boolean;
   formik?: FormikType<T>;
+  xs?: GridSize;
 
   // text field
   type: ComponentType;

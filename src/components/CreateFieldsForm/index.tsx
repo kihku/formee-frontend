@@ -40,11 +40,11 @@ export const CreateFieldsForm = <T extends object, K extends object>({
                 <FormSection index={key} title={section.title} />
               </Grid>
               <Grid item xs={12}>
-                {section.components.map(({ Component, label, index, helperText, ...rest }, idx) => {
+                {section.components.map(({ Component, label, index, helperText, xs, ...rest }, idx) => {
                   return (
                     <Grid container key={idx}>
                       {!StringUtils.isNullOrEmty(label) && (
-                        <Grid item xs={2.5}>
+                        <Grid item xs={2}>
                           <InputLabel sx={{ whiteSpace: "normal", textOverflow: "unset" }}>{label}</InputLabel>
                           <FormHelperText
                             sx={{
@@ -60,7 +60,13 @@ export const CreateFieldsForm = <T extends object, K extends object>({
                       {!enableEditing && (
                         <Grid
                           item
-                          xs={!StringUtils.isNullOrEmty(label) ? 9.5 : 12}
+                          xs={
+                            !StringUtils.isNullOrEmty(label)
+                              ? rest.disabled && ["ADDRESS", "TEXT"].includes(rest.type)
+                                ? 4
+                                : xs
+                              : 12
+                          }
                           key={key}
                           sx={{ marginBottom: 2, paddingX: "10px" }}
                         >
@@ -78,7 +84,7 @@ export const CreateFieldsForm = <T extends object, K extends object>({
                       {enableEditing && (
                         <Grid
                           item
-                          xs={StringUtils.isNullOrEmty(label) ? 8.5 : 12}
+                          xs={StringUtils.isNullOrEmty(label) ? xs : 12}
                           key={key}
                           sx={{ marginBottom: 2, paddingX: "10px" }}
                         >

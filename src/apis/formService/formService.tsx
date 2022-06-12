@@ -18,6 +18,19 @@ export class FormService extends BaseService {
     return data;
   };
 
+  updatePermission = async (formId: string): Promise<DataResponse<any>> => {
+    let data: any = {};
+    await AXIOS_INSTANCE.put(`${this.url}/update-permission?formId=${formId}`, {}, this.getRequestHeaders())
+      .then(response => {
+        data = response.data;
+      })
+      .catch(error => {
+        console.log(error);
+        return Promise.reject(error);
+      });
+    return data;
+  };
+
   getFormById = async (formId: string): Promise<DataResponse<FormDTO>> => {
     let data: any = {};
     await AXIOS_INSTANCE.get(`${this.url}/${formId}`, this.getRequestHeaders())

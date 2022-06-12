@@ -10,6 +10,7 @@ import { COLORS } from "styles";
 import { useNavigate } from "react-router-dom";
 import { getCookie, setCookie } from "utils/cookieUtils";
 import { UserService } from "apis/userService/userService";
+import { openNotification } from "redux/actions/notification";
 
 // const axios = require("axios").default;
 // TODO: Replace the following with your app's Firebase project configuration
@@ -51,11 +52,16 @@ export const GoogleLoginButton = () => {
             result.user.getIdToken(true).then(idToken => {
               setCookie("USER_TOKEN", idToken);
               setCookie("USER_ID", result.user.uid);
-              new UserService().login(idToken).then(response => {
-                console.log("token", getCookie("USER_TOKEN"));
-                console.log("id", getCookie("USER_ID"));
-                navigate("/home");
-              });
+              new UserService()
+                .login(idToken)
+                .then(response => {
+                  // console.log("token", getCookie("USER_TOKEN"));
+                  // console.log("id", getCookie("USER_ID"));
+                  navigate("/home");
+                })
+                .catch(e => {
+                  dispatch(openNotification({ open: true, content: e.message, severity: "error" }));
+                });
             });
           })
           .catch(error => {

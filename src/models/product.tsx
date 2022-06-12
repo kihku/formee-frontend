@@ -6,6 +6,9 @@ export interface ProductDTO {
   productPrice: number;
   quantity: number;
   selected?: boolean;
+  createdDate: Date;
+  image: File;
+  imageBase64: string;
 }
 
 export interface CartDTO {
@@ -13,3 +16,8 @@ export interface CartDTO {
   cartTotal: number;
   discount?: any;
 }
+
+export const initProduct: ProductDTO = {
+  name: "",
+  productPrice: 0,
+} as ProductDTO;

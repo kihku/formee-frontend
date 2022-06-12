@@ -3,7 +3,7 @@ import { CustomTitle } from "components/CustomTitle";
 import { COLORS } from "styles";
 import * as Yup from "yup";
 import { useFormik } from "formik";
-import { FormDTO, FormSectionDTO } from "models/form";
+import { FormDTO, FormResponseDTO, FormSectionDTO } from "models/form";
 import { CustomBackgroundCard } from "components/CustomBackgroundCard";
 import { useTranslation } from "react-i18next";
 import CreateFieldsForm from "components/CreateFieldsForm";
@@ -17,14 +17,16 @@ import { CustomButton } from "components/CustomButton";
 import { FormService } from "apis/formService/formService";
 import { FormAddress } from "components/CreateFieldsForm/FormFields/FormAddress";
 import { OrderService } from "apis/orderService/orderService";
-import { CustomTextField } from "components/CustomTextField";
+import { StyledInput } from "components/CustomTextField";
 
-function CreateOrderPage() {
-  const location = useLocation();
+function EditOrderPage() {
   const navigate = useNavigate();
+  const location = useLocation();
   const { t } = useTranslation(["forms", "buttons", "orders"]);
 
   const [form, setForm] = useState<FormDTO>({} as FormDTO);
+  const [formResponse, setFormResponse] = useState<FormResponseDTO>({} as FormResponseDTO);
+  const [formId, setFormId] = useState<string>("");
   const [fields, setFields] = useState<FormSectionDTO[]>([]);
 
   const validationSchema = Yup.object().shape({});
@@ -40,7 +42,7 @@ function CreateOrderPage() {
   };
 
   const formik = useFormik({
-    initialValues: { uuid: "", response: [], orderName: "" } as any,
+    initialValues: { uuid: "", response: [] } as any,
     onSubmit: handleSubmitForm,
     validationSchema: validationSchema,
     validateOnChange: false,
@@ -59,6 +61,7 @@ function CreateOrderPage() {
             cartIndex.push(index);
           }
           sectionDTO.components.push({
+            isEditing: true,
             index: index,
             xs: component.xs,
             type: component.type,
@@ -80,10 +83,6 @@ function CreateOrderPage() {
         });
         result.push(sectionDTO);
       });
-      formik.setFieldValue(
-        "response",
-        Array.from({ length: index }, (item, index) => (cartIndex.includes(index) ? [] : "")),
-      );
     }
     setFields(result);
   };
@@ -97,12 +96,31 @@ function CreateOrderPage() {
     });
   };
 
+  const getOrderResponse = async (orderId: string) => {
+    await new OrderService()
+      .getOrderById(orderId)
+      .then(response => {
+        if (response.result) {
+          setFormResponse({ ...response.result, response: JSON.parse(response.result.response) });
+          formik.setValues({ ...response.result, response: JSON.parse(response.result.response) });
+          setFormId(response.result.formId);
+        }
+      })
+      .catch(e => {
+        navigate("/error");
+      });
+  };
+
   useEffect(() => {
     if (location.state) {
       let state: any = location.state;
-      getForm(String(state.formId));
+      getOrderResponse(state.orderId);
     }
   }, []);
+
+  useEffect(() => {
+    formId && getForm(formId);
+  }, [formId]);
 
   useEffect(() => {
     getFields();
@@ -125,12 +143,12 @@ function CreateOrderPage() {
                 text={[
                   { text: String(form.name), highlight: false },
                   { text: "/", highlight: true },
-                  { text: t("orders:order_new"), highlight: true },
+                  { text: "Edit order", highlight: true },
                 ]}
               />
               <Box sx={{ display: "flex", gap: 1.5 }}>
                 <CustomButton
-                  text="Quản lý"
+                  text="Manage orders"
                   type="rounded-outlined"
                   startIcon="manage"
                   color={COLORS.primary}
@@ -153,7 +171,20 @@ function CreateOrderPage() {
                     <InputLabel sx={{ whiteSpace: "normal", textOverflow: "unset" }}>{"Tên đơn hàng"}</InputLabel>
                   </Grid>
                   <Grid item xs={5} sx={{ marginBottom: 2, paddingX: "10px" }}>
-                    <CustomTextField formik={formik} name="orderName" />
+                    <StyledInput
+                      fullWidth
+                      name={"orderName"}
+                      value={formik.values.orderName}
+                      onChange={e => {
+                        formik.setFieldValue("orderName", e.target.value);
+                      }}
+                      inputProps={{
+                        autoComplete: "new-password",
+                        form: {
+                          autoComplete: "off",
+                        },
+                      }}
+                    />
                   </Grid>
                 </Grid>
               </Grid>
@@ -176,4 +207,4 @@ function CreateOrderPage() {
     </Box>
   );
 }
-export default CreateOrderPage;
+export default EditOrderPage;

@@ -1,14 +1,14 @@
 import { Avatar, Box } from "@mui/material";
-import { CommentDTO } from "models/form";
+// import { CommentDTO } from "models/form";
 import { COLORS } from "styles";
 import DateUtils from "utils/dateUtils";
 
 interface FormCartProps {
-  comments: CommentDTO[];
+  // comments: CommentDTO[];
   direction: "right" | "left";
 }
 
-export const HistoryItem = ({ comments, direction }: FormCartProps) => {
+export const HistoryItem = ({ direction }: FormCartProps) => {
   return (
     <Box
       sx={{
@@ -19,10 +19,10 @@ export const HistoryItem = ({ comments, direction }: FormCartProps) => {
       }}
     >
       <Avatar sx={{ backgroundColor: direction === "left" ? COLORS.primaryLight : COLORS.red }}>
-        {comments[0].createdBy}
+        {/* {comments[0].createdBy} */}
       </Avatar>
       <Box sx={{ display: "flex", flexDirection: "column" }}>
-        {comments.map((comment, key) => {
+        {/* {comments.map((comment, key) => {
           return (
             <Box
               sx={{
@@ -49,7 +49,7 @@ export const HistoryItem = ({ comments, direction }: FormCartProps) => {
               </Box>
             </Box>
           );
-        })}
+        })} */}
       </Box>
     </Box>
   );

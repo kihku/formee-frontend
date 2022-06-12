@@ -1,39 +1,43 @@
-import { Box, Grid } from "@mui/material";
+import { Avatar, Box, Dialog, DialogContent, DialogTitle, Divider, Grid, IconButton, Tooltip } from "@mui/material";
+import { CustomTextField } from "components/CustomTextField";
 import { CustomTitle } from "components/CustomTitle";
-import * as Yup from "yup";
 import { useFormik } from "formik";
 import { FormDTO, FormResponseDTO, FormSectionDTO } from "models/form";
-import { CustomBackgroundCard } from "components/CustomBackgroundCard";
 import { useTranslation } from "react-i18next";
-import CreateFieldsForm from "components/CreateFieldsForm";
-import { orderStatusList } from "constants/constants";
+import * as Yup from "yup";
+import { CustomIcon } from "components/CustomIcon";
+import { COLORS } from "styles";
+import CreateFieldsForm, { CreateFieldsFormProps } from "components/CreateFieldsForm";
+import { CustomButton } from "components/CustomButton";
+import { OrderService } from "apis/orderService/orderService";
+import { CustomBackgroundCard } from "components/CustomBackgroundCard";
+import { useEffect, useState } from "react";
 import { FormTextField } from "components/CreateFieldsForm/FormFields/FormTextField";
 import { FormSelect } from "components/CreateFieldsForm/FormFields/FormSelect";
 import { FormCart } from "components/CreateFieldsForm/FormFields/FormCart";
-import { useEffect, useState } from "react";
-import { OrderService } from "apis/orderService/orderService";
-import CommonUtils from "utils/commonUtils";
+import { orderStatusList } from "constants/constants";
 import { FormService } from "apis/formService/formService";
-import { useNavigate } from "react-router-dom";
-import { CustomButton } from "components/CustomButton";
-import { COLORS } from "styles";
-import DialogRequestEditOrder from "./requestEditDialog";
+import CommonUtils from "utils/commonUtils";
+import { useLocation, useNavigate } from "react-router-dom";
+import { openNotification } from "redux/actions/notification";
+import { useDispatch } from "react-redux";
 
-function OrderTrackingPage() {
-  const { t } = useTranslation(["forms", "buttons", "orders"]);
+export interface ReviewOrderPageProps {}
+
+const ReviewOrderPage = ({}: ReviewOrderPageProps) => {
+  const { t } = useTranslation(["orders"]);
   const navigate = useNavigate();
+  const location = useLocation();
+  const dispatch = useDispatch();
 
   const [form, setForm] = useState<FormDTO>({} as FormDTO);
   const [formResponse, setFormResponse] = useState<FormResponseDTO>({} as FormResponseDTO);
   const [formId, setFormId] = useState<string>("");
   const [fields, setFields] = useState<FormSectionDTO[]>([]);
-  const [openRequestDialog, setOpenRequestDialog] = useState<boolean>(false);
 
   const validationSchema = Yup.object().shape({});
 
-  const handleSubmitForm = async (values: any) => {
-    // console.log("values", values);
-  };
+  const handleSubmitForm = async (values: any) => {};
 
   const formik = useFormik({
     initialValues: { uuid: "", response: [] } as any,
@@ -79,7 +83,6 @@ function OrderTrackingPage() {
     await new FormService().getFormById(formId).then(response => {
       if (response.result) {
         setForm(response.result);
-        // formik.setFieldValue("formId", response.result.uuid);
       }
     });
   };
@@ -99,13 +102,10 @@ function OrderTrackingPage() {
       });
   };
 
-  // console.log("response", formik.values);
-
   useEffect(() => {
-    if (window.location.href) {
-      let encodedId: string = String(window.location.href.split("/").at(-1));
-      let orderId: string = CommonUtils.decodeUUID(encodedId);
-      getOrderResponse(orderId);
+    if (location.state) {
+      let state: any = location.state;
+      getOrderResponse(state.orderId);
     }
   }, []);
 
@@ -132,35 +132,50 @@ function OrderTrackingPage() {
             >
               <CustomTitle
                 text={[
-                  { text: String(form.name) + " Tracking", highlight: false },
+                  { text: String(form.name), highlight: false },
                   { text: "/", highlight: false },
-                  { text: String(formResponse.orderName), highlight: true },
+                  { text: formResponse.orderName, highlight: true },
                 ]}
               />
               <Box sx={{ display: "flex", gap: 1.5 }}>
                 <CustomButton
-                  text="Confirm"
-                  type="rounded"
-                  startIcon="checkCircle"
-                  color={COLORS.white}
-                  handleOnClick={() => {}}
+                  text="Copy order link"
+                  type="rounded-outlined"
+                  startIcon="copyLink"
+                  color={COLORS.primary}
+                  handleOnClick={() => {
+                    navigator.clipboard.writeText(
+                      `localhost:3000/tracking/${CommonUtils.encodeUUID(formResponse.uuid)}`,
+                    );
+                    dispatch(openNotification({ open: true, content: "Order link copied", severity: "success" }));
+                  }}
                 />
                 <CustomButton
-                  text="Edit"
+                  text="Edit order"
                   type="rounded-outlined"
                   startIcon="edit"
                   color={COLORS.primary}
                   handleOnClick={() => {
-                    // check permission
-                    if (form.responsePermission === "AllowAll") {
-                      // check if there is a user token
-                      // else go to login page
-                    } else {
-                      // OwnerOnly
-                      // open request edit dialog
-                      setOpenRequestDialog(true);
-                      // send a comment
-                    }
+                    let state: any = location.state;
+                    navigate("/order/edit", {
+                      state: {
+                        // formId: form.uuid,
+                        orderId: state.orderId,
+                      },
+                    });
+                  }}
+                />
+                <CustomButton
+                  text="Close"
+                  type="rounded-outlined"
+                  startIcon="close"
+                  color={COLORS.primary}
+                  handleOnClick={() => {
+                    navigate("/orders", {
+                      state: {
+                        formId: form.uuid,
+                      },
+                    });
                   }}
                 />
               </Box>
@@ -172,17 +187,8 @@ function OrderTrackingPage() {
             </CustomBackgroundCard>
           </Grid>
         </Grid>
-        {openRequestDialog && (
-          <DialogRequestEditOrder
-            orderId={formResponse.uuid}
-            openDialog={openRequestDialog}
-            handleCloseDialog={() => {
-              setOpenRequestDialog(false);
-            }}
-          />
-        )}
       </Grid>
     </Box>
   );
-}
-export default OrderTrackingPage;
+};
+export default ReviewOrderPage;

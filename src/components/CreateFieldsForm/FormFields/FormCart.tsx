@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/alt-text */
 import FormControl from "@mui/material/FormControl";
 import { Autocomplete, Box, Checkbox, FormHelperText, IconButton } from "@mui/material";
 import { useEffect, useMemo, useState } from "react";
@@ -38,6 +39,29 @@ export const FormCart = ({ index, formik, disabled }: FormCartProps) => {
   };
 
   const cartTable: Column<ProductDTO>[] = [
+    {
+      Header: "Product",
+      accessor: "imageBase64",
+      maxWidth: 10,
+      Cell: ({ row }: CellProps<ProductDTO, {}>) => {
+        return (
+          <Box display="flex" justifyContent="left">
+            <img
+              src={row.original.imageBase64}
+              width="80"
+              height="80"
+              style={{
+                backgroundColor: COLORS.grayBackground,
+                // borderRadius: "10px",
+                display: "flex",
+                alignItems: "center",
+                placeContent: "center",
+              }}
+            />
+          </Box>
+        );
+      },
+    },
     {
       Header: "Product Name",
       accessor: "name",
@@ -121,6 +145,29 @@ export const FormCart = ({ index, formik, disabled }: FormCartProps) => {
   ];
 
   const cartTableDisabled: Column<ProductDTO>[] = [
+    {
+      Header: "Product",
+      accessor: "imageBase64",
+      maxWidth: 10,
+      Cell: ({ row }: CellProps<ProductDTO, {}>) => {
+        return (
+          <Box display="flex" justifyContent="left">
+            <img
+              src={row.original.imageBase64}
+              width="80"
+              height="80"
+              style={{
+                backgroundColor: COLORS.grayBackground,
+                // borderRadius: "10px",
+                display: "flex",
+                alignItems: "center",
+                placeContent: "center",
+              }}
+            />
+          </Box>
+        );
+      },
+    },
     {
       Header: "Product Name",
       accessor: "name",
@@ -221,7 +268,7 @@ export const FormCart = ({ index, formik, disabled }: FormCartProps) => {
   //   formik.values["response"].at(index).length === 0 && setValue([]);
   // }, [formik.values["response"]]);
 
-  console.log("values", formik.values["response"]);
+  // console.log("values", formik.values["response"]);
 
   return (
     <FormControl variant="standard" sx={{ width: "100%" }}>
@@ -241,7 +288,7 @@ export const FormCart = ({ index, formik, disabled }: FormCartProps) => {
                   {...params.InputProps}
                   {...rest}
                   onKeyDown={e => {
-                    console.log(e.code);
+                    // console.log(e.code);
                     if (e.code === "Enter") {
                       e.preventDefault();
                       e.stopPropagation();
@@ -291,7 +338,7 @@ export const FormCart = ({ index, formik, disabled }: FormCartProps) => {
         </Box>
       )}
 
-      {value.length > 0 && (
+      {(value.length > 0 || disabled) && (
         <Box sx={{ marginY: 2 }}>
           <CustomTable
             isCart

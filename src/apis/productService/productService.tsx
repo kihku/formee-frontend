@@ -35,4 +35,47 @@ export class ProductService extends BaseService {
       });
     return data;
   };
+
+  deleteById = async (productId: string): Promise<any> => {
+    let data: any = {};
+    await AXIOS_INSTANCE.delete(`${this.url}/delete/${productId}`, this.getRequestHeaders())
+      .then(response => {
+        data = response.data;
+      })
+      .catch(error => {
+        console.log(error);
+        return Promise.reject(error);
+      });
+    return data;
+  };
+
+  getProductsByUserId = async (userId: string): Promise<DataResponse<ProductDTO[]>> => {
+    let data: any = {};
+    await AXIOS_INSTANCE.get(`${this.url}/inventory/${userId}`, this.getRequestHeaders())
+      .then(response => {
+        data = response.data;
+      })
+      .catch(error => {
+        console.log(error);
+        return Promise.reject(error);
+      });
+    return data;
+  };
+
+  uploadImageToServer = async (file: File, productId: string): Promise<DataResponse<any>> => {
+    let data: any = {};
+    const formData = new FormData();
+    formData.append("file", file);
+    await AXIOS_INSTANCE.post(`${this.url}/${productId}`, formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+    })
+      .then(response => {
+        data = response.data;
+      })
+      .catch(error => {
+        console.log(error);
+        return Promise.reject(error);
+      });
+    return data;
+  };
 }
