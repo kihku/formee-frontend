@@ -26,7 +26,12 @@ const CustomCartFooter: React.FC<CustomCartFooterProps> = ({ formik, index, disa
 
   useEffect(() => {
     updateTotal();
-  }, [formik.values, discount]);
+  }, [formik.values]);
+
+  useEffect(() => {
+    console.log("discount", discount);
+    formik.values["discount"] = discount;
+  }, [discount]);
 
   return (
     <Grid item xs={12} sx={{ display: "flex", flexDirection: "column", textAlign: "end", gap: 2, paddingTop: 3 }}>
@@ -47,7 +52,7 @@ const CustomCartFooter: React.FC<CustomCartFooterProps> = ({ formik, index, disa
           <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", fontWeight: 500 }}>
             <Box>Giảm giá</Box>
             {disabled ? (
-              <Box>{discount + " %"}</Box>
+              <Box>{formik.values["discount"] + " %"}</Box>
             ) : (
               <StyledInput
                 type="number"

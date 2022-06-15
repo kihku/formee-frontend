@@ -18,6 +18,9 @@ import { FormService } from "apis/formService/formService";
 import { FormAddress } from "components/CreateFieldsForm/FormFields/FormAddress";
 import { OrderService } from "apis/orderService/orderService";
 import { CustomTextField } from "components/CustomTextField";
+import { CustomerService } from "apis/customerService/customerService";
+import { getCookie } from "utils/cookieUtils";
+import { FormPhoneSearch } from "components/CreateFieldsForm/FormFields/FormPhoneSearch";
 
 function CreateOrderPage() {
   const location = useLocation();
@@ -40,7 +43,7 @@ function CreateOrderPage() {
   };
 
   const formik = useFormik({
-    initialValues: { uuid: "", response: [], orderName: "" } as any,
+    initialValues: { uuid: "", response: [], orderName: "", discount: "0" } as any,
     onSubmit: handleSubmitForm,
     validationSchema: validationSchema,
     validateOnChange: false,
@@ -74,6 +77,8 @@ function CreateOrderPage() {
                 ? FormCart
                 : component.type === "ADDRESS"
                 ? FormAddress
+                : component.type === "PHONE"
+                ? FormPhoneSearch
                 : undefined,
           });
           index++;
@@ -97,10 +102,20 @@ function CreateOrderPage() {
     });
   };
 
+  // const getCustomers = async () => {
+  //   const userId = getCookie("USER_ID");
+  //   await new CustomerService().getCustomersByUserId(userId).then(response => {
+  //     if (response.result) {
+  //       console.log(response.result);
+  //     }
+  //   });
+  // };
+
   useEffect(() => {
     if (location.state) {
       let state: any = location.state;
       getForm(String(state.formId));
+      // getCustomers();
     }
   }, []);
 
@@ -160,7 +175,7 @@ function CreateOrderPage() {
               <CreateFieldsForm disabled={false} enableEditing={false} formik={formik} sections={fields} />
               <Grid item xs={12} sx={{ display: "flex", justifyContent: "flex-end", gap: 2, marginTop: 2 }}>
                 <CustomButton
-                  text="Save order"
+                  text="Lưu đơn hàng"
                   type="rounded-outlined"
                   startIcon="add"
                   color={COLORS.primary}

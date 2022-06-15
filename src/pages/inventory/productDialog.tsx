@@ -6,6 +6,7 @@ import { CustomTextField, StyledInput } from "components/CustomTextField";
 import { useFormik } from "formik";
 import { initProduct, ProductDTO } from "models/product";
 import { ChangeEvent, useEffect, useState } from "react";
+import Carousel from "react-material-ui-carousel";
 import * as Yup from "yup";
 
 export interface DialogProductProps {
@@ -15,7 +16,8 @@ export interface DialogProductProps {
 }
 
 const DialogProduct = ({ itemEdit, openDialog, handleCloseDialog }: DialogProductProps) => {
-  //   const [image, setImage] = useState<any>();
+  const [currentIndex, setCurrentIndex] = useState<number>(0);
+  const [imageList, setImageList] = useState<string[]>([]);
 
   const validationSchema = Yup.object().shape({
     name: Yup.string().trim().required("Product name is requried"),
@@ -29,24 +31,6 @@ const DialogProduct = ({ itemEdit, openDialog, handleCloseDialog }: DialogProduc
     validateOnChange: false,
   });
 
-  //   const fields: CreateFieldsProps<ProductDTO, any>[] = [
-  //     {
-  //       label: "Product name",
-  //       name: "name",
-  //       xs: 6,
-  //       required: true,
-  //       Component: CustomTextField,
-  //     },
-  //     {
-  //       label: "Product price",
-  //       name: "productPrice",
-  //       type: "number",
-  //       xs: 6,
-  //       required: true,
-  //       Component: CustomTextField,
-  //     },
-  //   ];
-
   function closeDialog() {
     formik.resetForm();
     handleCloseDialog();
@@ -58,23 +42,47 @@ const DialogProduct = ({ itemEdit, openDialog, handleCloseDialog }: DialogProduc
     //   .uploadImageToServer(formik.values.image, formik.values.uuid)
     //   .then(response => console.log(response));
 
-    await new ProductService().createProduct({ ...values }).then(response => {
-      console.log(response);
-      closeDialog();
-    });
+    await new ProductService()
+      .createProduct({
+        ...values,
+        imageName: String(imageList.at(0)),
+        imageList: JSON.stringify(imageList),
+      })
+      .then(response => {
+        console.log(response);
+        closeDialog();
+      });
     // closeDialog();
   }
 
   async function handleImport(e: ChangeEvent<HTMLInputElement>) {
     if (e.target.files && e.target.files.length > 0) {
       try {
-        formik.setFieldValue("image", e.target.files[0]);
+        let files = Array.from(e.target.files);
+        setImageList(
+          files.map((file: any) => {
+            return URL.createObjectURL(file);
+          }),
+        );
+        // formik.setFieldValue(
+        //   "imageList",
+        //   files.map((file: any) => {
+        //     return URL.createObjectURL(file);
+        //   }),
+        // );
+        // console.log(
+        //   files.map((file: any) => {
+        //     return URL.createObjectURL(file);
+        //   }),
+        // );
+        // console.log("files", URL.createObjectURL(e.target.files[0]));
         let reader = new FileReader();
         let file = e.target.files[0];
+        reader.readAsDataURL(file);
         reader.onloadend = () => {
+          // console.log("image", reader.result);
           formik.setFieldValue("imageBase64", reader.result);
         };
-        reader.readAsDataURL(file);
       } catch (error) {
         console.log(error);
       }
@@ -83,12 +91,15 @@ const DialogProduct = ({ itemEdit, openDialog, handleCloseDialog }: DialogProduc
 
   useEffect(() => {
     formik.setValues(itemEdit);
+    setImageList(JSON.parse(itemEdit.imageList));
   }, [itemEdit]);
+
+  // console.log("formik", formik.values);
 
   return (
     <Dialog fullWidth maxWidth="md" open={openDialog} onClose={closeDialog}>
       <DialogTitle>
-        <Box component="span">{"EDIT PRODUCT"}</Box>
+        <Box component="span">{"Chỉnh sửa thông tin sản phẩm"}</Box>
       </DialogTitle>
 
       <DialogContent dividers>
@@ -99,7 +110,7 @@ const DialogProduct = ({ itemEdit, openDialog, handleCloseDialog }: DialogProduc
               <Grid container>
                 <Grid item xs={12}>
                   <InputLabel shrink sx={{ fontSize: "18px", fontWeight: 500 }}>
-                    {"Product name *"}
+                    {"Tên sản phẩm *"}
                   </InputLabel>
                 </Grid>
                 <Grid item xs={12} sx={{ marginBottom: 2 }}>
@@ -114,10 +125,10 @@ const DialogProduct = ({ itemEdit, openDialog, handleCloseDialog }: DialogProduc
                 </Grid>
                 <Grid item xs={12}>
                   <InputLabel shrink sx={{ fontSize: "18px", fontWeight: 500 }}>
-                    {"Product price *"}
+                    {"Giá thành *"}
                   </InputLabel>
                 </Grid>
-                <Grid item xs={12}>
+                <Grid item xs={12} sx={{ marginBottom: 2 }}>
                   <StyledInput
                     fullWidth
                     type="number"
@@ -128,19 +139,33 @@ const DialogProduct = ({ itemEdit, openDialog, handleCloseDialog }: DialogProduc
                     }}
                   />
                 </Grid>
-              </Grid>
-            </Grid>
-
-            <Grid item xs={6} sx={{ paddingX: 1 }}>
-              <Grid container>
                 <Grid item xs={12}>
-                  <Box display="flex" flexDirection="row" alignItems="center" paddingBottom="15px">
-                    <InputLabel sx={{ paddingLeft: 1, fontWeight: 500 }}>Add product image</InputLabel>
+                  <InputLabel shrink sx={{ fontSize: "18px", fontWeight: 500 }}>
+                    {"Mô tả"}
+                  </InputLabel>
+                </Grid>
+                <Grid item xs={12} sx={{ marginBottom: 2 }}>
+                  <StyledInput
+                    fullWidth
+                    value={formik.values.description}
+                    defaultValue={itemEdit.description}
+                    onChange={e => {
+                      formik.setFieldValue("description", e.target.value);
+                    }}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <InputLabel shrink sx={{ fontSize: "18px", fontWeight: 500 }}>
+                    {"Hình ảnh"}
+                  </InputLabel>
+                </Grid>
+                <Grid item xs={12}>
+                  <Box paddingBottom="15px">
                     <input
                       accept="image/*"
                       hidden={true}
                       id="contained-button-file"
-                      multiple={false}
+                      multiple={true}
                       type="file"
                       onChange={handleImport}
                     />
@@ -150,46 +175,57 @@ const DialogProduct = ({ itemEdit, openDialog, handleCloseDialog }: DialogProduc
                         size="small"
                         component="span"
                         disableElevation
-                        style={{ marginLeft: 8, height: "32px" }}
+                        style={{ height: "32px" }}
                       >
-                        Choose file
+                        Chọn tệp tin
                       </Button>
                     </label>
                   </Box>
                 </Grid>
+              </Grid>
+            </Grid>
 
+            <Grid item xs={6} sx={{ paddingX: 1 }}>
+              <Grid container>
                 <Grid item xs={12}>
-                  {formik.values.imageBase64 !== "" &&
-                    formik.values.imageBase64 !== undefined &&
-                    formik.values.imageBase64 !== null && (
-                      <Box display="flex" alignItems="center" flexDirection="row">
-                        <img
-                          src={formik.values.imageBase64}
-                          alt="thumbnail"
-                          width="300"
-                          height="300"
-                          style={{
-                            display: "flex",
-                            alignItems: "center",
-                            placeContent: "center",
-                          }}
-                        />
-                      </Box>
-                    )}
+                  <Carousel
+                    onChange={index => {
+                      setCurrentIndex(Number(index));
+                    }}
+                    autoPlay={false}
+                  >
+                    {imageList &&
+                      imageList.length > 0 &&
+                      imageList.map((item, i) => (
+                        <div key={i}>
+                          <img
+                            style={{
+                              zIndex: 99,
+                              width: "100%",
+                              display: "flex",
+                              justifyContent: "center",
+                              alignItems: "center",
+                            }}
+                            src={item}
+                            alt="product"
+                          />
+                        </div>
+                      ))}
+                  </Carousel>
                 </Grid>
               </Grid>
             </Grid>
             <Grid item xs={12} sx={{ display: "flex", justifyContent: "flex-end", marginTop: 2 }}>
               <Box sx={{ display: "flex", gap: 1.5, paddingX: "10px", marginBottom: 1 }}>
                 <CustomButton
-                  text="Save"
+                  text="Lưu"
                   type="default"
                   handleOnClick={() => {
                     formik.handleSubmit();
                   }}
                 />
                 <CustomButton
-                  text="Close"
+                  text="Đóng"
                   type="outlined"
                   handleOnClick={() => {
                     closeDialog();

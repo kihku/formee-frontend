@@ -9,6 +9,9 @@ export interface ProductDTO {
   createdDate: Date;
   image: File;
   imageBase64: string;
+  imageName: string;
+  description: string;
+  imageList: string;
 }
 
 export interface CartDTO {

@@ -18,9 +18,35 @@ export class OrderService extends BaseService {
     return data;
   };
 
+  updateOrder = async (order: any): Promise<DataResponse<any>> => {
+    let data: any = {};
+    await AXIOS_INSTANCE.put(`${this.url}/update`, order, this.getRequestHeaders())
+      .then(response => {
+        data = response.data;
+      })
+      .catch(error => {
+        console.log(error);
+        return Promise.reject(error);
+      });
+    return data;
+  };
+
   getOrdersByFormId = async (formId: string): Promise<DataResponse<FormResponseDTO[]>> => {
     let data: any = {};
     await AXIOS_INSTANCE.get(`${this.url}/${formId}`, this.getRequestHeaders())
+      .then(response => {
+        data = response.data;
+      })
+      .catch(error => {
+        console.log(error);
+        return Promise.reject(error);
+      });
+    return data;
+  };
+
+  getRecentOrders = async (): Promise<DataResponse<FormResponseDTO[]>> => {
+    let data: any = {};
+    await AXIOS_INSTANCE.get(`${this.url}/recent`, this.getRequestHeaders())
       .then(response => {
         data = response.data;
       })
@@ -37,8 +63,7 @@ export class OrderService extends BaseService {
       .then(response => {
         if (response.status === 200) {
           data = response.data;
-        }
-        else {
+        } else {
           throw new Error("");
         }
       })

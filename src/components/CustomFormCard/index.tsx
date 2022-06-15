@@ -47,20 +47,9 @@ export const CustomFormCard = ({ item, handleOnClick }: FormCardProps) => {
         </CardActionArea>
       </Card>
       <Box>
-        <Box sx={{ marginY: 2, gap: 1, display: "flex", flexDirection: "row", flexWrap: "wrap", alignItems: "center" }}>
-          {item.tags &&
-            item.tags.map((tag, key) => {
-              return (
-                <CustomChip
-                  key={key}
-                  text={tag}
-                  textColor={tag === "New" ? COLORS.orange : COLORS.green}
-                  backgroundColor={tag === "New" ? COLORS.orangeBackground : COLORS.greenBackground}
-                />
-              );
-            })}
-        </Box>
-        <Typography fontSize={20}>{item.name}</Typography>
+        <Typography fontSize={20} sx={{ marginTop: 2 }}>
+          {item.name}
+        </Typography>
       </Box>
     </Box>
   );

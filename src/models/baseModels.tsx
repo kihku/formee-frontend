@@ -79,6 +79,7 @@ export interface FormFieldGeneral<T, K> {
   placeholder?: string;
   disabled?: boolean;
   required?: boolean;
+  show?: boolean;
   isEditing?: boolean;
   formik?: FormikType<T>;
   xs?: GridSize;

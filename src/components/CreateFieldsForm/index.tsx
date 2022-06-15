@@ -40,8 +40,8 @@ export const CreateFieldsForm = <T extends object, K extends object>({
                 <FormSection index={key} title={section.title} />
               </Grid>
               <Grid item xs={12}>
-                {section.components.map(({ Component, label, index, helperText, xs, ...rest }, idx) => {
-                  return (
+                {section.components.map(({ Component, label, index, helperText, xs, show, ...rest }, idx) => {
+                  return (show === undefined || show === true) ? (
                     <Grid container key={idx}>
                       {!StringUtils.isNullOrEmty(label) && (
                         <Grid item xs={2}>
@@ -99,7 +99,7 @@ export const CreateFieldsForm = <T extends object, K extends object>({
                           )}
                         </Grid>
                       )}
-                      {enableEditing && (
+                      {/* {enableEditing && (
                         <Grid item xs={0.5}>
                           <IconButton>
                             <CustomIcon name="edit" />
@@ -112,16 +112,16 @@ export const CreateFieldsForm = <T extends object, K extends object>({
                             <CustomIcon name="delete" />
                           </IconButton>
                         </Grid>
-                      )}
+                      )} */}
                     </Grid>
-                  );
+                  ) : null;
                 })}
               </Grid>
             </Grid>
           );
         })}
 
-      {enableEditing && (
+      {/* {enableEditing && (
         <Grid item xs={12} sx={{ display: "flex", flexDirection: "row", gap: 2 }}>
           <CustomButton
             text={"New field"}
@@ -136,7 +136,7 @@ export const CreateFieldsForm = <T extends object, K extends object>({
             handleOnClick={handleNewSection}
           />
         </Grid>
-      )}
+      )} */}
     </>
   );
 };

@@ -92,6 +92,7 @@ const ReviewOrderPage = ({}: ReviewOrderPageProps) => {
       .getOrderById(orderId)
       .then(response => {
         if (response.result) {
+          console.log(response.result);
           setFormResponse({ ...response.result, response: JSON.parse(response.result.response) });
           formik.setValues({ ...response.result, response: JSON.parse(response.result.response) });
           setFormId(response.result.formId);
@@ -116,6 +117,8 @@ const ReviewOrderPage = ({}: ReviewOrderPageProps) => {
   useEffect(() => {
     getFields();
   }, [form]);
+
+  // console.log("formik", formik.values);
 
   return (
     <Box>

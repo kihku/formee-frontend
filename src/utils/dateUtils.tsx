@@ -33,29 +33,29 @@ export default class DateUtils {
     if (weeks > 4) {
       result.push(this.toDDMMYYYY(date2));
     } else if (weeks > 0) {
-      result.push(weeks + "w");
-      result.push("ago");
+      result.push(weeks + " tuần ");
+      result.push("trước");
     } else {
       // day
       const days = Math.trunc(duration / msInDay);
       if (days > 0) {
-        result.push(days + "d");
-        result.push("ago");
+        result.push(days + " ngày ");
+        result.push("trước");
       } else {
         // hour
         const hours = Math.trunc(duration / msInHour);
         if (hours > 0) {
-          result.push(hours + "h");
-          result.push("ago");
+          result.push(hours + " giờ ");
+          result.push("trước");
         } else {
           // minute
           const minutes = Math.trunc(duration / msInMinute);
           if (minutes > 0) {
-            result.push(minutes + "m");
-            result.push("ago");
+            result.push(minutes + " phút ");
+            result.push("trước");
           }
           else {
-            result.push("Just now");
+            result.push("Vài giây trước");
           }
         }
       }

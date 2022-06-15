@@ -10,6 +10,9 @@ import { COLORS } from "styles";
 import { StyledInput } from "components/CustomTextField";
 import { ProductService } from "apis/productService/productService";
 import CustomCartFooter from "components/CustomTable/cartFooter";
+import { getCookie } from "utils/cookieUtils";
+import { CustomButton } from "components/CustomButton";
+import StringUtils from "utils/stringUtils";
 
 interface FormCartProps {
   index: number;
@@ -21,6 +24,7 @@ interface FormCartProps {
 export const FormCart = ({ index, formik, disabled }: FormCartProps) => {
   const [value, setValue] = useState<ProductDTO[]>([]);
   const [products, setProducts] = useState<ProductDTO[]>([]);
+  const [rawValue, setRawValue] = useState<string>("");
 
   const renderValue = () => {
     if (formik) {
@@ -40,7 +44,7 @@ export const FormCart = ({ index, formik, disabled }: FormCartProps) => {
 
   const cartTable: Column<ProductDTO>[] = [
     {
-      Header: "Product",
+      Header: "Sản phẩm",
       accessor: "imageBase64",
       maxWidth: 10,
       Cell: ({ row }: CellProps<ProductDTO, {}>) => {
@@ -52,7 +56,6 @@ export const FormCart = ({ index, formik, disabled }: FormCartProps) => {
               height="80"
               style={{
                 backgroundColor: COLORS.grayBackground,
-                // borderRadius: "10px",
                 display: "flex",
                 alignItems: "center",
                 placeContent: "center",
@@ -63,7 +66,7 @@ export const FormCart = ({ index, formik, disabled }: FormCartProps) => {
       },
     },
     {
-      Header: "Product Name",
+      Header: "Tên sản phẩm",
       accessor: "name",
       maxWidth: 10,
       Cell: ({ row }: CellProps<ProductDTO, {}>) => {
@@ -75,7 +78,7 @@ export const FormCart = ({ index, formik, disabled }: FormCartProps) => {
       },
     },
     {
-      Header: "Price",
+      Header: "Giá thành",
       accessor: "productPrice",
       maxWidth: 5,
       Cell: ({ row }: CellProps<ProductDTO, {}>) => {
@@ -87,7 +90,7 @@ export const FormCart = ({ index, formik, disabled }: FormCartProps) => {
       },
     },
     {
-      Header: "Quantity",
+      Header: "Số lượng",
       accessor: "quantity",
       maxWidth: 10,
       Cell: ({ row }: CellProps<ProductDTO, {}>) => {
@@ -117,7 +120,7 @@ export const FormCart = ({ index, formik, disabled }: FormCartProps) => {
       },
     },
     {
-      Header: "Total",
+      Header: "Tổng cộng",
       accessor: undefined,
       maxWidth: 10,
       Cell: ({ row }: CellProps<ProductDTO, {}>) => {
@@ -129,7 +132,7 @@ export const FormCart = ({ index, formik, disabled }: FormCartProps) => {
       },
     },
     {
-      Header: "Actions",
+      Header: "Thao tác",
       accessor: undefined,
       maxWidth: 10,
       Cell: ({ row }: CellProps<ProductDTO, {}>) => {
@@ -146,7 +149,7 @@ export const FormCart = ({ index, formik, disabled }: FormCartProps) => {
 
   const cartTableDisabled: Column<ProductDTO>[] = [
     {
-      Header: "Product",
+      Header: "Sản phẩm",
       accessor: "imageBase64",
       maxWidth: 10,
       Cell: ({ row }: CellProps<ProductDTO, {}>) => {
@@ -169,7 +172,7 @@ export const FormCart = ({ index, formik, disabled }: FormCartProps) => {
       },
     },
     {
-      Header: "Product Name",
+      Header: "Tên sản phẩm",
       accessor: "name",
       maxWidth: 10,
       Cell: ({ row }: CellProps<ProductDTO, {}>) => {
@@ -181,7 +184,7 @@ export const FormCart = ({ index, formik, disabled }: FormCartProps) => {
       },
     },
     {
-      Header: "Price",
+      Header: "Giá thành",
       accessor: "productPrice",
       maxWidth: 5,
       Cell: ({ row }: CellProps<ProductDTO, {}>) => {
@@ -194,7 +197,7 @@ export const FormCart = ({ index, formik, disabled }: FormCartProps) => {
       },
     },
     {
-      Header: "Quantity",
+      Header: "Số lượng",
       accessor: "quantity",
       maxWidth: 10,
       Cell: ({ row }: CellProps<ProductDTO, {}>) => {
@@ -206,7 +209,7 @@ export const FormCart = ({ index, formik, disabled }: FormCartProps) => {
       },
     },
     {
-      Header: "Total",
+      Header: "Tổng cộng",
       accessor: undefined,
       maxWidth: 10,
       Cell: ({ row }: CellProps<ProductDTO, {}>) => {
@@ -245,7 +248,8 @@ export const FormCart = ({ index, formik, disabled }: FormCartProps) => {
   };
 
   const getProducts = async () => {
-    await new ProductService().getProductsByFormId(formik.values["formId"]).then(response => {
+    let userId = getCookie("USER_ID");
+    await new ProductService().getProductsByUserId(userId).then(response => {
       response.result &&
         setProducts(
           response.result.map(product => {
@@ -264,67 +268,84 @@ export const FormCart = ({ index, formik, disabled }: FormCartProps) => {
     updateFormikCart();
   }, [value]);
 
-  // useEffect(() => {
-  //   formik.values["response"].at(index).length === 0 && setValue([]);
-  // }, [formik.values["response"]]);
-
-  // console.log("values", formik.values["response"]);
-
   return (
     <FormControl variant="standard" sx={{ width: "100%" }}>
       {!disabled && (
         <Box>
-          <Autocomplete
-            freeSolo
-            multiple
-            fullWidth
-            disableCloseOnSelect
-            options={products}
-            renderTags={() => null}
-            renderInput={params => {
-              const { InputLabelProps, InputProps, ...rest } = params;
-              return (
-                <StyledInput
-                  {...params.InputProps}
-                  {...rest}
-                  onKeyDown={e => {
-                    // console.log(e.code);
-                    if (e.code === "Enter") {
-                      e.preventDefault();
-                      e.stopPropagation();
-                      formik.values["formId"] &&
-                        createProduct({
-                          formId: formik.values["formId"],
-                          name: e.currentTarget.value.split("/").at(0),
-                          productPrice: Number(e.currentTarget.value.split("/").at(-2)),
-                          quantity: Number(e.currentTarget.value.split("/").at(-1)),
-                        } as ProductDTO);
-                    } else if (e.code === "Backspace") {
-                      e.stopPropagation();
-                    }
-                  }}
-                />
-              );
-            }}
-            getOptionLabel={option => option.name}
-            renderOption={(props, option, { selected }) => (
-              <li {...props}>
-                <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%" }}>
-                  <Box sx={{ display: "flex", alignItems: "center" }}>
-                    <Checkbox size="small" checked={selected || value.some(value => value.uuid === option.uuid)} />
-                    {option.name}
+          <Box display="flex">
+            <Autocomplete
+              freeSolo
+              multiple
+              fullWidth
+              // disableClearable
+              disableCloseOnSelect
+              options={products}
+              renderTags={() => null}
+              renderInput={params => {
+                const { InputLabelProps, InputProps, ...rest } = params;
+                return (
+                  <StyledInput
+                    {...params.InputProps}
+                    {...rest}
+                    onKeyDown={e => {
+                      // console.log(e.code);
+                      if (e.code === "Enter") {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        !StringUtils.isNullOrEmty(e.currentTarget.value) &&
+                          formik.values["formId"] &&
+                          createProduct({
+                            formId: formik.values["formId"],
+                            name: e.currentTarget.value.split("/").at(0),
+                            productPrice: Number(e.currentTarget.value.split("/").at(-2)),
+                            quantity: Number(e.currentTarget.value.split("/").at(-1)),
+                          } as ProductDTO);
+                      } else if (e.code === "Backspace") {
+                        e.stopPropagation();
+                      } else {
+                        setRawValue(e.currentTarget.value);
+                      }
+                    }}
+                  />
+                );
+              }}
+              getOptionLabel={option => option.name}
+              renderOption={(props, option, { selected }) => (
+                <li {...props}>
+                  <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%" }}>
+                    <Box sx={{ display: "flex", alignItems: "center" }}>
+                      <Checkbox size="small" checked={selected || value.some(value => value.uuid === option.uuid)} />
+                      {option.name}
+                    </Box>
+                    <Box>
+                      {option.productPrice}
+                      {" đ"}
+                    </Box>
                   </Box>
-                  <Box>
-                    {option.productPrice}
-                    {" đ"}
-                  </Box>
-                </Box>
-              </li>
-            )}
-            onChange={(event: any, newValue: any) => {
-              setValue(newValue);
-            }}
-          />
+                </li>
+              )}
+              onChange={(event: any, newValue: any) => {
+                setValue(newValue);
+              }}
+              sx={{ marginRight: 2 }}
+            />
+            <CustomButton
+              text={"Tạo sản phẩm"}
+              type={"outlined"}
+              startIcon="lightAdd"
+              handleOnClick={() => {
+                // TODO: check valid input
+                !StringUtils.isNullOrEmty(rawValue) &&
+                  formik.values["formId"] &&
+                  createProduct({
+                    formId: formik.values["formId"],
+                    name: rawValue.split("/").at(0),
+                    productPrice: Number(rawValue.split("/").at(-2)),
+                    quantity: Number(rawValue.split("/").at(-1)),
+                  } as ProductDTO);
+              }}
+            />
+          </Box>
           <FormHelperText
             sx={{
               color: COLORS.lightText,

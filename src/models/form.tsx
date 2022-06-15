@@ -1,5 +1,6 @@
 import { CreateFieldsFormProps } from "components/CreateFieldsForm";
 import { ComponentType, ValidationType } from "constants/forms";
+import { CommentDTO } from "./comment";
 
 export interface FormDTO {
   uuid: string;
@@ -12,6 +13,7 @@ export interface FormDTO {
   layoutJson: string;
   sections?: CreateFieldsFormProps<any, any>[];
   responsePermission?: string;
+  createdBy?: string;
 }
 
 export interface FormResponseDTO {
@@ -20,6 +22,11 @@ export interface FormResponseDTO {
   orderName: string;
   createdDate: Date;
   response: any; // layout and response must be of the same length in order to map the answers to the components
+  requested?: boolean;
+  confirmed?: boolean;
+  comments?: CommentDTO[];
+  discount?: string;
+  status?: string;
 }
 
 export interface FormLayoutDTO {

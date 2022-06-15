@@ -12,7 +12,7 @@ import * as Yup from "yup";
 export interface DialogRequestEditOrderProps {
   orderId: string;
   openDialog: boolean;
-  handleCloseDialog: () => void;
+  handleCloseDialog: (result: CommentDTO) => void;
 }
 
 const DialogRequestEditOrder = (props: DialogRequestEditOrderProps) => {
@@ -22,11 +22,16 @@ const DialogRequestEditOrder = (props: DialogRequestEditOrderProps) => {
     message: Yup.string().trim().required("Vui lòng nhập lời nhắn cho người bán"),
   });
 
+  const closeDialog = (result: CommentDTO) => {
+    formik.resetForm();
+    props.handleCloseDialog(result);
+  };
+
   const handleSubmitForm = async (values: CommentDTO) => {
     await new CommentService().createComment(values).then(response => {
       if (Number(response.code) === 200) {
         dispatch(openNotification({ open: true, content: response.message, severity: "success" }));
-        closeDialog();
+        closeDialog(response.result);
       }
     });
   };
@@ -49,11 +54,6 @@ const DialogRequestEditOrder = (props: DialogRequestEditOrderProps) => {
     },
   ];
 
-  function closeDialog() {
-    formik.resetForm();
-    props.handleCloseDialog();
-  }
-
   return (
     <Dialog fullWidth maxWidth="sm" open={props.openDialog} onClose={closeDialog}>
       <DialogTitle>
@@ -65,7 +65,7 @@ const DialogRequestEditOrder = (props: DialogRequestEditOrderProps) => {
           <Grid container>
             <Grid item xs={12} sx={{ marginBottom: 2, paddingX: "10px", lineHeight: 1.5 }}>
               {
-                "Bạn không có quyền để chỉnh sửa thông tin đơn hàng này. Vui lòng để lại lời nhắn cho người bán để yêu cầu chỉnh sửa thông tin."
+                "Vui lòng để lại lời nhắn cho người bán để yêu cầu chỉnh sửa thông tin."
               }
             </Grid>
             <CreateFields formik={formik} fields={fields} />
@@ -82,7 +82,7 @@ const DialogRequestEditOrder = (props: DialogRequestEditOrderProps) => {
                   text="Đóng"
                   type="outlined"
                   handleOnClick={() => {
-                    closeDialog();
+                    closeDialog({} as CommentDTO);
                   }}
                 />
               </Box>
