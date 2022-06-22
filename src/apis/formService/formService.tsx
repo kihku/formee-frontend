@@ -56,4 +56,17 @@ export class FormService extends BaseService {
       });
     return data;
   };
+
+  getFormsByUserId = async (userId: string): Promise<any> => {
+    let data: any = {};
+    await AXIOS_INSTANCE.get(`${this.url}/find-all/${userId}`, this.getRequestHeaders())
+      .then(response => {
+        data = response.data;
+      })
+      .catch(error => {
+        console.log(error);
+        return Promise.reject(error);
+      });
+    return data;
+  };
 }

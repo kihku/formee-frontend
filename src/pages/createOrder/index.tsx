@@ -18,9 +18,8 @@ import { FormService } from "apis/formService/formService";
 import { FormAddress } from "components/CreateFieldsForm/FormFields/FormAddress";
 import { OrderService } from "apis/orderService/orderService";
 import { CustomTextField } from "components/CustomTextField";
-import { CustomerService } from "apis/customerService/customerService";
-import { getCookie } from "utils/cookieUtils";
 import { FormPhoneSearch } from "components/CreateFieldsForm/FormFields/FormPhoneSearch";
+import DialogFinishOrder from "./dialogFinish";
 
 function CreateOrderPage() {
   const location = useLocation();
@@ -28,17 +27,23 @@ function CreateOrderPage() {
   const { t } = useTranslation(["forms", "buttons", "orders"]);
 
   const [form, setForm] = useState<FormDTO>({} as FormDTO);
+  const [responseId, setResponseId] = useState<string>("");
+  const [orderName, setOrderName] = useState<string>("");
   const [fields, setFields] = useState<FormSectionDTO[]>([]);
+  const [openDialog, setOpenDialog] = useState<boolean>(false);
 
   const validationSchema = Yup.object().shape({});
 
   const handleSubmitForm = async (values: any) => {
     await new OrderService().createOrder({ ...values, response: JSON.stringify(values.response) }).then(response => {
-      navigate("/order/view", {
-        state: {
-          orderId: response.result.uuid,
-        },
-      });
+      setResponseId(response.result.uuid);
+      setOrderName(response.result.orderName);
+      setOpenDialog(true);
+      // navigate("/order/view", {
+      //   state: {
+      //     orderId: response.result.uuid,
+      //   },
+      // });
     });
   };
 
@@ -63,6 +68,7 @@ function CreateOrderPage() {
           }
           sectionDTO.components.push({
             index: index,
+            isEditing: true,
             xs: component.xs,
             type: component.type,
             label: component.title,
@@ -143,7 +149,7 @@ function CreateOrderPage() {
                   { text: t("orders:order_new"), highlight: true },
                 ]}
               />
-              <Box sx={{ display: "flex", gap: 1.5 }}>
+              {/* <Box sx={{ display: "flex", gap: 1.5 }}>
                 <CustomButton
                   text="Quản lý"
                   type="rounded-outlined"
@@ -157,7 +163,7 @@ function CreateOrderPage() {
                     });
                   }}
                 />
-              </Box>
+              </Box> */}
             </Box>
           </Grid>
           <Grid item xs={12}>
@@ -175,9 +181,9 @@ function CreateOrderPage() {
               <CreateFieldsForm disabled={false} enableEditing={false} formik={formik} sections={fields} />
               <Grid item xs={12} sx={{ display: "flex", justifyContent: "flex-end", gap: 2, marginTop: 2 }}>
                 <CustomButton
-                  text="Lưu đơn hàng"
+                  text="Tạo đơn hàng"
                   type="rounded-outlined"
-                  startIcon="add"
+                  startIcon="checkCircle"
                   color={COLORS.primary}
                   handleOnClick={() => {
                     formik.handleSubmit();
@@ -187,6 +193,16 @@ function CreateOrderPage() {
             </CustomBackgroundCard>
           </Grid>
         </Grid>
+        {openDialog && (
+          <DialogFinishOrder
+            orderName={orderName}
+            responseId={responseId}
+            openDialog={openDialog}
+            handleCloseDialog={() => {
+              setOpenDialog(false);
+            }}
+          />
+        )}
       </Grid>
     </Box>
   );

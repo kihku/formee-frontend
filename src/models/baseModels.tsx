@@ -65,7 +65,7 @@ export interface FilterFieldGeneral<T, K> {
   formik?: FormikType<T>;
 
   // text field
-  type: "text" | "checkbox" | "picker";
+  type: "text" | "checkbox" | "picker" | "select";
 
   // select
   options?: K[];

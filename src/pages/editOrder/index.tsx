@@ -18,26 +18,43 @@ import { FormService } from "apis/formService/formService";
 import { FormAddress } from "components/CreateFieldsForm/FormFields/FormAddress";
 import { OrderService } from "apis/orderService/orderService";
 import { StyledInput } from "components/CustomTextField";
+import { FormSection } from "components/CreateFieldsForm/FormFields/FormSection";
+import { HistoryItem } from "pages/orders/components/historyItem";
+import DialogRequestMessage from "./requestMessageDialog";
+import { CommentDTO } from "models/comment";
+import { useDispatch } from "react-redux";
+import { openNotification } from "redux/actions/notification";
 
-function EditOrderPage() {
+interface EditOrderPageProps {
+  fromRequest: boolean;
+}
+
+function EditOrderPage({ fromRequest }: EditOrderPageProps) {
   const navigate = useNavigate();
   const location = useLocation();
+  const dispatch = useDispatch();
   const { t } = useTranslation(["forms", "buttons", "orders"]);
 
   const [form, setForm] = useState<FormDTO>({} as FormDTO);
   const [formResponse, setFormResponse] = useState<FormResponseDTO>({} as FormResponseDTO);
   const [formId, setFormId] = useState<string>("");
   const [fields, setFields] = useState<FormSectionDTO[]>([]);
+  const [openMessageDialog, setOpenMessageDialog] = useState<boolean>(false);
 
   const validationSchema = Yup.object().shape({});
 
   const handleSubmitForm = async (values: any) => {
     await new OrderService().createOrder({ ...values, response: JSON.stringify(values.response) }).then(response => {
-      navigate("/order/view", {
-        state: {
-          orderId: response.result.uuid,
-        },
-      });
+      if (Number(response.code) === 200) {
+        dispatch(openNotification({ open: true, content: response.message, severity: "success" }));
+        navigate("/order/view", {
+          state: {
+            orderId: response.result.uuid,
+          },
+        });
+      } else {
+        dispatch(openNotification({ open: true, content: response.message, severity: "error" }));
+      }
     });
   };
 
@@ -69,7 +86,7 @@ function EditOrderPage() {
             options: component.type === "STATUS" ? orderStatusList : [],
             required: component.validation.some((val: any) => val.type === "REQUIRED"),
             Component:
-              component.type === "TEXT"
+              component.type === "TEXT" || component.type === "PHONE"
                 ? FormTextField
                 : component.type === "STATUS"
                 ? FormSelect
@@ -189,19 +206,43 @@ function EditOrderPage() {
                 </Grid>
               </Grid>
               <CreateFieldsForm disabled={false} enableEditing={false} formik={formik} sections={fields} />
+              <Grid item xs={12} sx={{ marginBottom: 3 }}>
+                <FormSection index={2} title={"C. Lịch sử"} />
+                {formResponse.comments?.map(comment => {
+                  return (
+                    <HistoryItem
+                      item={comment}
+                      direction={comment.createdBy === String(form.createdBy) ? "left" : "right"}
+                    />
+                  );
+                })}
+              </Grid>
               <Grid item xs={12} sx={{ display: "flex", justifyContent: "flex-end", gap: 2, marginTop: 2 }}>
                 <CustomButton
-                  text="Save order"
+                  text="Lưu đơn hàng"
                   type="rounded-outlined"
-                  startIcon="add"
+                  startIcon="checkCircle"
                   color={COLORS.primary}
                   handleOnClick={() => {
-                    formik.handleSubmit();
+                    // formik.handleSubmit();
+                    setOpenMessageDialog(true);
                   }}
                 />
               </Grid>
             </CustomBackgroundCard>
           </Grid>
+          {openMessageDialog && (
+            <DialogRequestMessage
+              orderId={formResponse.uuid}
+              openDialog={openMessageDialog}
+              handleCloseDialog={(result: CommentDTO) => {
+                formik.handleSubmit();
+                setOpenMessageDialog(false);
+                // navigate("/orders");
+                // getOrderResponse(orderId);
+              }}
+            />
+          )}
         </Grid>
       </Grid>
     </Box>

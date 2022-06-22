@@ -40,7 +40,7 @@ const DialogFormTemplate = ({ item, openDialog, handleCloseDialog }: DialogFormT
   const validationSchema = Yup.object().shape({});
 
   const formNameValidationSchema = Yup.object().shape({
-    name: Yup.string().trim().required("Form name must not be empty"),
+    name: Yup.string().trim().required("Tên form không được bỏ trống"),
   });
 
   const formik = useFormik({
@@ -158,24 +158,18 @@ const DialogFormTemplate = ({ item, openDialog, handleCloseDialog }: DialogFormT
   }, [form]);
 
   return (
-    <Dialog fullWidth maxWidth="xl" open={openDialog} onClose={closeDialog}>
+    <Dialog fullWidth maxWidth="sm" open={openDialog} onClose={closeDialog}>
       <DialogTitle>
         <Box sx={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
           <Box sx={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
-            <CustomTitle
-              text={[
-                { text: "Template", highlight: false },
-                { text: "/", highlight: false },
-                { text: item.name, highlight: true },
-              ]}
-            />
+            <CustomTitle text={[{ text: "Tạo form mới", highlight: true }]} />
           </Box>
           <Box sx={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
-            <Tooltip title={t("template_link")}>
+            {/* <Tooltip title={t("template_link")}>
               <IconButton>
                 <CustomIcon name="copyLink" color={COLORS.primary} />
               </IconButton>
-            </Tooltip>
+            </Tooltip> */}
             <IconButton onClick={closeDialog}>
               <CustomIcon name="close" size={30} />
             </IconButton>
@@ -185,7 +179,7 @@ const DialogFormTemplate = ({ item, openDialog, handleCloseDialog }: DialogFormT
 
       <DialogContent dividers>
         <Grid container>
-          <Grid item xs={8} sx={{ paddingX: 1.5, paddingTop: 1.5 }}>
+          {/* <Grid item xs={8} sx={{ paddingX: 1.5, paddingTop: 1.5 }}>
             <Box sx={{ width: "100%", maxHeight: 200 }}>
               <img
                 src={item.image ? `data:image/png;base64,${item.image}` : "/images/Ramen-amico.svg"}
@@ -200,12 +194,12 @@ const DialogFormTemplate = ({ item, openDialog, handleCloseDialog }: DialogFormT
             <Box sx={{ marginY: 3 }}>
               <CreateFieldsForm enableEditing={false} formik={formik} sections={fields} />
             </Box>
-          </Grid>
+          </Grid> */}
           <Grid
             item
-            xs={4}
+            xs={12}
             sx={{
-              paddingLeft: 3,
+              // paddingLeft: 3,
               display: "flex",
               flexDirection: "column",
               justifyContent: "space-between",
@@ -221,9 +215,9 @@ const DialogFormTemplate = ({ item, openDialog, handleCloseDialog }: DialogFormT
                 <Typography fontSize={35} fontWeight={600}>
                   {item.name}
                 </Typography>
-                <CustomTextField name="name" placeholder="Enter form name" formik={formNameFormik} />
+                <CustomTextField name="name" placeholder="Nhập tên form" formik={formNameFormik} />
                 <CustomButton
-                  text={"Use this template"}
+                  text={"Tạo form mới"}
                   type={"default"}
                   endIcon={"rightArrow"}
                   style={{ marginY: 1, fontSize: 16, fontWeight: 400 }}
@@ -231,12 +225,12 @@ const DialogFormTemplate = ({ item, openDialog, handleCloseDialog }: DialogFormT
                     formNameFormik.handleSubmit();
                   }}
                 />
-                <Divider sx={{ marginY: 1 }} />
+                {/* <Divider sx={{ marginY: 1 }} />
                 <Typography>
                   Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
                   dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
                   aliquip ex ea commodo consequat
-                </Typography>
+                </Typography> */}
               </Box>
             </Box>
           </Grid>

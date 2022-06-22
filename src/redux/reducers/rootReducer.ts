@@ -1,9 +1,9 @@
 import { combineReducers } from "redux";
-import AvatarReducer from "./avatarReducer";
+import UserInfoReducer from "./userInfoReducer";
 import { NotificationReducer } from "./notificationReducer";
 
 export const rootReducer = combineReducers({
-  globalAvatar: AvatarReducer,
+  userInfo: UserInfoReducer,
   notification: NotificationReducer,
 });
 

@@ -21,6 +21,7 @@ import CommonUtils from "utils/commonUtils";
 import { useLocation, useNavigate } from "react-router-dom";
 import { openNotification } from "redux/actions/notification";
 import { useDispatch } from "react-redux";
+import { FormAddress } from "components/CreateFieldsForm/FormFields/FormAddress";
 
 export interface ReviewOrderPageProps {}
 
@@ -57,18 +58,21 @@ const ReviewOrderPage = ({}: ReviewOrderPageProps) => {
           sectionDTO.components.push({
             index: index,
             disabled: true,
+            isEditing: false,
             xs: component.xs,
             type: component.type,
             label: component.title,
             options: component.type === "STATUS" ? orderStatusList : [],
             required: component.validation.some((val: any) => val.type === "REQUIRED"),
             Component:
-              component.type === "TEXT" || component.type === "ADDRESS"
+              component.type === "TEXT" || component.type === "PHONE"
                 ? FormTextField
                 : component.type === "STATUS"
                 ? FormSelect
                 : component.type === "CART"
                 ? FormCart
+                : component.type === "ADDRESS"
+                ? FormAddress
                 : undefined,
           });
           index++;

@@ -1,4 +1,4 @@
-import { Avatar, Box } from "@mui/material";
+import { Avatar, Box, Divider, Grid } from "@mui/material";
 import { CommentDTO } from "models/comment";
 import { COLORS } from "styles";
 import DateUtils from "utils/dateUtils";
@@ -10,15 +10,28 @@ interface HistoryItemProps {
 
 export const HistoryItem = ({ item, direction }: HistoryItemProps) => {
   return (
-    <Box
+    <Grid
+      container
       sx={{
-        paddingY: 1,
+        marginBottom: 4,
         display: "flex",
-        alignItems: "flex-end",
-        flexDirection: direction === "left" ? "row" : "row-reverse",
+        alignItems: "center",
+        gap: 2,
+        // flexDirection: direction === "left" ? "row" : "row-reverse",
       }}
     >
-      <Avatar sx={{ backgroundColor: direction === "left" ? COLORS.primaryLight : COLORS.red }}>
+      <Grid item xs={2} sx={{ color: COLORS.lightText }}>
+        {DateUtils.getTimeDifference(new Date(item.createdDate), new Date())}
+      </Grid>
+      <Grid item xs={8} sx={{ display: "flex", alignItems: "center" }}>
+        <Box sx={{ color: direction === "left" ? COLORS.primary : COLORS.red, marginRight: 2 }}>
+          {item.createdBy}
+          {": "}
+        </Box>
+        <Box>{item.message}</Box>
+      </Grid>
+      {/* <Divider orientation="vertical" flexItem sx={{ borderBottomWidth: "2px", height: "10px" }} /> */}
+      {/* <Avatar sx={{ backgroundColor: direction === "left" ? COLORS.primaryLight : COLORS.red }}>
         {String(item.createdBy[0]).toUpperCase()}
       </Avatar>
       <Box sx={{ display: "flex", flexDirection: "column" }}>
@@ -39,7 +52,7 @@ export const HistoryItem = ({ item, direction }: HistoryItemProps) => {
             {DateUtils.getTimeDifference(new Date(item.createdDate), new Date())}
           </Box>
         </Box>
-      </Box>
-    </Box>
+      </Box> */}
+    </Grid>
   );
 };

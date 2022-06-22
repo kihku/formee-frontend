@@ -5,15 +5,16 @@ import { CustomOption } from "models/baseModels";
 interface CustomSelectProps {
   label?: string;
   options: CustomOption[];
+  value?: any;
   defaultValue?: any;
   handleOnChange: (event: any) => void;
   disabled?: boolean;
 }
 
-export const CustomSelect = ({ label, options, defaultValue, handleOnChange, disabled }: CustomSelectProps) => {
+export const CustomSelect = ({ label, options, value, defaultValue, handleOnChange, disabled }: CustomSelectProps) => {
   return (
     <FormControl variant="standard" sx={{ width: "100%" }} disabled={disabled}>
-      <Select defaultValue={defaultValue} onChange={handleOnChange} input={<StyledInput />}>
+      <Select value={value} defaultValue={defaultValue} onChange={handleOnChange} input={<StyledInput />}>
         {options.map((option, key) => {
           return <MenuItem value={option.value}>{option.title}</MenuItem>;
         })}

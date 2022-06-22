@@ -1,4 +1,5 @@
-import { Chip, SxProps } from "@mui/material";
+import { Box, Chip, SxProps } from "@mui/material";
+import ArrowDropDownRoundedIcon from "@mui/icons-material/ArrowDropDownRounded";
 
 interface CustomChipProps {
   text: string | React.ReactNode;
@@ -6,8 +7,9 @@ interface CustomChipProps {
   backgroundColor?: string;
   size?: number;
   clickable?: boolean;
+  isSelect?: boolean;
   rounded?: boolean;
-  handleOnClick?: () => void;
+  handleOnClick?: (e: any) => void;
   style?: SxProps;
 }
 
@@ -20,21 +22,29 @@ export const CustomChip = ({
   rounded,
   handleOnClick,
   style,
+  isSelect,
 }: CustomChipProps) => {
   return (
     <Chip
-      label={text}
+      label={
+        <Box sx={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "center" }}>
+          {text}
+          {isSelect && <ArrowDropDownRoundedIcon />}
+        </Box>
+      }
       onClick={handleOnClick}
       sx={{
         backgroundColor: backgroundColor,
         color: textColor,
         fontSize: size,
         fontWeight: 500,
-        paddingX: rounded ? 0 : 1,
+        paddingLeft: rounded ? 0 : 1,
+        paddingRight: isSelect ? 0 : 1,
         cursor: clickable ? "pointer" : "default",
         borderRadius: rounded ? 50 : "auto",
         ...style,
       }}
-    ></Chip>
+      // deleteIcon={}
+    />
   );
 };

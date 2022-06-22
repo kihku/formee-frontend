@@ -94,6 +94,13 @@ const CustomTableBody = <D extends object>({
           </StyledTableCell>
         </TableRow>
       )}
+      {rows.length === 0 && (
+        <TableRow>
+          <StyledTableCell scope="row" colSpan={columns.length + 2} sx={{ textAlign: "center" }}>
+            Bạn không có đơn hàng nào.
+          </StyledTableCell>
+        </TableRow>
+      )}
       {/* {isCart && (
         <TableRow>
           <StyledTableCell scope="row" colSpan={columns.length + 2} sx={{ textAlign: "center" }}>

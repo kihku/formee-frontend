@@ -1,4 +1,4 @@
-import { Box, Grid, Paper, CssBaseline, Link, Typography, ThemeProvider } from "@mui/material";
+import { Box, Grid, Paper, CssBaseline, Link, Typography, ThemeProvider, InputLabel } from "@mui/material";
 import { CustomButton } from "components/CustomButton";
 import { CustomTextField } from "components/CustomTextField";
 import { GoogleLoginButton } from "../../firebase/googleLoginButton";
@@ -6,9 +6,26 @@ import { GoogleLoginButton } from "../../firebase/googleLoginButton";
 import { COLORS } from "styles";
 import { lightTheme } from "styles/theme";
 import { useNavigate } from "react-router-dom";
+import CreateFields, { CreateFieldsProps } from "components/CreateFields";
+import { useFormik } from "formik";
+import * as Yup from "yup";
 
 function LoginPage() {
   const navigate = useNavigate();
+
+  const validationSchema = Yup.object().shape({});
+
+  const formik = useFormik({
+    initialValues: {} as any,
+    onSubmit: handleSubmitForm,
+    validationSchema: validationSchema,
+    validateOnChange: false,
+  });
+
+  async function handleSubmitForm(values: any) {
+    console.log("values", values);
+    // closeDialog();
+  }
 
   return (
     <Paper
@@ -98,6 +115,7 @@ function LoginPage() {
               <Typography fontWeight={500} color={COLORS.lightText}>
                 Register your account
               </Typography>
+              {/* <CreateFields formik={formik} fields={fields} /> */}
               <Box
                 sx={{
                   paddingTop: "5%",
@@ -107,25 +125,31 @@ function LoginPage() {
                   flexDirection: "column",
                 }}
               >
-                <CustomTextField
+                {/* <CustomTextField
                   label="Name"
                   handleOnChange={e => {
                     // alert(e.target.value);
                   }}
-                ></CustomTextField>
+                ></CustomTextField> */}
+                <InputLabel shrink sx={{ fontSize: "18px", fontWeight: 500 }}>
+                  {"Email/Phone"}
+                </InputLabel>
                 <CustomTextField
                   label="Email"
                   handleOnChange={e => {
                     // alert(e.target.value);
                   }}
-                ></CustomTextField>
+                />
+                <InputLabel shrink sx={{ fontSize: "18px", fontWeight: 500 }}>
+                  {"Password"}
+                </InputLabel>
                 <CustomTextField
                   type="password"
                   label="Password"
                   handleOnChange={e => {
                     // alert(e.target.value);
                   }}
-                ></CustomTextField>
+                />
               </Box>
             </Box>
             <Box

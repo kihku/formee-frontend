@@ -16,9 +16,9 @@ export interface FieldsArray<T, K> {
 }
 
 export const CreateFieldsFilter = <T extends object, K extends object>({ fields, formik }: FieldsArray<T, K>) => {
-  const [expanded, setExpanded] = useState<boolean[]>(Array.from({ length: fields.length }, () => true));
+  const [expanded, setExpanded] = useState<boolean[]>(Array.from({ length: fields.length }, () => false));
 
-  const getValueCount = (type: "text" | "checkbox" | "picker", value: any) => {
+  const getValueCount = (type: "text" | "checkbox" | "picker" | "select", value: any) => {
     switch (type) {
       case "text":
         return StringUtils.isNullOrEmty(value) ? 0 : 1;
@@ -28,7 +28,7 @@ export const CreateFieldsFilter = <T extends object, K extends object>({ fields,
   };
 
   useEffect(() => {
-    console.log("formik", formik.values);
+    // console.log("formik", formik.values);
   }, [formik.values]);
 
   return (

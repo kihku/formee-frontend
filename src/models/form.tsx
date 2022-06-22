@@ -14,6 +14,7 @@ export interface FormDTO {
   sections?: CreateFieldsFormProps<any, any>[];
   responsePermission?: string;
   createdBy?: string;
+  isDefault?: boolean;
 }
 
 export interface FormResponseDTO {
@@ -51,3 +52,19 @@ export interface FormValidationDTO {
   controlValue?: any;
   errorMessgage?: string;
 }
+
+export interface FormOrderSearchRequest {
+  formId: string;
+  startDate: string;
+  endDate: string;
+  keywords: string;
+  orderStatus: string[];
+}
+
+export const initFilterRequest: FormOrderSearchRequest = {
+  formId: "",
+  startDate: "",
+  endDate: "",
+  keywords: "",
+  orderStatus: [],
+};

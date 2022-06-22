@@ -277,7 +277,7 @@ export const FormCart = ({ index, formik, disabled }: FormCartProps) => {
               freeSolo
               multiple
               fullWidth
-              // disableClearable
+              disableClearable
               disableCloseOnSelect
               options={products}
               renderTags={() => null}

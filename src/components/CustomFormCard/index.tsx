@@ -1,5 +1,4 @@
 import { Box, Card, CardActionArea, CardMedia, Typography } from "@mui/material";
-import { CustomChip } from "components/CustomChip";
 import { FormDTO } from "models/form";
 import { useNavigate } from "react-router-dom";
 import { COLORS } from "styles";
@@ -16,7 +15,7 @@ export const CustomFormCard = ({ item, handleOnClick }: FormCardProps) => {
     borderRadius: 5,
     border: "2.5px solid " + COLORS.primary,
     maxWidth: 400,
-    maxHeight: 200,
+    maxHeight: 180,
   };
 
   return (
@@ -40,8 +39,8 @@ export const CustomFormCard = ({ item, handleOnClick }: FormCardProps) => {
         >
           <CardMedia
             component="img"
-            height="250px"
-            image={item.image ? `data:image/png;base64,${item.image}` : "/images/Ramen-amico.svg"}
+            height="150px"
+            image={item.image ? `data:image/png;base64,${item.image}` : "/images/default.svg"}
             alt="form image"
           />
         </CardActionArea>

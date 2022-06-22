@@ -2,7 +2,7 @@ import { initializeApp } from "firebase/app";
 import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 
 //redux
-import { updateAvatar } from "../redux/actions";
+import { updateUserInfo } from "../redux/actions";
 import { useDispatch } from "react-redux";
 import { IconButton } from "@mui/material";
 import { CustomIcon } from "components/CustomIcon";
@@ -45,8 +45,8 @@ export const GoogleLoginButton = () => {
             // This gives you a Google Access Token. You can use it to access the Google API.
             const credential = GoogleAuthProvider.credentialFromResult(result);
             if (credential !== null) {
-              if (result.user.photoURL !== null) {
-                dispatch(updateAvatar(result.user.photoURL));
+              if (result.user.photoURL !== null && result.user.displayName !== null) {
+                dispatch(updateUserInfo(result.user.displayName, result.user.photoURL));
               }
             }
             result.user.getIdToken(true).then(idToken => {

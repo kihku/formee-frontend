@@ -1,20 +1,21 @@
-import { Grid, IconButton, Tooltip } from "@mui/material";
-import { COLORS } from "styles";
-import { CustomIcon } from "components/CustomIcon";
+/* eslint-disable jsx-a11y/alt-text */
+import { Box, Grid, Icon, IconButton, InputBase, MenuItem, Select, Tooltip } from "@mui/material";
 import { CustomAvatar } from "components/CustomAvatar";
-import { useSelector } from "react-redux";
-import { RootState } from "redux/reducers/rootReducer";
-import { useNavigate } from "react-router-dom";
 import { CustomChip } from "components/CustomChip";
+import { CustomIcon } from "components/CustomIcon";
 import { useTranslation } from "react-i18next";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { RootState } from "redux/reducers/rootReducer";
+import { COLORS } from "styles";
 
 export const Header = () => {
   const { t, i18n } = useTranslation(["commons"]);
   const navigate = useNavigate();
 
-  const avatarURL = useSelector((state: RootState) => {
+  const userInfo = useSelector((state: RootState) => {
     // console.log("use selector called");
-    return state.globalAvatar.value;
+    return state.userInfo;
   });
 
   const changeLanguage = (language: "en" | "vi") => {
@@ -37,16 +38,6 @@ export const Header = () => {
     >
       <Grid
         item
-        xs={2}
-        sx={{ cursor: "pointer" }}
-        onClick={() => {
-          changeLanguage(i18n.language === "en" ? "vi" : "en");
-        }}
-      >
-        Logo / Change language
-      </Grid>
-      <Grid
-        item
         xs={8}
         sx={{
           display: "flex",
@@ -55,6 +46,16 @@ export const Header = () => {
           gap: 1.5,
         }}
       >
+        <Box
+          sx={{ display: "flex", alignItems: "center", marginRight: 5 }}
+          onClick={() => {
+            navigate("/home");
+          }}
+        >
+          <Icon sx={{ transform: "scale(1.8)", cursor: "pointer" }}>
+            <img src="/images/logo.svg" height="100%" />
+          </Icon>
+        </Box>
         <CustomChip
           clickable
           text={t("header_home")}
@@ -67,18 +68,6 @@ export const Header = () => {
             navigate("/home");
           }}
         />
-        {/* <CustomChip
-          clickable
-          text={t("header_form")}
-          backgroundColor={
-            window.location.href === "http://localhost:3000/form/create" ? COLORS.primaryBackground : COLORS.white
-          }
-          textColor={window.location.href === "http://localhost:3000/form/create" ? COLORS.primary : COLORS.text}
-          size={18}
-          handleOnClick={() => {
-            navigate("/form/create");
-          }}
-        /> */}
         <CustomChip
           clickable
           backgroundColor={
@@ -115,22 +104,10 @@ export const Header = () => {
             navigate("/report");
           }}
         /> */}
-        {/* <CustomChip
-          clickable
-          backgroundColor={
-            window.location.href === "http://localhost:3000/components" ? COLORS.primaryBackground : COLORS.white
-          }
-          textColor={window.location.href === "http://localhost:3000/components" ? COLORS.primary : COLORS.text}
-          text={t("header_components")}
-          size={18}
-          handleOnClick={() => {
-            navigate("/components");
-          }}
-        /> */}
       </Grid>
       <Grid
         item
-        xs={2}
+        xs={4}
         sx={{
           display: "flex",
           flexDirection: "row-reverse",
@@ -141,7 +118,7 @@ export const Header = () => {
           gap: 0.5,
         }}
       >
-        <CustomAvatar image={avatarURL} />
+        <CustomAvatar image={userInfo.image} />
         <Tooltip title={t("header_settings")}>
           <IconButton
             sx={{ marginRight: "10px" }}
@@ -150,11 +127,6 @@ export const Header = () => {
             }}
           >
             <CustomIcon name="settings" size={25} />
-          </IconButton>
-        </Tooltip>
-        <Tooltip title={t("header_notifications")}>
-          <IconButton>
-            <CustomIcon name="notification" size={28} />
           </IconButton>
         </Tooltip>
         <Tooltip title={t("header_help")}>
@@ -166,6 +138,54 @@ export const Header = () => {
             <CustomIcon name="about" size={28} />
           </IconButton>
         </Tooltip>
+        <Select
+          sx={{ marginLeft: 2 }}
+          input={<InputBase value={String(localStorage.getItem("i18nextLng"))} />}
+          onChange={event => {}}
+        >
+          <MenuItem
+            value={"vi"}
+            onClick={() => {
+              changeLanguage("vi");
+            }}
+          >
+            <Box
+              sx={{
+                whiteSpace: "nowrap",
+                textOverflow: "ellipsis",
+                overflow: "hidden",
+                fontSize: 14,
+                display: "flex",
+                alignItems: "center",
+                gap: 1.5,
+              }}
+            >
+              <img src={"/images/language-vi.png"} width={"20vh"} height={"20vh"} />
+              Tiếng Việt
+            </Box>
+          </MenuItem>
+          <MenuItem
+            value={"en"}
+            onClick={() => {
+              changeLanguage("en");
+            }}
+          >
+            <Box
+              sx={{
+                whiteSpace: "nowrap",
+                textOverflow: "ellipsis",
+                overflow: "hidden",
+                fontSize: 14,
+                display: "flex",
+                alignItems: "center",
+                gap: 1.5,
+              }}
+            >
+              <img src={"/images/language-en.png"} width={"20vh"} height={"20vh"} />
+              English
+            </Box>
+          </MenuItem>
+        </Select>
       </Grid>
     </Grid>
   );

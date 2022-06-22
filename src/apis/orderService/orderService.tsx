@@ -1,6 +1,6 @@
 import AXIOS_INSTANCE from "apis/axiosClient";
 import { BaseService, DataResponse } from "apis/baseService";
-import { FormDTO, FormResponseDTO } from "models/form";
+import { FormDTO, FormOrderSearchRequest, FormResponseDTO } from "models/form";
 
 export class OrderService extends BaseService {
   url = "/api/order";
@@ -31,9 +31,37 @@ export class OrderService extends BaseService {
     return data;
   };
 
-  getOrdersByFormId = async (formId: string): Promise<DataResponse<FormResponseDTO[]>> => {
+  updateOrderStatus = async (order: any): Promise<DataResponse<any>> => {
     let data: any = {};
-    await AXIOS_INSTANCE.get(`${this.url}/${formId}`, this.getRequestHeaders())
+    await AXIOS_INSTANCE.put(`${this.url}/update-status`, order, this.getRequestHeaders())
+      .then(response => {
+        data = response.data;
+      })
+      .catch(error => {
+        console.log(error);
+        return Promise.reject(error);
+      });
+    return data;
+  };
+
+  filterOrders = async (request: FormOrderSearchRequest): Promise<DataResponse<FormResponseDTO[]>> => {
+    let data: any = {};
+    await AXIOS_INSTANCE.post(`${this.url}/filter`, request, this.getRequestHeaders())
+      .then(response => {
+        data = response.data;
+      })
+      .catch(error => {
+        console.log(error);
+        return Promise.reject(error);
+      });
+    return data;
+  };
+
+  exportOrders = async (request: FormOrderSearchRequest): Promise<any> => {
+    let data: any = {};
+    await AXIOS_INSTANCE.post(`${this.url}/export`, request, {
+      responseType: "blob",
+    })
       .then(response => {
         data = response.data;
       })

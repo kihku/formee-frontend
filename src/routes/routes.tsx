@@ -1,7 +1,6 @@
 import { lazy } from "react";
 
 // lazy loading
-const ComponentsPage = lazy(() => import("pages/components"));
 const SettingsPage = lazy(() => import("pages/settings"));
 const GeneralErrorPage = lazy(() => import("pages/generalError"));
 const HomePage = lazy(() => import("pages/home"));
@@ -21,7 +20,6 @@ export interface RouteProps {
 export const PRIVATE_ROUTES: RouteProps[] = [];
 
 export const PUBLIC_ROUTES: RouteProps[] = [
-  { title: "Components", component: <ComponentsPage />, path: "/components" },
   { title: "Settings", component: <SettingsPage />, path: "/settings" },
   { title: "404 Not Found", component: <GeneralErrorPage />, path: "/error" },
   { title: "Home", component: <HomePage />, path: "/home" },
@@ -29,6 +27,7 @@ export const PUBLIC_ROUTES: RouteProps[] = [
   { title: "Create new form", component: <CreateFormPage />, path: "/form/create" },
   { title: "Create new order", component: <CreateOrderPage />, path: "/order/create" },
   { title: "View order", component: <ViewOrderPage />, path: "/order/view" },
-  { title: "Edit order", component: <EditOrderPage />, path: "/order/edit" },
+  { title: "Edit order", component: <EditOrderPage fromRequest={false} />, path: "/order/edit" },
+  { title: "Edit order request", component: <EditOrderPage fromRequest={true} />, path: "/order/request" },
   { title: "Products", component: <InventoryPage />, path: "/products" },
 ];

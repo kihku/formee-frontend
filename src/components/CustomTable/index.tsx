@@ -3,7 +3,6 @@ import { Pageable } from "models/baseModels";
 import React from "react";
 import { Column, TableInstance } from "react-table";
 import { COLORS } from "styles";
-import CustomCartFooter from "./cartFooter";
 import CustomTableBody from "./tableBody";
 import CustomTableFooter from "./tableFooter";
 import CustomTableHeader from "./tableHeader";
@@ -13,13 +12,13 @@ export interface CustomTableProps<D extends object> {
   table: TableInstance<D>;
   data?: Array<D>;
   pageParams?: Pageable;
-  onChangePageNumber?: (value: number) => void;
-  onChangePageSize?: (value: number) => void;
+  isCart?: boolean;
   showCheckbox?: boolean;
   highlightOnHover?: boolean;
-  isCart?: boolean;
   onAddCart?: () => void;
   onClickRow?: (row: any) => void;
+  onChangePageNumber?: (value: number) => void;
+  onChangePageSize?: (value: number) => void;
 }
 
 export const StyledTableCell = styled(TableCell)(({ theme }) => ({

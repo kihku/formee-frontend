@@ -79,9 +79,10 @@ export const FormPhoneSearch = ({ formik, disabled }: FormPhoneSearchProps) => {
                 formik.setFieldValue("response", [
                   value.phone,
                   value.name,
-                  value.address,
+                  JSON.parse(value.address),
                   ...formik.values["response"].slice(3),
                 ]);
+                formik.setFieldValue("loadAddress", true);
               }
             }}
           />

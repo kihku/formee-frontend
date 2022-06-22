@@ -48,6 +48,9 @@ import AutorenewRoundedIcon from "@mui/icons-material/AutorenewRounded";
 import AutoModeRoundedIcon from "@mui/icons-material/AutoModeRounded";
 import ManageSearchRoundedIcon from "@mui/icons-material/ManageSearchRounded";
 import ShareRoundedIcon from "@mui/icons-material/ShareRounded";
+import ContentCopyRoundedIcon from "@mui/icons-material/ContentCopyRounded";
+import EditOffRoundedIcon from "@mui/icons-material/EditOffRounded";
+import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
 import { COLORS } from "styles";
 
 export type IconType =
@@ -101,7 +104,10 @@ export type IconType =
   | "refresh"
   | "refresh-partial"
   | "preview"
-  | "share";
+  | "share"
+  | "duplicate"
+  | "disableEdit"
+  | "home";
 
 interface IconProps {
   name: IconType;
@@ -233,5 +239,11 @@ export const CustomIcon = ({ name, size, color }: IconProps) => {
       return <ManageSearchRoundedIcon sx={iconStyle} />;
     case "share":
       return <ShareRoundedIcon sx={iconStyle} />;
+    case "duplicate":
+      return <ContentCopyRoundedIcon sx={iconStyle} />;
+    case "disableEdit":
+      return <EditOffRoundedIcon sx={iconStyle} />;
+    case "home":
+      return <HomeRoundedIcon sx={iconStyle} />;
   }
 };

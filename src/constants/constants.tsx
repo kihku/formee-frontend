@@ -35,6 +35,15 @@ export const orderStatusList: CustomOption[] = [
   { title: "Đang giao hàng", value: "ON_THE_WAY", color: COLORS.blue, backgroundColor: COLORS.blueBackground },
   { title: "Hoàn thành", value: "COMPLETED", color: COLORS.green, backgroundColor: COLORS.greenBackground },
   { title: "Đã huỷ", value: "CANCELLED", color: COLORS.red, backgroundColor: COLORS.redBackground },
+  { title: "Đã xác nhận", value: "CONFIRMED", color: COLORS.primaryLight, backgroundColor: COLORS.primaryBackground },
+  { title: "Chờ chỉnh sửa", value: "REQUESTED", color: COLORS.yellow, backgroundColor: COLORS.yellowBackground },
+];
+
+export const editStatusList: CustomOption[] = [
+  { title: "Đang chuẩn bị", value: "PREPARING", color: COLORS.orange, backgroundColor: COLORS.orangeBackground },
+  { title: "Đang giao hàng", value: "ON_THE_WAY", color: COLORS.blue, backgroundColor: COLORS.blueBackground },
+  { title: "Hoàn thành", value: "COMPLETED", color: COLORS.green, backgroundColor: COLORS.greenBackground },
+  { title: "Huỷ", value: "CANCELLED", color: COLORS.red, backgroundColor: COLORS.redBackground },
 ];
 
 export const tinhThanhVN: CustomOption[] = [

@@ -1,13 +1,14 @@
-import { Box, Grid, IconButton, Tooltip, Typography, Zoom } from "@mui/material";
+import { Box, Grid, IconButton, Menu, MenuItem, Tooltip, Typography, Zoom } from "@mui/material";
 import { FormService } from "apis/formService/formService";
 import { OrderService } from "apis/orderService/orderService";
 import { TemplateService } from "apis/template/templateService";
 import { CustomBackgroundCard } from "components/CustomBackgroundCard";
+import { CustomButton } from "components/CustomButton";
 import { CustomChip } from "components/CustomChip";
 import { CustomFormCard } from "components/CustomFormCard";
 import { CustomIcon } from "components/CustomIcon";
 import CustomTable from "components/CustomTable";
-import { orderStatusList } from "constants/constants";
+import { editStatusList, orderStatusList } from "constants/constants";
 import { FormDTO, FormResponseDTO } from "models/form";
 import DialogFormTemplate from "pages/formGallery/dialogTemplate";
 import { useEffect, useMemo, useState } from "react";
@@ -27,10 +28,12 @@ function HomePage() {
 
   // const [templates, setTemplates] = useState<FormDTO[]>([]);
   const [form, setForm] = useState<FormDTO>({} as FormDTO);
+  const [item, setItem] = useState<FormResponseDTO>({} as FormResponseDTO);
   const [recentForms, setRecentForms] = useState<FormDTO[]>([]);
   const [chosenItem, setChosenItem] = useState<FormDTO>({} as FormDTO);
   const [openTemplateDialog, setOpenTemplateDialog] = useState<boolean>(false);
   const [recentOrders, setRecentOrders] = useState<FormResponseDTO[]>([]);
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
   // const getFormTemplates = async () => {
   //   await new TemplateService().getTemplateGallery().then(response => {
@@ -44,55 +47,21 @@ function HomePage() {
     });
   };
 
+  const openMenuStatus = Boolean(anchorEl);
+
+  const handleOpenMenu = (event: React.MouseEvent<any>, response: FormResponseDTO) => {
+    setAnchorEl(event.currentTarget);
+    setItem(response);
+  };
+
+  const handleCloseMenu = () => {
+    setAnchorEl(null);
+  };
+
   // const handleOpenDialog = (item: FormDTO) => {
   //   setChosenItem(item);
   //   setOpenTemplateDialog(true);
   // };
-
-  const getColumns = (): Column<FormResponseDTO>[] => {
-    let result: Column<FormResponseDTO>[] = [];
-    let index = 0;
-    if (form.layoutJson) {
-      let layout: any = JSON.parse(String(form.layoutJson));
-      layout.sections.forEach((section: any) => {
-        section.components.forEach((component: any) => {
-          if (component.showOnTable) {
-            let idx = index;
-            result.push({
-              Header: component.title,
-              accessor: String(idx),
-              maxWidth: 10,
-              Cell: ({ row }: CellProps<FormResponseDTO, {}>) => {
-                switch (component.type) {
-                  case "ADDRESS":
-                  case "TEXT":
-                    return (
-                      <Box display="flex" justifyContent="left">
-                        {row.original.response[idx]}
-                      </Box>
-                    );
-                  case "STATUS":
-                    return (
-                      <Box display="flex" justifyContent="left">
-                        <CustomChip
-                          text={orderStatusList.find(item => item.value === row.original.response[idx])?.title}
-                          backgroundColor={
-                            orderStatusList.find(item => item.value === row.original.response[idx])?.backgroundColor
-                          }
-                          textColor={orderStatusList.find(item => item.value === row.original.response[idx])?.color}
-                        />
-                      </Box>
-                    );
-                }
-              },
-            } as Column<FormResponseDTO>);
-          }
-          ++index;
-        });
-      });
-    }
-    return result;
-  };
 
   const tableContent: Column<FormResponseDTO>[] = [
     {
@@ -119,14 +88,38 @@ function HomePage() {
         );
       },
     },
+    // {
+    //   Header: "Địa chỉ",
+    //   accessor: undefined,
+    //   maxWidth: 10,
+    //   Cell: ({ row }: CellProps<FormResponseDTO, {}>) => {
+    //     return (
+    //       <Box display="flex" justifyContent="left">
+    //         {JSON.parse(row.original.response).at(2)}
+    //       </Box>
+    //     );
+    //   },
+    // },
     {
-      Header: "Địa chỉ",
+      Header: "Trạng thái",
       accessor: undefined,
       maxWidth: 10,
       Cell: ({ row }: CellProps<FormResponseDTO, {}>) => {
         return (
-          <Box display="flex" justifyContent="left">
-            {JSON.parse(row.original.response).at(2)}
+          <Box
+            display="flex"
+            justifyContent="left"
+            onClick={e => {
+              handleOpenMenu(e, row.original);
+            }}
+          >
+            <CustomChip
+              isSelect
+              clickable
+              text={orderStatusList.find(item => item.value === row.original.status)?.title}
+              backgroundColor={orderStatusList.find(item => item.value === row.original.status)?.backgroundColor}
+              textColor={orderStatusList.find(item => item.value === row.original.status)?.color}
+            />
           </Box>
         );
       },
@@ -152,6 +145,7 @@ function HomePage() {
           <Box display="flex" justifyContent="left" sx={{}}>
             <Tooltip title={"Edit order"}>
               <IconButton
+                disabled={row.original.status !== "PENDING"}
                 onClick={() => {
                   navigate("/order/edit", {
                     state: {
@@ -161,7 +155,7 @@ function HomePage() {
                   });
                 }}
               >
-                <CustomIcon name="edit" />
+                <CustomIcon name={row.original.status !== "PENDING" ? "disableEdit" : "edit"} />
               </IconButton>
             </Tooltip>
             <Tooltip title={"Copy order link"}>
@@ -204,6 +198,20 @@ function HomePage() {
   //   });
   // };
 
+  const handleOpenDialog = (item: FormDTO) => {
+    setChosenItem(item);
+    setOpenTemplateDialog(true);
+  };
+
+  const handleChangeStatus = async (status: string) => {
+    await new OrderService().updateOrderStatus({ uuid: item.uuid, status: status }).then(response => {
+      if (Number(response.code) === 200) {
+        dispatch(openNotification({ open: true, content: response.message, severity: "success" }));
+        getRecentOrders();
+      }
+    });
+  };
+
   const getRecentOrders = async () => {
     await new OrderService().getRecentOrders().then(response => {
       if (response.result) {
@@ -229,7 +237,7 @@ function HomePage() {
       }}
     >
       <CustomBackgroundCard sizeX={"100%"} sizeY={"auto"} padding={-2}>
-        <Grid container>
+        <Grid container sx={{ paddingBottom: 3 }}>
           <Grid item xs={5}>
             <Box
               sx={{
@@ -240,9 +248,36 @@ function HomePage() {
                 paddingX: 4,
               }}
             >
-              <Typography sx={{ marginTop: "2%", fontSize: "25px", fontWeight: 600, color: COLORS.primary }}>
+              <Typography
+                sx={{ marginY: "2%", fontSize: "25px", fontWeight: 600, color: COLORS.primary, alignItems: "center" }}
+              >
                 Tạo đơn hàng mới
               </Typography>
+              <Box
+                onClick={() => {
+                  handleOpenDialog({
+                    isDefault: true,
+                    layoutJson: "",
+                    userId: getCookie("USER_ID"),
+                  } as FormDTO);
+                }}
+                sx={{ marginY: "2%", display: "flex", alignItems: "center", cursor: "pointer" }}
+              >
+                <Typography
+                  sx={{
+                    marginTop: "2%",
+                    fontSize: "18px",
+                    fontWeight: 400,
+                    color: COLORS.lightText,
+                    ":hover": { textDecoration: "underline" },
+                  }}
+                >
+                  Tạo form mới
+                </Typography>
+                <IconButton>
+                  <CustomIcon name={"lightAdd"} />
+                </IconButton>
+              </Box>
             </Box>
             <Grid
               container
@@ -260,25 +295,51 @@ function HomePage() {
                   </Zoom>
                 );
               })}
-              <Zoom in style={{ transformOrigin: "50% 50% 0" }} {...{ timeout: 500 }}>
-                <Grid item xs={4} sx={{ paddingX: 2, paddingY: 1 }}>
-                  <CustomFormCard item={{ name: "Tạo mới" } as FormDTO} />
-                </Grid>
-              </Zoom>
             </Grid>
           </Grid>
           <Grid item xs={7}>
-            <Typography
+            <Box
               sx={{
-                paddingX: "2%",
-                paddingTop: "2%",
-                fontSize: "25px",
-                fontWeight: 600,
-                color: COLORS.primary,
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "space-between",
+                paddingX: 4,
               }}
             >
-              Đơn hàng gần đây
-            </Typography>
+              <Typography
+                sx={{
+                  paddingX: "2%",
+                  marginY: "2%",
+                  fontSize: "25px",
+                  fontWeight: 600,
+                  color: COLORS.primary,
+                }}
+              >
+                Đơn hàng gần đây
+              </Typography>
+              <Box
+                onClick={() => {
+                  navigate("/orders");
+                }}
+                sx={{ marginY: "2%", display: "flex", alignItems: "center", cursor: "pointer" }}
+              >
+                <Typography
+                  sx={{
+                    fontSize: "18px",
+                    fontWeight: 400,
+                    color: COLORS.lightText,
+                    ":hover": { textDecoration: "underline" },
+                  }}
+                >
+                  {"Xem tất cả"}
+                </Typography>
+                <IconButton>
+                  <CustomIcon name={"rightArrow"} />
+                </IconButton>
+              </Box>
+            </Box>
+
             <Grid
               container
               sx={{
@@ -286,17 +347,35 @@ function HomePage() {
                 paddingTop: "1%",
               }}
             >
-              <CustomTable
-                showCheckbox={false}
-                highlightOnHover
-                data={recentOrders}
-                table={table}
-                columns={columns}
-                onClickRow={(row: any) => {
-                  // navigator.clipboard.writeText(`localhost:3000/tracking/${CommonUtils.encodeUUID(row.original.uuid)}`);
-                  // dispatch(openNotification({ open: true, content: "Order link copied", severity: "success" }));
+              <CustomTable highlightOnHover showCheckbox={false} data={recentOrders} table={table} columns={columns} />
+
+              <Menu
+                id="status-menu"
+                anchorEl={anchorEl}
+                open={openMenuStatus}
+                onClose={handleCloseMenu}
+                onClick={handleCloseMenu}
+                anchorOrigin={{
+                  vertical: "bottom",
+                  horizontal: "left",
                 }}
-              />
+                transformOrigin={{
+                  vertical: "top",
+                  horizontal: "left",
+                }}
+              >
+                {editStatusList.map(status => {
+                  return (
+                    <MenuItem
+                      onClick={e => {
+                        handleChangeStatus(status.value);
+                      }}
+                    >
+                      {status.title}
+                    </MenuItem>
+                  );
+                })}
+              </Menu>
             </Grid>
           </Grid>
         </Grid>

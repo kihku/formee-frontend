@@ -36,14 +36,15 @@ export const CustomButton = ({
   };
 
   const buttonStyle = {
-    paddingX: isType("rounded") ? 3 : 2.5,
-    paddingY: 1,
+    paddingX: 2.5,
+    paddingY: 0.75,
     borderRadius: isType("rounded") ? 10 : 1.5,
     textTransform: "none",
     whiteSpace: "nowrap",
     textOverflow: "ellipsis",
     overflow: "hidden",
     color: color ? color : "",
+    fontSize: 14,
     border: isType("outlined") ? `solid 2px ${color ? color : ""}` : "",
     ":hover": {
       border: isType("outlined") ? `solid 2px ${color ? color : ""}` : "",

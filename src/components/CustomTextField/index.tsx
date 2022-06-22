@@ -9,9 +9,9 @@ import StringUtils from "utils/stringUtils";
 import { getIn } from "formik";
 
 export const StyledInput = styled(InputBase)(({ theme }) => ({
-  "label + &": {
-    marginTop: theme.spacing(3),
-  },
+  // "label + &": {
+  //   marginTop: theme.spacing(3),
+  // },
   "& .MuiInputBase-input": {
     flexGrow: 1,
     borderRadius: 4,

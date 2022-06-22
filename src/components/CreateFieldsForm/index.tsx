@@ -62,8 +62,8 @@ export const CreateFieldsForm = <T extends object, K extends object>({
                           item
                           xs={
                             !StringUtils.isNullOrEmty(label)
-                              ? rest.disabled && ["ADDRESS", "TEXT"].includes(rest.type)
-                                ? 4
+                              ? rest.disabled && ["TEXT", "PHONE"].includes(rest.type)
+                                ? 5
                                 : xs
                               : 12
                           }

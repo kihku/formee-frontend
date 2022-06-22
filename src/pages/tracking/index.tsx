@@ -23,6 +23,8 @@ import { HistoryItem } from "pages/orders/components/historyItem";
 import { openNotification } from "redux/actions/notification";
 import { useDispatch } from "react-redux";
 import { CustomChip } from "components/CustomChip";
+import { FormSection } from "components/CreateFieldsForm/FormFields/FormSection";
+import { FormAddress } from "components/CreateFieldsForm/FormFields/FormAddress";
 
 function OrderTrackingPage() {
   const { t } = useTranslation(["forms", "buttons", "orders"]);
@@ -37,7 +39,7 @@ function OrderTrackingPage() {
   const [openRequestDialog, setOpenRequestDialog] = useState<boolean>(false);
   // const [requested, setRequested] = useState<boolean>(false);
   const [enableEditing, setEnableEditing] = useState<boolean>(false);
-  const [statusIndex, setStatusIndex] = useState<number>(-1);
+  // const [statusIndex, setStatusIndex] = useState<number>(-1);
 
   const validationSchema = Yup.object().shape({});
 
@@ -65,9 +67,6 @@ function OrderTrackingPage() {
       layout.sections.forEach((section: any) => {
         let sectionDTO: FormSectionDTO = { title: String(section.title), components: [] };
         section.components.forEach((component: any) => {
-          if (component.type === "STATUS") {
-            setStatusIndex(index);
-          }
           sectionDTO.components.push({
             index: index,
             disabled: true,
@@ -78,12 +77,14 @@ function OrderTrackingPage() {
             options: component.type === "STATUS" ? orderStatusList : [],
             required: component.validation.some((val: any) => val.type === "REQUIRED"),
             Component:
-              component.type === "TEXT" || component.type === "ADDRESS"
+              component.type === "TEXT" || component.type === "PHONE"
                 ? FormTextField
                 : component.type === "STATUS"
                 ? FormSelect
                 : component.type === "CART"
                 ? FormCart
+                : component.type === "ADDRESS"
+                ? FormAddress
                 : undefined,
           });
           index++;
@@ -147,7 +148,7 @@ function OrderTrackingPage() {
             <Box
               sx={{
                 display: "flex",
-                justifyContent: "space-between",
+                justifyContent: "center",
                 width: "100%",
                 alignItems: "center",
               }}
@@ -160,76 +161,66 @@ function OrderTrackingPage() {
                     { text: String(formResponse.orderName), highlight: true },
                   ]}
                 />
-                {statusIndex > -1 && (
-                  <CustomChip
-                    text={orderStatusList.find(item => item.value === formik.values["response"].at(statusIndex))?.title}
-                    backgroundColor={
-                      orderStatusList.find(item => item.value === formik.values["response"].at(statusIndex))
-                        ?.backgroundColor
-                    }
-                    textColor={
-                      orderStatusList.find(item => item.value === formik.values["response"].at(statusIndex))?.color
-                    }
-                  />
-                )}
-              </Box>
-              <Box sx={{ display: "flex", gap: 1.5 }}>
-                {!enableEditing && (
-                  <CustomButton
-                    text="Xác nhận"
-                    type="rounded"
-                    startIcon="checkCircle"
-                    color={COLORS.white}
-                    handleOnClick={() => {
-                      setEnableEditing(false);
-                    }}
-                  />
-                )}
-                {
-                  <CustomButton
-                    text={
-                      enableEditing
-                        ? "Lưu thay đổi"
-                        : `${form.responsePermission === "OwnerOnly" ? "Yêu cầu chỉnh" : "Chỉnh"} sửa`
-                    }
-                    type="rounded-outlined"
-                    startIcon={enableEditing ? "checkCircle" : "edit"}
-                    color={COLORS.primary}
-                    handleOnClick={() => {
-                      // check permission
-                      if (form.responsePermission === "AllowAll") {
-                        // check if there is a user token
-                        enableEditing ? formik.handleSubmit() : setEnableEditing(true);
-                        // else go to login page
-                      } else {
-                        // OwnerOnly
-                        // open request edit dialog
-                        setOpenRequestDialog(true);
-                        // send a comment
-                      }
-                    }}
-                  />
-                }
+                <CustomChip
+                  text={orderStatusList.find(item => item.value === formik.values.status)?.title}
+                  backgroundColor={orderStatusList.find(item => item.value === formik.values.status)?.backgroundColor}
+                  textColor={orderStatusList.find(item => item.value === formik.values.status)?.color}
+                />
               </Box>
             </Box>
           </Grid>
           <Grid container>
-            <Grid item xs={9}>
-              <CustomBackgroundCard sizeX="auto" sizeY="auto">
+            <Grid item xs={12} sx={{ display: "flex", justifyContent: "center" }}>
+              <CustomBackgroundCard sizeX="70vw" sizeY="auto">
                 <CreateFieldsForm disabled={!enableEditing} enableEditing={false} formik={formik} sections={fields} />
-              </CustomBackgroundCard>
-            </Grid>
-            <Grid item xs={3} sx={{ paddingLeft: 4 }}>
-              <CustomBackgroundCard sizeX="auto" sizeY="auto" padding={-1}>
-                <Box sx={{ fontWeight: 600, fontSize: 20, paddingBottom: 2 }}>Lịch sử</Box>
-                {formResponse.comments?.map(comment => {
-                  return (
-                    <HistoryItem
-                      item={comment}
-                      direction={comment.createdBy === String(form.createdBy) ? "left" : "right"}
+                <Grid item xs={12} sx={{ marginBottom: 3 }}>
+                  <FormSection index={2} title={"C. Lịch sử"} />
+                  {formResponse.comments?.map(comment => {
+                    return (
+                      <HistoryItem
+                        item={comment}
+                        direction={comment.createdBy === String(form.createdBy) ? "left" : "right"}
+                      />
+                    );
+                  })}
+                </Grid>
+
+                <Box sx={{ display: "flex", gap: 1.5, justifyContent: "flex-end" }}>
+                  {
+                    <CustomButton
+                      text={
+                        enableEditing
+                          ? "Lưu thay đổi"
+                          : `${form.responsePermission === "OwnerOnly" ? "Yêu cầu chỉnh" : "Chỉnh"} sửa`
+                      }
+                      type="rounded-outlined"
+                      startIcon={enableEditing ? "checkCircle" : "edit"}
+                      color={COLORS.primary}
+                      handleOnClick={() => {
+                        // check permission
+                        if (form.responsePermission === "AllowAll") {
+                          // check if there is a user token
+                          enableEditing ? formik.handleSubmit() : setEnableEditing(true);
+                          // else go to login page
+                        } else {
+                          // OwnerOnly: open request edit dialog
+                          setOpenRequestDialog(true);
+                        }
+                      }}
                     />
-                  );
-                })}
+                  }
+                  {!enableEditing && (
+                    <CustomButton
+                      text="Xác nhận"
+                      type="rounded"
+                      startIcon="checkCircle"
+                      color={COLORS.white}
+                      handleOnClick={() => {
+                        setEnableEditing(false);
+                      }}
+                    />
+                  )}
+                </Box>
               </CustomBackgroundCard>
             </Grid>
           </Grid>

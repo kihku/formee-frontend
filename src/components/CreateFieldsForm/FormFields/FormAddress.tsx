@@ -3,8 +3,8 @@ import { Grid } from "@mui/material";
 import { useEffect, useState } from "react";
 import { StyledInput } from "components/CustomTextField";
 import { CustomSelect } from "components/CustomSelect";
-import { phuongXaVN, quanHuyenVN, tinhThanhVN } from "constants/constants";
 import StringUtils from "utils/stringUtils";
+import { AddressDTO, AddressService } from "apis/addressService/addressService";
 
 interface FormAddressProps {
   index: number;
@@ -23,17 +23,37 @@ export const FormAddress = ({ index, formik, required, disabled, isEditing }: Fo
   const [quanHuyen, setQuanHuyen] = useState<string>("");
   const [phuongXa, setPhuongXa] = useState<string>("");
 
+  const [tinhThanhList, setTinhThanhList] = useState<AddressDTO[]>([]);
+  const [quanHuyenList, setQuanHuyenList] = useState<AddressDTO[]>([]);
+  const [phuongXaList, setPhuongXaList] = useState<AddressDTO[]>([]);
+
   const renderValue = () => {
     if (formik) {
       if (!isEditing) {
-        setValue(formik.values["response"] && formik.values["response"].at(index));
+        let head = formik.values["response"].at(index)[0];
+        let tail = [...formik.values["response"].at(index)]
+          .filter((item, index) => index !== 0)
+          .map(item => item.name_)
+          .join(", ");
+        setFullValue([head, tail].join(", "));
       } else {
-        let values = formik.values["response"] && formik.values["response"].at(index).split(",");
-        // console.log(values);
-        setValue(values[0] ? String(values[0]).trim() : "");
-        // setPhuongXa(values[1] ? String(values[1]).trim() : "");
-        // setQuanHuyen(values[2] ? String(values[2]).trim() : "");
-        // setTinhThanh(values[3] ? String(values[3]).trim() : "");
+        let values = formik.values["response"].at(index);
+        let tinhThanhNew = values[3] ? values[3].code : "";
+        let quanHuyenNew = values[2] ? values[2].code : "";
+        let phuongXaNew = values[1] ? values[1].code : "";
+        let diaChi = values[0] ? String(values[0]).trim() : "";
+
+        setValue(diaChi);
+        setTinhThanh(tinhThanhNew);
+        getQuanHuyen(tinhThanhNew)
+          .then(() => {
+            setQuanHuyen(quanHuyenNew);
+          })
+          .then(() => {
+            getPhuongXa(quanHuyenNew).then(() => {
+              setPhuongXa(phuongXaNew);
+            });
+          });
       }
     }
   };
@@ -42,82 +62,123 @@ export const FormAddress = ({ index, formik, required, disabled, isEditing }: Fo
     setValue(e.target.value);
   };
 
-  const handleSelect = () => {
-    setFullValue(
-      [value, phuongXa, quanHuyen, tinhThanh]
-        .filter(item => !StringUtils.isNullOrEmty(item) && item !== "default")
-        .join(", "),
-    );
+  const getTinhThanh = async () => {
+    await new AddressService().getAddressByParentCode("").then(response => {
+      if (response.result) {
+        setTinhThanhList(response.result);
+      }
+    });
+  };
+
+  const getQuanHuyen = async (parentCode: string) => {
+    await new AddressService().getAddressByParentCode(parentCode).then(response => {
+      if (response.result) {
+        setQuanHuyenList(response.result);
+      }
+    });
+  };
+
+  const getPhuongXa = async (parentCode: string) => {
+    await new AddressService().getAddressByParentCode(parentCode).then(response => {
+      if (response.result) {
+        setPhuongXaList(response.result);
+      }
+    });
   };
 
   useEffect(() => {
-    renderValue();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    getTinhThanh().then(() => {
+      renderValue();
+    });
   }, []);
 
   useEffect(() => {
-    handleSelect();
-  }, [phuongXa, quanHuyen, tinhThanh, value]);
+    renderValue();
+  }, [formik.values["loadAddress"]]);
+
+  // console.log("formik", formik.values["response"]);
 
   useEffect(() => {
     formik &&
       formik.setFieldValue &&
       formik.setFieldValue("response", [
         ...(formik.values["response"] ? formik.values["response"].slice(0, index) : []),
-        fullValue,
+        [
+          value,
+          phuongXaList.find(item => item.code === phuongXa),
+          quanHuyenList.find(item => item.code === quanHuyen),
+          tinhThanhList.find(item => item.code === tinhThanh),
+        ],
         ...(formik.values["response"] ? formik.values["response"].slice(index + 1) : []),
       ]);
-  }, [fullValue]);
+  }, [phuongXa, quanHuyen, tinhThanh, value]);
 
   return (
     <FormControl variant="standard" sx={{ width: "100%" }}>
-      <Grid container>
-        <Grid item xs={3} sx={{ marginBottom: 2, paddingRight: 2 }}>
-          <StyledInput
-            fullWidth
-            value={value}
-            required={required}
-            disabled={disabled}
-            placeholder={"Số nhà/Đường"}
-            onChange={handleChange}
-            inputProps={{
-              autoComplete: "new-password",
-              form: {
-                autoComplete: "off",
-              },
-            }}
-          />
-        </Grid>
-
-        {!disabled && (
-          <Grid item xs={9} sx={{ display: "flex", gap: 2 }}>
-            <CustomSelect
+      {isEditing && (
+        <Grid container>
+          <Grid item xs={3} sx={{ marginBottom: 2, paddingRight: 2 }}>
+            <StyledInput
+              fullWidth
+              value={value}
+              required={required}
               disabled={disabled}
-              options={tinhThanhVN}
-              defaultValue={isEditing ? tinhThanh : "default"}
-              handleOnChange={e => {
-                setTinhThanh(e.target.value);
-              }}
-            />
-            <CustomSelect
-              defaultValue={isEditing ? quanHuyen : "default"}
-              options={quanHuyenVN.filter(option => option.parentValue === tinhThanh || option.value === "default")}
-              disabled={StringUtils.isNullOrEmty(tinhThanh)}
-              handleOnChange={e => {
-                setQuanHuyen(e.target.value);
-              }}
-            />
-            <CustomSelect
-              defaultValue={isEditing ? phuongXa : "default"}
-              options={phuongXaVN.filter(option => option.parentValue === quanHuyen || option.value === "default")}
-              disabled={StringUtils.isNullOrEmty(quanHuyen)}
-              handleOnChange={e => {
-                setPhuongXa(e.target.value);
+              placeholder={"Số nhà/Đường"}
+              onChange={handleChange}
+              inputProps={{
+                autoComplete: "new-password",
+                form: {
+                  autoComplete: "off",
+                },
               }}
             />
           </Grid>
-        )}
-      </Grid>
+
+          {!disabled && (
+            <Grid item xs={9} sx={{ display: "flex", gap: 2 }}>
+              <CustomSelect
+                disabled={disabled}
+                options={tinhThanhList.map(item => {
+                  return { title: item.name_, value: item.code };
+                })}
+                value={tinhThanh}
+                handleOnChange={e => {
+                  setTinhThanh(e.target.value);
+                  getQuanHuyen(e.target.value);
+                }}
+              />
+              <CustomSelect
+                value={quanHuyen}
+                options={quanHuyenList.map(item => {
+                  return { title: item.name_, value: item.code };
+                })}
+                disabled={StringUtils.isNullOrEmty(tinhThanh)}
+                handleOnChange={e => {
+                  setQuanHuyen(e.target.value);
+                  getPhuongXa(e.target.value);
+                }}
+              />
+              <CustomSelect
+                value={phuongXa}
+                options={phuongXaList.map(item => {
+                  return { title: item.name_, value: item.code };
+                })}
+                disabled={StringUtils.isNullOrEmty(quanHuyen)}
+                handleOnChange={e => {
+                  setPhuongXa(e.target.value);
+                }}
+              />
+            </Grid>
+          )}
+        </Grid>
+      )}
+      {!isEditing && (
+        <Grid container>
+          <Grid item xs={12}>
+            <StyledInput fullWidth disabled value={fullValue} />
+          </Grid>
+        </Grid>
+      )}
     </FormControl>
   );
 };
