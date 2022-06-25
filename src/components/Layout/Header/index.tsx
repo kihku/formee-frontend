@@ -119,6 +119,7 @@ export const Header = () => {
         }}
       >
         <CustomAvatar image={userInfo.image} />
+        {/* <Box>{userInfo.name}</Box> */}
         <Tooltip title={t("header_settings")}>
           <IconButton
             sx={{ marginRight: "10px" }}

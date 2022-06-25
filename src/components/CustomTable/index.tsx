@@ -15,6 +15,7 @@ export interface CustomTableProps<D extends object> {
   isCart?: boolean;
   showCheckbox?: boolean;
   highlightOnHover?: boolean;
+  pointerOnHover?: boolean;
   onAddCart?: () => void;
   onClickRow?: (row: any) => void;
   onChangePageNumber?: (value: number) => void;
@@ -44,6 +45,7 @@ const CustomTable = <D extends object>({
   data,
   showCheckbox,
   highlightOnHover,
+  pointerOnHover,
   isCart,
   onAddCart,
   onClickRow
@@ -88,6 +90,7 @@ const CustomTable = <D extends object>({
           getTableBodyProps={getTableBodyProps}
           showCheckbox={Boolean(showCheckbox)}
           highlightOnHover={Boolean(highlightOnHover)}
+          pointerOnHover={Boolean(pointerOnHover)}
           isCart={isCart}
           onAddCart={onAddCart}
           onClickRow={onClickRow}

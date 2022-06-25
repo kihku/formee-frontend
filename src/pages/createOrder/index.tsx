@@ -20,9 +20,13 @@ import { OrderService } from "apis/orderService/orderService";
 import { CustomTextField } from "components/CustomTextField";
 import { FormPhoneSearch } from "components/CreateFieldsForm/FormFields/FormPhoneSearch";
 import DialogFinishOrder from "./dialogFinish";
+import { CustomSwitch } from "components/CustomSwitch";
+import { openNotification } from "redux/actions/notification";
+import { useDispatch } from "react-redux";
 
 function CreateOrderPage() {
   const location = useLocation();
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const { t } = useTranslation(["forms", "buttons", "orders"]);
 
@@ -117,6 +121,21 @@ function CreateOrderPage() {
   //   });
   // };
 
+  const handleUpdatePermission = async () => {
+    if (location.state) {
+      let state: any = location.state;
+      let formId: string = String(state.formId);
+      await new FormService().updatePermission(formId).then(response => {
+        if (Number(response.code) === 200) {
+          dispatch(openNotification({ open: true, content: response.message, severity: "success" }));
+          setForm(prev => {
+            return { ...prev, responsePermission: prev.responsePermission === "AllowAll" ? "OwnerOnly" : "AllowAll" };
+          });
+        }
+      });
+    }
+  };
+
   useEffect(() => {
     if (location.state) {
       let state: any = location.state;
@@ -148,6 +167,12 @@ function CreateOrderPage() {
                   { text: "/", highlight: true },
                   { text: t("orders:order_new"), highlight: true },
                 ]}
+              />
+              <CustomSwitch
+                tooltipText="Cho phép khách hàng chỉnh sửa đơn hàng"
+                handleOnChange={handleUpdatePermission}
+                value={form.responsePermission === "AllowAll"}
+                defaultChecked={form.responsePermission === "AllowAll"}
               />
               {/* <Box sx={{ display: "flex", gap: 1.5 }}>
                 <CustomButton

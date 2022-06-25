@@ -70,6 +70,7 @@ function OrderTrackingPage() {
           sectionDTO.components.push({
             index: index,
             disabled: true,
+            isEditing: false,
             show: component.type !== "STATUS",
             xs: component.xs,
             type: component.type,
@@ -171,8 +172,14 @@ function OrderTrackingPage() {
           </Grid>
           <Grid container>
             <Grid item xs={12} sx={{ display: "flex", justifyContent: "center" }}>
-              <CustomBackgroundCard sizeX="70vw" sizeY="auto">
-                <CreateFieldsForm disabled={!enableEditing} enableEditing={false} formik={formik} sections={fields} />
+              <CustomBackgroundCard sizeX="80vw" sizeY="auto">
+                <CreateFieldsForm
+                  disabled={!enableEditing}
+                  disabledFormCart={true}
+                  enableEditing={false}
+                  formik={formik}
+                  sections={fields}
+                />
                 <Grid item xs={12} sx={{ marginBottom: 3 }}>
                   <FormSection index={2} title={"C. Lịch sử"} />
                   {formResponse.comments?.map(comment => {

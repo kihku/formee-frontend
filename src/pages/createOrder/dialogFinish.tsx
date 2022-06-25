@@ -154,7 +154,13 @@ const DialogFinishOrder = ({ responseId, openDialog, handleCloseDialog, orderNam
 
       <DialogContent dividers>
         <Grid container sx={{ padding: 1 }}>
-          <Grid item xs={12} sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+          <Grid item xs={12} sx={{ paddingX: 1.5, paddingTop: 2.5 }}>
+            <CreateFieldsForm enableEditing={false} disabled formik={formik} sections={fields} />
+          </Grid>
+          <Grid item xs={12} sx={{ paddingX: 1.5, paddingTop: 2.5 }}>
+            <Divider sx={{ width: "100%", borderBottomWidth: "2px" }} />
+          </Grid>
+          <Grid item xs={12} sx={{ display: "flex", flexDirection: "column", gap: 2, marginTop: 3 }}>
             <Box
               sx={{
                 display: "flex",
@@ -223,10 +229,6 @@ const DialogFinishOrder = ({ responseId, openDialog, handleCloseDialog, orderNam
                 }}
               />
             </Box>
-          </Grid>
-
-          <Grid item xs={12} sx={{ paddingX: 1.5, paddingTop: 2.5 }}>
-            <CreateFieldsForm enableEditing={false} disabled formik={formik} sections={fields} />
           </Grid>
         </Grid>
       </DialogContent>

@@ -7,9 +7,15 @@ export interface CustomCartFooterProps {
   formik: any;
   index: number;
   disabled?: boolean;
+  disabledFormCart?: boolean;
 }
 
-const CustomCartFooter: React.FC<CustomCartFooterProps> = ({ formik, index, disabled }: CustomCartFooterProps) => {
+const CustomCartFooter: React.FC<CustomCartFooterProps> = ({
+  formik,
+  index,
+  disabled,
+  disabledFormCart,
+}: CustomCartFooterProps) => {
   const [total, setTotal] = useState<number>(0);
   const [subTotal, setSubTotal] = useState<number>(0);
   const [discount, setDiscount] = useState<number>(0);
@@ -51,7 +57,7 @@ const CustomCartFooter: React.FC<CustomCartFooterProps> = ({ formik, index, disa
         <Grid item xs={3} sx={{ marginY: 1 }}>
           <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", fontWeight: 500 }}>
             <Box>Giảm giá</Box>
-            {disabled ? (
+            {disabled || disabledFormCart ? (
               <Box>{formik.values["discount"] + " %"}</Box>
             ) : (
               <StyledInput

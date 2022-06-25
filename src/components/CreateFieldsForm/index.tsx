@@ -19,6 +19,7 @@ export interface FieldsArray<T, K> {
   handleNewField?: () => void;
   handleNewSection?: () => void;
   disabled?: boolean;
+  disabledFormCart?: boolean;
 }
 
 export const CreateFieldsForm = <T extends object, K extends object>({
@@ -29,6 +30,7 @@ export const CreateFieldsForm = <T extends object, K extends object>({
   handleNewField,
   handleNewSection,
   disabled,
+  disabledFormCart
 }: FieldsArray<T, K>) => {
   return (
     <>
@@ -77,6 +79,7 @@ export const CreateFieldsForm = <T extends object, K extends object>({
                               helperText={helperText && helperText}
                               index={index}
                               disabled={disabled}
+                              disabledFormCart={disabledFormCart}
                             />
                           )}
                         </Grid>

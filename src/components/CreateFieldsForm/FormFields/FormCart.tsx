@@ -13,15 +13,22 @@ import CustomCartFooter from "components/CustomTable/cartFooter";
 import { getCookie } from "utils/cookieUtils";
 import { CustomButton } from "components/CustomButton";
 import StringUtils from "utils/stringUtils";
+import { openNotification } from "redux/actions/notification";
+import { useDispatch } from "react-redux";
 
 interface FormCartProps {
   index: number;
   formik?: any;
   handleOnChange?: (event: any) => void;
   disabled?: boolean;
+  disabledFormCart?: boolean;
 }
 
-export const FormCart = ({ index, formik, disabled }: FormCartProps) => {
+export const FormCart = ({ index, formik, disabled, disabledFormCart }: FormCartProps) => {
+  const dispatch = useDispatch();
+
+  console.log("disabled", disabledFormCart);
+
   const [value, setValue] = useState<ProductDTO[]>([]);
   const [products, setProducts] = useState<ProductDTO[]>([]);
   const [rawValue, setRawValue] = useState<string>("");
@@ -108,9 +115,23 @@ export const FormCart = ({ index, formik, disabled }: FormCartProps) => {
             {row.original.quantity}
             <IconButton
               onClick={() => {
-                setValue(prev =>
-                  prev.map(item => (item.uuid === row.original.uuid ? { ...item, quantity: item.quantity + 1 } : item)),
-                );
+                // TODO: fix condition
+                console.log(Number(value.find(item => item.uuid === row.original.uuid)?.quantity));
+                if (row.original.inventory < Number(value.find(item => item.uuid === row.original.uuid)?.quantity)) {
+                  setValue(prev =>
+                    prev.map(item =>
+                      item.uuid === row.original.uuid ? { ...item, quantity: item.quantity + 1 } : item,
+                    ),
+                  );
+                } else {
+                  dispatch(
+                    openNotification({
+                      open: true,
+                      content: "Số lượng sản phẩm vượt quá số lượng trong kho",
+                      severity: "error",
+                    }),
+                  );
+                }
               }}
             >
               <CustomIcon name="add" color={COLORS.primaryLight} />
@@ -270,7 +291,7 @@ export const FormCart = ({ index, formik, disabled }: FormCartProps) => {
 
   return (
     <FormControl variant="standard" sx={{ width: "100%" }}>
-      {!disabled && (
+      {!disabled && !disabledFormCart && (
         <Box>
           <Box display="flex">
             <Autocomplete
@@ -292,14 +313,14 @@ export const FormCart = ({ index, formik, disabled }: FormCartProps) => {
                       if (e.code === "Enter") {
                         e.preventDefault();
                         e.stopPropagation();
-                        !StringUtils.isNullOrEmty(e.currentTarget.value) &&
-                          formik.values["formId"] &&
-                          createProduct({
-                            formId: formik.values["formId"],
-                            name: e.currentTarget.value.split("/").at(0),
-                            productPrice: Number(e.currentTarget.value.split("/").at(-2)),
-                            quantity: Number(e.currentTarget.value.split("/").at(-1)),
-                          } as ProductDTO);
+                        // !StringUtils.isNullOrEmty(e.currentTarget.value) &&
+                        //   formik.values["formId"] &&
+                        //   createProduct({
+                        //     formId: formik.values["formId"],
+                        //     name: e.currentTarget.value.split("/").at(0),
+                        //     productPrice: Number(e.currentTarget.value.split("/").at(-2)),
+                        //     quantity: Number(e.currentTarget.value.split("/").at(-1)),
+                        //   } as ProductDTO);
                       } else if (e.code === "Backspace") {
                         e.stopPropagation();
                       } else {
@@ -329,7 +350,7 @@ export const FormCart = ({ index, formik, disabled }: FormCartProps) => {
               }}
               sx={{ marginRight: 2 }}
             />
-            <CustomButton
+            {/* <CustomButton
               text={"Tạo sản phẩm"}
               type={"outlined"}
               startIcon="lightAdd"
@@ -344,7 +365,7 @@ export const FormCart = ({ index, formik, disabled }: FormCartProps) => {
                     quantity: Number(rawValue.split("/").at(-1)),
                   } as ProductDTO);
               }}
-            />
+            /> */}
           </Box>
           <FormHelperText
             sx={{
@@ -354,7 +375,7 @@ export const FormCart = ({ index, formik, disabled }: FormCartProps) => {
               paddingTop: 0.75,
             }}
           >
-            {"Tạo sản phẩm mới với cú pháp {Tên sản phẩm/Giá thành/Số lượng} (ví dụ: Áo sơ mi/120000/1)"}
+            {"Tìm kiếm sản phẩm"}
           </FormHelperText>
         </Box>
       )}
@@ -369,7 +390,7 @@ export const FormCart = ({ index, formik, disabled }: FormCartProps) => {
             highlightOnHover={false}
             onAddCart={handleAddCart}
           />
-          <CustomCartFooter formik={formik} index={index} disabled={disabled} />
+          <CustomCartFooter formik={formik} index={index} disabled={disabled} disabledFormCart={true} />
         </Box>
       )}
     </FormControl>

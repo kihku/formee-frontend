@@ -4,6 +4,7 @@ export interface ProductDTO {
   userId?: string;
   name: string;
   productPrice: number;
+  costPrice: number;
   quantity: number;
   selected?: boolean;
   createdDate: Date;
@@ -12,6 +13,8 @@ export interface ProductDTO {
   imageName: string;
   description: string;
   imageList: string;
+  type: string;
+  inventory: number;
 }
 
 export interface CartDTO {
@@ -22,5 +25,4 @@ export interface CartDTO {
 
 export const initProduct: ProductDTO = {
   name: "",
-  productPrice: 0,
 } as ProductDTO;

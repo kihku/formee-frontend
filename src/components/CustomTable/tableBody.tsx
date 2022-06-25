@@ -14,6 +14,7 @@ export interface CustomTableBodyProps<D extends object> {
   data?: Array<D>;
   showCheckbox?: boolean;
   highlightOnHover?: boolean;
+  pointerOnHover?: boolean;
   isCart?: boolean;
   onAddCart?: () => void;
   onClickRow?: (row: any) => void;
@@ -29,6 +30,7 @@ const CustomTableBody = <D extends object>({
   data,
   showCheckbox,
   highlightOnHover,
+  pointerOnHover,
   isCart,
   onAddCart,
   onClickRow,
@@ -41,10 +43,14 @@ const CustomTableBody = <D extends object>({
           let style: React.CSSProperties = dataRow["style"]
             ? ({
                 ...dataRow["style"],
-                ":hover": highlightOnHover ? { backgroundColor: COLORS.primaryBackground } : {},
+                ":hover": highlightOnHover
+                  ? { backgroundColor: COLORS.primaryBackground, cursor: pointerOnHover ? "pointer" : "auto" }
+                  : {},
               } as React.CSSProperties)
             : ({
-                ":hover": highlightOnHover ? { backgroundColor: COLORS.primaryBackground } : {},
+                ":hover": highlightOnHover
+                  ? { backgroundColor: COLORS.primaryBackground, cursor: pointerOnHover ? "pointer" : "auto" }
+                  : {},
               } as React.CSSProperties);
           prepareRow(row);
           return (

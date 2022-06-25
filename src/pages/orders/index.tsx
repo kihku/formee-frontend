@@ -326,20 +326,20 @@ function OrdersPage() {
       });
   };
 
-  const handleUpdatePermission = async () => {
-    if (location.state) {
-      let state: any = location.state;
-      let formId: string = String(state.formId);
-      await new FormService().updatePermission(formId).then(response => {
-        if (Number(response.code) === 200) {
-          dispatch(openNotification({ open: true, content: response.message, severity: "success" }));
-          setForm(prev => {
-            return { ...prev, responsePermission: prev.responsePermission === "AllowAll" ? "OwnerOnly" : "AllowAll" };
-          });
-        }
-      });
-    }
-  };
+  // const handleUpdatePermission = async () => {
+  //   if (location.state) {
+  //     let state: any = location.state;
+  //     let formId: string = String(state.formId);
+  //     await new FormService().updatePermission(formId).then(response => {
+  //       if (Number(response.code) === 200) {
+  //         dispatch(openNotification({ open: true, content: response.message, severity: "success" }));
+  //         setForm(prev => {
+  //           return { ...prev, responsePermission: prev.responsePermission === "AllowAll" ? "OwnerOnly" : "AllowAll" };
+  //         });
+  //       }
+  //     });
+  //   }
+  // };
 
   // console.log("form", form);
 

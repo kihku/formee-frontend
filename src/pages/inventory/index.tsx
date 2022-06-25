@@ -18,9 +18,12 @@ import { CustomIcon } from "components/CustomIcon";
 import { ProductDTO } from "models/product";
 import { ProductService } from "apis/productService/productService";
 import { getCookie } from "utils/cookieUtils";
-import DialogProduct from "./productDialog";
+import DialogEditProduct from "./dialogs/editProductDialog";
 import { openNotification } from "redux/actions/notification";
 import { useDispatch } from "react-redux";
+import DialogAddProduct from "./dialogs/addProductDialog";
+import { productTypeList } from "constants/constants";
+import { CustomChip } from "components/CustomChip";
 
 function ProductsPage() {
   const { t } = useTranslation(["commons", "buttons"]);
@@ -28,7 +31,8 @@ function ProductsPage() {
 
   const [item, setItem] = useState<ProductDTO>({} as ProductDTO);
   const [products, setProducts] = useState<ProductDTO[]>([]);
-  const [openDialog, setOpenDialog] = useState<boolean>(false);
+  const [openAddDialog, setOpenAddDialog] = useState<boolean>(false);
+  const [openEditDialog, setOpenEditDialog] = useState<boolean>(false);
   const [pageParams, setPageParams] = useState<Pageable>({
     total: 0,
     pageNumber: 0,
@@ -48,8 +52,8 @@ function ProductsPage() {
 
   const tableContent: Column<ProductDTO>[] = [
     {
-      Header: "Product",
-      accessor: "imageBase64",
+      Header: "Hình ảnh",
+      accessor: undefined,
       maxWidth: 10,
       Cell: ({ row }: CellProps<ProductDTO, {}>) => {
         return (
@@ -71,7 +75,23 @@ function ProductsPage() {
       },
     },
     {
-      Header: "Product Name",
+      Header: "Loại sản phẩm",
+      accessor: "type",
+      maxWidth: 10,
+      Cell: ({ row }: CellProps<ProductDTO, {}>) => {
+        return (
+          <Box display="flex" justifyContent="left">
+            <CustomChip
+              text={productTypeList.find(item => item.value === row.original.type)?.title}
+              backgroundColor={COLORS.redBackground}
+              textColor={COLORS.red}
+            />
+          </Box>
+        );
+      },
+    },
+    {
+      Header: "Tên sản phẩm",
       accessor: "name",
       maxWidth: 10,
       Cell: ({ row }: CellProps<ProductDTO, {}>) => {
@@ -83,7 +103,20 @@ function ProductsPage() {
       },
     },
     {
-      Header: "Product Price",
+      Header: "Giá gốc",
+      accessor: "costPrice",
+      maxWidth: 10,
+      Cell: ({ row }: CellProps<ProductDTO, {}>) => {
+        return (
+          <Box display="flex" justifyContent="left">
+            {row.original.costPrice}
+            {" đ"}
+          </Box>
+        );
+      },
+    },
+    {
+      Header: "Giá bán",
       accessor: "productPrice",
       maxWidth: 10,
       Cell: ({ row }: CellProps<ProductDTO, {}>) => {
@@ -96,19 +129,19 @@ function ProductsPage() {
       },
     },
     {
-      Header: "Created Date",
-      accessor: "createdDate",
-      maxWidth: 10,
+      Header: "Số lượng",
+      accessor: "inventory",
+      maxWidth: 5,
       Cell: ({ row }: CellProps<ProductDTO, {}>) => {
         return (
           <Box display="flex" justifyContent="left">
-            {DateUtils.toDDMMYYYY(row.original.createdDate)}
+            {row.original.inventory}
           </Box>
         );
       },
     },
     {
-      Header: "Actions",
+      Header: "Thao tác",
       accessor: undefined,
       maxWidth: 5,
       Cell: ({ row }: CellProps<ProductDTO, {}>) => {
@@ -117,7 +150,7 @@ function ProductsPage() {
             <IconButton
               onClick={() => {
                 setItem(row.original);
-                setOpenDialog(true);
+                setOpenEditDialog(true);
               }}
             >
               <CustomIcon name="edit" />
@@ -218,32 +251,26 @@ function ProductsPage() {
                 alignItems: "center",
               }}
             >
-              <CustomTitle
-                text={[
-                  //   { text: form.name, highlight: false },
-                  //   { text: "/", highlight: true },
-                  { text: "Products", highlight: true },
-                ]}
-              />
-              {/* <Box sx={{ display: "flex", gap: 1.5 }}>
+              <CustomTitle text={[{ text: "Quản lý sản phẩm", highlight: true }]} />
+              <Box sx={{ display: "flex", gap: 1.5 }}>
                 <CustomButton
-                  text="New product"
+                  text="Tạo sản phẩm"
                   type="rounded-outlined"
-                  startIcon="add"
+                  startIcon="lightAdd"
                   color={COLORS.lightText}
                   handleOnClick={() => {
-                    setOpenDialog(true);
+                    setOpenAddDialog(true);
                   }}
-                  //   handleOnClickMenu={handleOpenMenu}
                 />
-              </Box> */}
+              </Box>
             </Box>
           </Grid>
           <Grid item xs={12}>
             <CustomBackgroundCard sizeX="auto" sizeY="auto" padding={-2}>
               <CustomTable
-                showCheckbox={false}
+                pointerOnHover
                 highlightOnHover
+                showCheckbox={false}
                 data={products}
                 table={table}
                 columns={columns}
@@ -254,17 +281,29 @@ function ProductsPage() {
                 onChangePageSize={(value: number) => {
                   setPageParams(pageParams => ({ ...pageParams, pageNumber: 0, pageSize: value }));
                 }}
-                onClickRow={(row: any) => {}}
+                onClickRow={(row: any) => {
+                  setItem(row.original);
+                  setOpenEditDialog(true);
+                }}
               />
             </CustomBackgroundCard>
           </Grid>
         </Grid>
-        {openDialog && (
-          <DialogProduct
+        {openEditDialog && (
+          <DialogEditProduct
             itemEdit={item}
-            openDialog={openDialog}
+            openDialog={openEditDialog}
             handleCloseDialog={() => {
-              setOpenDialog(false);
+              setOpenEditDialog(false);
+              getProducts();
+            }}
+          />
+        )}
+        {openAddDialog && (
+          <DialogAddProduct
+            openDialog={openAddDialog}
+            handleCloseDialog={() => {
+              setOpenAddDialog(false);
               getProducts();
             }}
           />

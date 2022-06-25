@@ -1,21 +1,35 @@
-import { Box, Button, Dialog, DialogContent, DialogTitle, Grid, IconButton, InputLabel, styled } from "@mui/material";
+import {
+  Box,
+  Button,
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  FormHelperText,
+  Grid,
+  IconButton,
+  InputLabel,
+  MenuItem,
+  Select,
+  styled,
+} from "@mui/material";
 import { ProductService } from "apis/productService/productService";
 import CreateFields, { CreateFieldsProps } from "components/CreateFields";
 import { CustomButton } from "components/CustomButton";
 import { CustomTextField, StyledInput } from "components/CustomTextField";
+import { productTypeList } from "constants/constants";
 import { useFormik } from "formik";
 import { initProduct, ProductDTO } from "models/product";
 import { ChangeEvent, useEffect, useState } from "react";
 import Carousel from "react-material-ui-carousel";
 import * as Yup from "yup";
 
-export interface DialogProductProps {
+export interface DialogEditProductProps {
   itemEdit: ProductDTO;
   openDialog: boolean;
   handleCloseDialog: () => void;
 }
 
-const DialogProduct = ({ itemEdit, openDialog, handleCloseDialog }: DialogProductProps) => {
+const DialogEditProduct = ({ itemEdit, openDialog, handleCloseDialog }: DialogEditProductProps) => {
   const [currentIndex, setCurrentIndex] = useState<number>(0);
   const [imageList, setImageList] = useState<string[]>([]);
 
@@ -99,7 +113,7 @@ const DialogProduct = ({ itemEdit, openDialog, handleCloseDialog }: DialogProduc
   return (
     <Dialog fullWidth maxWidth="md" open={openDialog} onClose={closeDialog}>
       <DialogTitle>
-        <Box component="span">{"Chỉnh sửa thông tin sản phẩm"}</Box>
+        <Box component="span">{"Thông tin sản phẩm"}</Box>
       </DialogTitle>
 
       <DialogContent dividers>
@@ -108,37 +122,32 @@ const DialogProduct = ({ itemEdit, openDialog, handleCloseDialog }: DialogProduc
             {/* <CreateFields formik={formik} fields={fields} /> */}
             <Grid item xs={6} sx={{ paddingX: 1 }}>
               <Grid container>
+                {/* name */}
                 <Grid item xs={12}>
                   <InputLabel shrink sx={{ fontSize: "18px", fontWeight: 500 }}>
                     {"Tên sản phẩm *"}
                   </InputLabel>
                 </Grid>
-                <Grid item xs={12} sx={{ marginBottom: 2 }}>
+                <Grid item xs={12} sx={{ marginBottom: 1 }}>
                   <StyledInput
                     fullWidth
                     value={formik.values.name}
-                    defaultValue={itemEdit.name}
                     onChange={e => {
                       formik.setFieldValue("name", e.target.value);
                     }}
                   />
                 </Grid>
-                <Grid item xs={12}>
-                  <InputLabel shrink sx={{ fontSize: "18px", fontWeight: 500 }}>
-                    {"Giá thành *"}
-                  </InputLabel>
-                </Grid>
-                <Grid item xs={12} sx={{ marginBottom: 2 }}>
-                  <StyledInput
-                    fullWidth
-                    type="number"
-                    value={formik.values.productPrice}
-                    defaultValue={itemEdit.productPrice}
-                    onChange={e => {
-                      formik.setFieldValue("productPrice", e.target.value);
+                <Grid item xs={12} sx={{ marginBottom: 1 }}>
+                  <FormHelperText
+                    sx={{
+                      color: "red",
                     }}
-                  />
+                  >
+                    {formik.errors["name"] && formik.errors["name"]}
+                  </FormHelperText>
                 </Grid>
+
+                {/* description */}
                 <Grid item xs={12}>
                   <InputLabel shrink sx={{ fontSize: "18px", fontWeight: 500 }}>
                     {"Mô tả"}
@@ -148,39 +157,118 @@ const DialogProduct = ({ itemEdit, openDialog, handleCloseDialog }: DialogProduc
                   <StyledInput
                     fullWidth
                     value={formik.values.description}
-                    defaultValue={itemEdit.description}
                     onChange={e => {
                       formik.setFieldValue("description", e.target.value);
                     }}
                   />
                 </Grid>
+
+                {/* type */}
                 <Grid item xs={12}>
                   <InputLabel shrink sx={{ fontSize: "18px", fontWeight: 500 }}>
-                    {"Hình ảnh"}
+                    {"Loại sản phẩm *"}
                   </InputLabel>
                 </Grid>
+                <Grid item xs={12} sx={{ marginBottom: 1 }}>
+                  <Select
+                    fullWidth
+                    value={formik.values.type}
+                    onChange={e => {
+                      formik.setFieldValue("type", e.target.value);
+                    }}
+                    input={<StyledInput />}
+                  >
+                    {productTypeList.map((option, key) => {
+                      return <MenuItem value={option.value}>{option.title}</MenuItem>;
+                    })}
+                  </Select>
+                </Grid>
+                <Grid item xs={12} sx={{ marginBottom: 1 }}>
+                  <FormHelperText
+                    sx={{
+                      color: "red",
+                    }}
+                  >
+                    {formik.errors["type"] && formik.errors["type"]}
+                  </FormHelperText>
+                </Grid>
+
+                {/* cost price */}
                 <Grid item xs={12}>
-                  <Box paddingBottom="15px">
-                    <input
-                      accept="image/*"
-                      hidden={true}
-                      id="contained-button-file"
-                      multiple={true}
-                      type="file"
-                      onChange={handleImport}
-                    />
-                    <label htmlFor="contained-button-file">
-                      <Button
-                        variant="outlined"
-                        size="small"
-                        component="span"
-                        disableElevation
-                        style={{ height: "32px" }}
-                      >
-                        Chọn tệp tin
-                      </Button>
-                    </label>
-                  </Box>
+                  <InputLabel shrink sx={{ fontSize: "18px", fontWeight: 500 }}>
+                    {"Giá gốc *"}
+                  </InputLabel>
+                </Grid>
+                <Grid item xs={12} sx={{ marginBottom: 1 }}>
+                  <StyledInput
+                    fullWidth
+                    type="number"
+                    value={formik.values.productPrice}
+                    onChange={e => {
+                      formik.setFieldValue("productPrice", e.target.value);
+                    }}
+                  />
+                </Grid>
+                <Grid item xs={12} sx={{ marginBottom: 1 }}>
+                  <FormHelperText
+                    sx={{
+                      color: "red",
+                    }}
+                  >
+                    {formik.errors["productPrice"] && formik.errors["productPrice"]}
+                  </FormHelperText>
+                </Grid>
+
+                {/* product price */}
+                <Grid item xs={12}>
+                  <InputLabel shrink sx={{ fontSize: "18px", fontWeight: 500 }}>
+                    {"Giá bán *"}
+                  </InputLabel>
+                </Grid>
+                <Grid item xs={12} sx={{ marginBottom: 1 }}>
+                  <StyledInput
+                    fullWidth
+                    type="number"
+                    value={formik.values.costPrice}
+                    onChange={e => {
+                      formik.setFieldValue("costPrice", e.target.value);
+                    }}
+                  />
+                </Grid>
+                <Grid item xs={12} sx={{ marginBottom: 1 }}>
+                  <FormHelperText
+                    sx={{
+                      color: "red",
+                    }}
+                  >
+                    {formik.errors["costPrice"] && formik.errors["costPrice"]}
+                  </FormHelperText>
+                </Grid>
+
+                {/* inventory */}
+                <Grid item xs={12}>
+                  <InputLabel shrink sx={{ fontSize: "18px", fontWeight: 500 }}>
+                    {"Số lượng trong kho *"}
+                  </InputLabel>
+                </Grid>
+                <Grid item xs={12} sx={{ marginBottom: 1 }}>
+                  <StyledInput
+                    fullWidth
+                    type="number"
+                    value={formik.values.inventory}
+                    onChange={e => {
+                      formik.setFieldValue("inventory", e.target.value);
+                    }}
+                  />
+                </Grid>
+                <Grid item xs={12} sx={{ marginBottom: 1 }}>
+                  <FormHelperText
+                    sx={{
+                      color: "red",
+                    }}
+                  >
+                    {formik.errors["inventory"] && formik.errors["inventory"]}
+                  </FormHelperText>
                 </Grid>
               </Grid>
             </Grid>
@@ -239,4 +327,4 @@ const DialogProduct = ({ itemEdit, openDialog, handleCloseDialog }: DialogProduc
     </Dialog>
   );
 };
-export default DialogProduct;
+export default DialogEditProduct;
