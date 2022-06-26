@@ -1,7 +1,6 @@
 import { Box, IconButton, SxProps } from "@mui/material";
 import { CustomIcon } from "components/CustomIcon";
 import { TextItem } from "models/textItem";
-import { useState } from "react";
 import { COLORS } from "styles";
 interface CustomTitleProps {
   text: TextItem[];
@@ -9,8 +8,6 @@ interface CustomTitleProps {
 }
 
 export const CustomTitle = (props: CustomTitleProps) => {
-  const [enableEdit, setEnableEdit] = useState<boolean>(false);
-
   return (
     <Box sx={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
       {props.text.map((item, key) => {

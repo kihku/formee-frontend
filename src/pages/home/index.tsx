@@ -10,6 +10,7 @@ import { CustomIcon } from "components/CustomIcon";
 import CustomTable from "components/CustomTable";
 import { editStatusList, orderStatusList } from "constants/constants";
 import { FormDTO, FormResponseDTO } from "models/form";
+import DialogFinishOrder from "pages/createOrder/dialogFinish";
 import DialogFormTemplate from "pages/formGallery/dialogTemplate";
 import { useEffect, useMemo, useState } from "react";
 import { useDispatch } from "react-redux";
@@ -34,6 +35,7 @@ function HomePage() {
   const [openTemplateDialog, setOpenTemplateDialog] = useState<boolean>(false);
   const [recentOrders, setRecentOrders] = useState<FormResponseDTO[]>([]);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [openDetailDialog, setOpenDetailDialog] = useState<boolean>(false);
 
   // const getFormTemplates = async () => {
   //   await new TemplateService().getTemplateGallery().then(response => {
@@ -145,22 +147,27 @@ function HomePage() {
           <Box display="flex" justifyContent="left" sx={{}}>
             <Tooltip title={"Edit order"}>
               <IconButton
-                disabled={row.original.status !== "PENDING"}
-                onClick={() => {
+                disabled={row.original.status === "COMPLETED" || row.original.status === "CANCELLED"}
+                onClick={(e) => {
+                  e.stopPropagation();
                   navigate("/order/edit", {
                     state: {
-                      // formId: form.uuid,
                       orderId: row.original.uuid,
                     },
                   });
                 }}
               >
-                <CustomIcon name={row.original.status !== "PENDING" ? "disableEdit" : "edit"} />
+                <CustomIcon
+                  name={
+                    row.original.status === "COMPLETED" || row.original.status === "CANCELLED" ? "disableEdit" : "edit"
+                  }
+                />
               </IconButton>
             </Tooltip>
             <Tooltip title={"Copy order link"}>
               <IconButton
-                onClick={() => {
+                onClick={(e) => {
+                  e.stopPropagation();
                   navigator.clipboard.writeText(`localhost:3000/tracking/${CommonUtils.encodeUUID(row.original.uuid)}`);
                   dispatch(
                     openNotification({
@@ -180,23 +187,12 @@ function HomePage() {
     },
   ];
 
-  // console.log(tableContent);
-
   const columns = useMemo(() => tableContent, []);
 
   const table = useTable({
     columns,
     data: recentOrders,
   });
-
-  // const getForm = async (formId: string) => {
-  //   await new FormService().getFormById(formId).then(response => {
-  //     if (response.result) {
-  //       setForm(response.result);
-  //       // formik.setFieldValue("formId", response.result.uuid);
-  //     }
-  //   });
-  // };
 
   const handleOpenDialog = (item: FormDTO) => {
     setChosenItem(item);
@@ -347,7 +343,18 @@ function HomePage() {
                 paddingTop: "1%",
               }}
             >
-              <CustomTable highlightOnHover showCheckbox={false} data={recentOrders} table={table} columns={columns} />
+              <CustomTable
+                highlightOnHover
+                pointerOnHover
+                showCheckbox={false}
+                data={recentOrders}
+                table={table}
+                columns={columns}
+                onClickRow={(row: any) => {
+                  setItem(row.original);
+                  setOpenDetailDialog(true);
+                }}
+              />
 
               <Menu
                 id="status-menu"
@@ -386,6 +393,16 @@ function HomePage() {
           openDialog={openTemplateDialog}
           handleCloseDialog={() => {
             setOpenTemplateDialog(false);
+          }}
+        />
+      )}
+      {openDetailDialog && (
+        <DialogFinishOrder
+          orderName={item.orderName}
+          responseId={item.uuid}
+          openDialog={openDetailDialog}
+          handleCloseDialog={() => {
+            setOpenDetailDialog(false);
           }}
         />
       )}

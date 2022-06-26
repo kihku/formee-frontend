@@ -1,16 +1,13 @@
-import { initializeApp } from "firebase/app";
-import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
-
-//redux
-import { updateUserInfo } from "../redux/actions";
-import { useDispatch } from "react-redux";
 import { IconButton } from "@mui/material";
-import { CustomIcon } from "components/CustomIcon";
-import { COLORS } from "styles";
-import { useNavigate } from "react-router-dom";
-import { getCookie, setCookie } from "utils/cookieUtils";
 import { UserService } from "apis/userService/userService";
+import { CustomIcon } from "components/CustomIcon";
+import { initializeApp } from "firebase/app";
+import { getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { openNotification } from "redux/actions/notification";
+import { COLORS } from "styles";
+import { setCookie } from "utils/cookieUtils";
 
 // const axios = require("axios").default;
 // TODO: Replace the following with your app's Firebase project configuration
@@ -42,21 +39,23 @@ export const GoogleLoginButton = () => {
       onClick={() => {
         signInWithPopup(auth, provider)
           .then(result => {
-            // This gives you a Google Access Token. You can use it to access the Google API.
-            const credential = GoogleAuthProvider.credentialFromResult(result);
-            if (credential !== null) {
-              if (result.user.photoURL !== null && result.user.displayName !== null) {
-                dispatch(updateUserInfo(result.user.displayName, result.user.photoURL));
-              }
-            }
             result.user.getIdToken(true).then(idToken => {
               setCookie("USER_TOKEN", idToken);
               setCookie("USER_ID", result.user.uid);
               new UserService()
                 .login(idToken)
                 .then(response => {
-                  // console.log("token", getCookie("USER_TOKEN"));
-                  // console.log("id", getCookie("USER_ID"));
+                  localStorage.setItem(
+                    "USER_DATA",
+                    JSON.stringify({
+                      uuid: response.uuid,
+                      username: response.username,
+                      email: response.email,
+                      fullName: response.fullName,
+                      phone: response.phone,
+                      profilePicture: response.profilePicture,
+                    }),
+                  );
                   navigate("/home");
                 })
                 .catch(e => {

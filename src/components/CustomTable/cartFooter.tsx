@@ -35,7 +35,6 @@ const CustomCartFooter: React.FC<CustomCartFooterProps> = ({
   }, [formik.values]);
 
   useEffect(() => {
-    console.log("discount", discount);
     formik.values["discount"] = discount;
   }, [discount]);
 

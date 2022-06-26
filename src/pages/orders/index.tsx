@@ -1,35 +1,34 @@
 import { Box, Grid, IconButton, InputLabel, Menu, MenuItem, Tooltip } from "@mui/material";
-import { CustomTextField, StyledInput } from "components/CustomTextField";
-import { CustomTitle } from "components/CustomTitle";
-import { COLORS } from "styles";
-import * as Yup from "yup";
-import CreateFieldsFilter, { CreateFieldsFilterProps } from "components/CreateFieldsFilter";
-import { useFormik } from "formik";
-import { CustomCheckbox } from "components/CustomCheckbox";
-import { editStatusList, orderStatusList } from "constants/constants";
-import { CustomOption, Pageable } from "models/baseModels";
-import { CustomButton } from "components/CustomButton";
-import { useEffect, useMemo, useState } from "react";
-import { FormDTO, FormOrderSearchRequest, FormResponseDTO, initFilterRequest } from "models/form";
-import { CellProps, Column, useRowSelect, useTable } from "react-table";
-import DateUtils from "utils/dateUtils";
-import CustomTable from "components/CustomTable";
-import { CustomBackgroundCard } from "components/CustomBackgroundCard";
-import { CustomChip } from "components/CustomChip";
-import { useTranslation } from "react-i18next";
-import DialogOrderDetails from "./dialogs/dialogDetails";
-import { useLocation, useNavigate } from "react-router-dom";
-import { TemplateService } from "apis/template/templateService";
-import { OrderService } from "apis/orderService/orderService";
-import CommonUtils from "utils/commonUtils";
 import { FormService } from "apis/formService/formService";
-import { useDispatch } from "react-redux";
-import { openNotification } from "redux/actions/notification";
+import { OrderService } from "apis/orderService/orderService";
+import CreateFieldsFilter, { CreateFieldsFilterProps } from "components/CreateFieldsFilter";
+import { CustomBackgroundCard } from "components/CustomBackgroundCard";
+import { CustomButton } from "components/CustomButton";
+import { CustomCheckbox } from "components/CustomCheckbox";
+import { CustomChip } from "components/CustomChip";
 import { CustomIcon } from "components/CustomIcon";
-import { CustomSwitch } from "components/CustomSwitch";
-import StringUtils from "utils/stringUtils";
 import { CustomSelect } from "components/CustomSelect";
+import CustomTable from "components/CustomTable";
+import { StyledInput } from "components/CustomTextField";
+import { CustomTitle } from "components/CustomTitle";
+import { editStatusList, orderStatusList } from "constants/constants";
+import { useFormik } from "formik";
+import { CustomOption, Pageable } from "models/baseModels";
+import { FormDTO, FormOrderSearchRequest, FormResponseDTO, initFilterRequest } from "models/form";
+import DialogFinishOrder from "pages/createOrder/dialogFinish";
+import { useEffect, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useDispatch } from "react-redux";
+import { useLocation, useNavigate } from "react-router-dom";
+import { CellProps, Column, useRowSelect, useTable } from "react-table";
+import { openNotification } from "redux/actions/notification";
+import { COLORS } from "styles";
+import CommonUtils from "utils/commonUtils";
 import { getCookie } from "utils/cookieUtils";
+import DateUtils from "utils/dateUtils";
+import StringUtils from "utils/stringUtils";
+import * as Yup from "yup";
+import DialogOrderDetails from "./dialogs/dialogDetails";
 
 function OrdersPage() {
   const location = useLocation();
@@ -60,7 +59,7 @@ function OrdersPage() {
     setAnchorEl(null);
   };
 
-  console.log("aaaa", pageParams);
+  // console.log("aaaa", pageParams);
 
   const validationSchema = Yup.object().shape({});
 
@@ -236,7 +235,8 @@ function OrdersPage() {
           <Box display="flex" justifyContent="left" sx={{}}>
             <Tooltip title={"Chỉnh sửa đơn hàng"}>
               <IconButton
-                onClick={() => {
+                onClick={(e) => {
+                  e.stopPropagation();
                   navigate("/order/edit", {
                     state: {
                       orderId: row.original.uuid,
@@ -248,13 +248,19 @@ function OrdersPage() {
               </IconButton>
             </Tooltip>
             <Tooltip title={"Sao chép đơn hàng"}>
-              <IconButton onClick={() => {}}>
+              <IconButton
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleDuplicate(row.original.uuid);
+                }}
+              >
                 <CustomIcon name="duplicate" />
               </IconButton>
             </Tooltip>
             <Tooltip title={"Sao chép liên kết"}>
               <IconButton
-                onClick={() => {
+                onClick={(e) => {
+                  e.stopPropagation();
                   navigator.clipboard.writeText(`localhost:3000/tracking/${CommonUtils.encodeUUID(row.original.uuid)}`);
                   dispatch(
                     openNotification({
@@ -287,9 +293,11 @@ function OrdersPage() {
   );
 
   async function handleSubmitForm(values: FormOrderSearchRequest) {
-    console.log("values", values);
+    // console.log("values", values);
     getOrders({
       ...values,
+      pageNumber: pageParams.pageNumber,
+      pageSize: pageParams.pageSize,
       startDate: StringUtils.isNullOrEmty(values.startDate) ? "" : values.startDate + " 00:00:01",
       endDate: StringUtils.isNullOrEmty(values.endDate) ? "" : values.endDate + " 23:59:59",
     });
@@ -302,6 +310,15 @@ function OrdersPage() {
 
   const handleChangeStatus = async (status: string) => {
     await new OrderService().updateOrderStatus({ uuid: item.uuid, status: status }).then(response => {
+      if (Number(response.code) === 200) {
+        dispatch(openNotification({ open: true, content: response.message, severity: "success" }));
+        formik.handleSubmit();
+      }
+    });
+  };
+
+  const handleDuplicate = async (orderId: string) => {
+    await new OrderService().duplicateOrder(orderId).then(response => {
       if (Number(response.code) === 200) {
         dispatch(openNotification({ open: true, content: response.message, severity: "success" }));
         formik.handleSubmit();
@@ -326,41 +343,16 @@ function OrdersPage() {
       });
   };
 
-  // const handleUpdatePermission = async () => {
-  //   if (location.state) {
-  //     let state: any = location.state;
-  //     let formId: string = String(state.formId);
-  //     await new FormService().updatePermission(formId).then(response => {
-  //       if (Number(response.code) === 200) {
-  //         dispatch(openNotification({ open: true, content: response.message, severity: "success" }));
-  //         setForm(prev => {
-  //           return { ...prev, responsePermission: prev.responsePermission === "AllowAll" ? "OwnerOnly" : "AllowAll" };
-  //         });
-  //       }
-  //     });
-  //   }
-  // };
-
-  // console.log("form", form);
-
-  // const getForm = async (formId: string) => {
-  //   await new FormService().getFormById(formId).then(response => {
-  //     if (response.result) {
-  //       setForm(response.result);
-  //       // formik.setFieldValue("formId", response.result.uuid);
-  //     }
-  //   });
-  // };
-
   const getOrders = async (request: FormOrderSearchRequest) => {
     await new OrderService().filterOrders(request).then(response => {
       if (response.result) {
+        console.log(response.result);
         setResponses(
-          response.result.map(item => {
+          response.result.content.map((item: any) => {
             return { ...item, response: JSON.parse(item.response) };
           }),
         );
-        setPageParams({ ...pageParams, total: response.result.length });
+        setPageParams({ ...pageParams, total: response.result.totalElements });
       }
     });
   };
@@ -376,11 +368,9 @@ function OrdersPage() {
 
   // console.log("responses", responses);
 
-  // useEffect(() => {
-  //   setResponses(
-  //     responses.slice(pageParams.pageNumber * pageParams.pageSize, (pageParams.pageNumber + 1) * pageParams.pageSize),
-  //   );
-  // }, [pageParams.pageNumber, pageParams.pageSize]);
+  useEffect(() => {
+    formik.handleSubmit();
+  }, [pageParams.pageNumber, pageParams.pageSize]);
 
   useEffect(() => {
     getFormList();
@@ -406,17 +396,6 @@ function OrdersPage() {
                 value={formik.values.keywords}
                 onChange={e => formik.setFieldValue("keywords", e.target.value)}
               />
-              {/* <Box sx={{ marginTop: 2 }}>
-              <InputLabel shrink sx={{ fontSize: "18px", fontWeight: 500 }}>
-                {"Lọc theo form"}
-              </InputLabel>
-              <CustomSelect
-                options={[]}
-                handleOnChange={function (event: any): void {
-                  throw new Error("Function not implemented.");
-                }}
-              />
-            </Box> */}
             </Grid>
             <CreateFieldsFilter formik={formik} fields={fields} />
             <Grid
@@ -455,23 +434,10 @@ function OrdersPage() {
                 justifyContent: "space-between",
                 width: "100%",
                 alignItems: "center",
-                // cursor: "pointer",
               }}
             >
-              <CustomTitle
-                text={[
-                  // { text: form.name, highlight: false },
-                  // { text: "/", highlight: true },
-                  { text: t("header_orders"), highlight: true },
-                ]}
-              />
+              <CustomTitle text={[{ text: t("header_orders"), highlight: true }]} />
               <Box sx={{ display: "flex", gap: 1.5, alignItems: "center" }}>
-                {/* <CustomSwitch
-                  tooltipText="Cho phép khách hàng chỉnh sửa đơn hàng"
-                  handleOnChange={handleUpdatePermission}
-                  value={form.responsePermission === "AllowAll"}
-                  defaultChecked={form.responsePermission === "AllowAll"}
-                /> */}
                 <CustomButton
                   text="Xuất danh sách"
                   type="rounded-outlined"
@@ -487,6 +453,7 @@ function OrdersPage() {
               <CustomTable
                 showCheckbox={false}
                 highlightOnHover
+                pointerOnHover
                 data={responses.slice(
                   pageParams.pageNumber * pageParams.pageSize,
                   (pageParams.pageNumber + 1) * pageParams.pageSize,
@@ -501,11 +468,8 @@ function OrdersPage() {
                   setPageParams(pageParams => ({ ...pageParams, pageNumber: 0, pageSize: value }));
                 }}
                 onClickRow={(row: any) => {
-                  // navigator.clipboard.writeText(`localhost:3000/tracking/${CommonUtils.encodeUUID(row.original.uuid)}`);
-                  // navigator.clipboard.writeText(
-                  //   `https://formee.website/tracking/${CommonUtils.encodeUUID(row.original.uuid)}`,
-                  // );
-                  // dispatch(openNotification({ open: true, content: "Order link copied", severity: "success" }));
+                  setItem(row.original);
+                  setOpenDetailDialog(true);
                 }}
               />
 
@@ -539,10 +503,20 @@ function OrdersPage() {
             </CustomBackgroundCard>
           </Grid>
         </Grid>
-        {openDetailDialog && (
+        {/* {openDetailDialog && (
           <DialogOrderDetails
             form={form}
             response={item}
+            openDialog={openDetailDialog}
+            handleCloseDialog={() => {
+              setOpenDetailDialog(false);
+            }}
+          />
+        )} */}
+        {openDetailDialog && (
+          <DialogFinishOrder
+            orderName={item.orderName}
+            responseId={item.uuid}
             openDialog={openDetailDialog}
             handleCloseDialog={() => {
               setOpenDetailDialog(false);

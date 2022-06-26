@@ -15,6 +15,7 @@ export interface ProductDTO {
   imageList: string;
   type: string;
   inventory: number;
+  sales?: number;
 }
 
 export interface CartDTO {

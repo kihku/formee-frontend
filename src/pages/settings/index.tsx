@@ -9,11 +9,16 @@ import AccountSettings from "./tabs/account";
 import NotificationSettings from "./tabs/notification";
 
 function SettingsPage() {
-  const { t }  = useTranslation(["settings"]);
+  const { t } = useTranslation(["settings"]);
   const [chosenTab, setChosenTab] = useState("account");
 
   const settingOptions: CustomOption[] = [
-    { title: t("settings_account_title"), value: "account", icon: "person", component: <AccountSettings tab={chosenTab} /> },
+    {
+      title: t("settings_account_title"),
+      value: "account",
+      icon: "person",
+      component: <AccountSettings tab={chosenTab} />,
+    },
     {
       title: t("settings_noti_title"),
       value: "notification",
@@ -28,7 +33,14 @@ function SettingsPage() {
         <Grid
           item
           xs={12}
-          sx={{ fontWeight: 800, fontSize: "30px", textAlign: "start", marginBottom: 4, color: COLORS.text, textTransform: "uppercase", letterSpacing: 0.75 }}
+          sx={{
+            fontWeight: 800,
+            fontSize: "25px",
+            textAlign: "start",
+            marginBottom: 4,
+            color: COLORS.text,
+            letterSpacing: 0.75,
+          }}
         >
           {t("settings_title")}
         </Grid>

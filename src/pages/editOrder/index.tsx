@@ -44,14 +44,10 @@ function EditOrderPage({ fromRequest }: EditOrderPageProps) {
   const validationSchema = Yup.object().shape({});
 
   const handleSubmitForm = async (values: any) => {
-    await new OrderService().createOrder({ ...values, response: JSON.stringify(values.response) }).then(response => {
+    await new OrderService().updateOrder({ ...values, response: JSON.stringify(values.response) }).then(response => {
       if (Number(response.code) === 200) {
         dispatch(openNotification({ open: true, content: response.message, severity: "success" }));
-        navigate("/order/view", {
-          state: {
-            orderId: response.result.uuid,
-          },
-        });
+        navigate("/orders");
       } else {
         dispatch(openNotification({ open: true, content: response.message, severity: "error" }));
       }
@@ -160,24 +156,9 @@ function EditOrderPage({ fromRequest }: EditOrderPageProps) {
                 text={[
                   { text: String(form.name), highlight: false },
                   { text: "/", highlight: true },
-                  { text: "Edit order", highlight: true },
+                  { text: "Chỉnh sửa đơn hàng " + formResponse.orderName, highlight: true },
                 ]}
               />
-              <Box sx={{ display: "flex", gap: 1.5 }}>
-                <CustomButton
-                  text="Manage orders"
-                  type="rounded-outlined"
-                  startIcon="manage"
-                  color={COLORS.primary}
-                  handleOnClick={() => {
-                    navigate("/orders", {
-                      state: {
-                        formId: form.uuid,
-                      },
-                    });
-                  }}
-                />
-              </Box>
             </Box>
           </Grid>
           <Grid item xs={12}>
@@ -224,7 +205,6 @@ function EditOrderPage({ fromRequest }: EditOrderPageProps) {
                   startIcon="checkCircle"
                   color={COLORS.primary}
                   handleOnClick={() => {
-                    // formik.handleSubmit();
                     setOpenMessageDialog(true);
                   }}
                 />
@@ -236,10 +216,10 @@ function EditOrderPage({ fromRequest }: EditOrderPageProps) {
               orderId={formResponse.uuid}
               openDialog={openMessageDialog}
               handleCloseDialog={(result: CommentDTO) => {
+                formik.setFieldValue("message", result.message);
+                formik.setFieldValue("requested", true);
                 formik.handleSubmit();
                 setOpenMessageDialog(false);
-                // navigate("/orders");
-                // getOrderResponse(orderId);
               }}
             />
           )}

@@ -2,6 +2,8 @@
 //   return { type: "SET", payload: { image: imageUrl } };
 // };
 
-export const updateUserInfo = (name: string, imageUrl: string) => {
-  return { type: "SET", payload: { name: name, image: imageUrl } };
+import { UserDTO } from "models/user";
+
+export const updateUserInfo = (user: UserDTO) => {
+  return { type: "SET", payload: { ...user } };
 };

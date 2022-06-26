@@ -1,35 +1,25 @@
-import { Box, Grid, Paper, CssBaseline, Link, Typography, ThemeProvider, InputLabel } from "@mui/material";
+import { Box, CssBaseline, Grid, InputLabel, Link, Paper, ThemeProvider, Typography } from "@mui/material";
 import { CustomButton } from "components/CustomButton";
 import { CustomTextField } from "components/CustomTextField";
 import { GoogleLoginButton } from "../../firebase/googleLoginButton";
 
+import { useFormik } from "formik";
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { COLORS } from "styles";
 import { lightTheme } from "styles/theme";
-import { useNavigate } from "react-router-dom";
-import CreateFields, { CreateFieldsProps } from "components/CreateFields";
-import { useFormik } from "formik";
+import CommonUtils from "utils/commonUtils";
 import * as Yup from "yup";
 
 function LoginPage() {
   const navigate = useNavigate();
 
-  const validationSchema = Yup.object().shape({});
-
-  const formik = useFormik({
-    initialValues: {} as any,
-    onSubmit: handleSubmitForm,
-    validationSchema: validationSchema,
-    validateOnChange: false,
-  });
-
-  async function handleSubmitForm(values: any) {
-    console.log("values", values);
-    // closeDialog();
-  }
+  useEffect(() => {
+    CommonUtils.setPageTitle("Đăng nhập");
+  }, []);
 
   return (
     <Paper
-      // className="classes.pageMedia"
       title="Login Page"
       sx={{
         display: "flex",
@@ -38,15 +28,12 @@ function LoginPage() {
         backgroundImage: "url(/images/loginBG.svg)",
         backgroundSize: "cover",
         backgroundRepeat: "no-repeat",
-        // width: "100vw",
-        // height: "auto",
         height: "100vh",
       }}
     >
       <Box
         sx={{
           width: "100%",
-          // height: "auto",
           padding: "25px",
           backgroundColor: "white",
           marginX: 10,
@@ -90,13 +77,10 @@ function LoginPage() {
           >
             <Box
               sx={{
-                // paddingTop: "40px",
-                // paddingRight: "25px",
                 gap: "4%",
                 display: "flex",
                 flexDirection: "row",
                 justifyContent: "right",
-                // height: "5%",
                 alignItems: "center",
               }}
             >
@@ -115,7 +99,6 @@ function LoginPage() {
               <Typography fontWeight={500} color={COLORS.lightText}>
                 Register your account
               </Typography>
-              {/* <CreateFields formik={formik} fields={fields} /> */}
               <Box
                 sx={{
                   paddingTop: "5%",

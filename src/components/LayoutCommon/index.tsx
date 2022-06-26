@@ -1,10 +1,11 @@
 import { Box } from "@mui/material";
 import CustomSnackBar from "components/CustomSnackbar";
-import { useNavigate } from "react-router-dom";
-import { getCookie, setCookie } from "utils/cookieUtils";
+import { getAuth } from "firebase/auth";
 import jwt_decode from "jwt-decode";
 import moment from "moment";
 import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { getCookie, setCookie } from "utils/cookieUtils";
 
 const LayoutCommon = () => {
   const navigate = useNavigate();
@@ -13,7 +14,15 @@ const LayoutCommon = () => {
     checkToken();
   }, []);
 
-  async function checkToken() {
+  const logOut = () => {
+    setCookie("USER_ID", "");
+    setCookie("USER_TOKEN", "");
+    localStorage.setItem("USER_DATA", "{}");
+    getAuth().signOut(); // firebase
+    navigate("/login");
+  };
+
+  const checkToken = async () => {
     const TOKEN = getCookie("USER_TOKEN");
     if (window.location.pathname !== "/login" && TOKEN) {
       try {
@@ -21,18 +30,20 @@ const LayoutCommon = () => {
         const nowDate = moment(new Date());
         const expDate = moment(new Date(payload.exp * 1000));
         if (moment(nowDate).isAfter(expDate)) {
-          setCookie("USER_TOKEN", "");
-          navigate("/login");
+          console.log("refreshing token");
+          getAuth()
+            .currentUser?.getIdToken(true)
+            .then(token => {
+              setCookie("USER_TOKEN", token);
+            });
         }
       } catch (error) {
-        setCookie("USER_TOKEN", "");
-        navigate("/login");
+        logOut();
       }
     } else {
-      setCookie("USER_TOKEN", "");
-      navigate("/login");
+      logOut();
     }
-  }
+  };
 
   return (
     <Box>

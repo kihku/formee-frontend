@@ -4,4 +4,5 @@ export interface CommentDTO {
     message: string;
     createdBy: string;
     createdDate: string;
+    fromEdit: boolean;
 }

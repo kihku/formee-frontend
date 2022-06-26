@@ -59,6 +59,8 @@ export interface FormOrderSearchRequest {
   endDate: string;
   keywords: string;
   orderStatus: string[];
+  pageNumber: number;
+  pageSize: number;
 }
 
 export const initFilterRequest: FormOrderSearchRequest = {
@@ -67,4 +69,6 @@ export const initFilterRequest: FormOrderSearchRequest = {
   endDate: "",
   keywords: "",
   orderStatus: [],
+  pageNumber: 0,
+  pageSize: 10,
 };

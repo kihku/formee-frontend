@@ -15,6 +15,7 @@ import { CustomButton } from "components/CustomButton";
 import StringUtils from "utils/stringUtils";
 import { openNotification } from "redux/actions/notification";
 import { useDispatch } from "react-redux";
+import DialogViewProduct from "pages/inventory/dialogs/viewProductDialog";
 
 interface FormCartProps {
   index: number;
@@ -27,11 +28,11 @@ interface FormCartProps {
 export const FormCart = ({ index, formik, disabled, disabledFormCart }: FormCartProps) => {
   const dispatch = useDispatch();
 
-  console.log("disabled", disabledFormCart);
-
   const [value, setValue] = useState<ProductDTO[]>([]);
   const [products, setProducts] = useState<ProductDTO[]>([]);
+  const [item, setItem] = useState<ProductDTO>({} as ProductDTO);
   const [rawValue, setRawValue] = useState<string>("");
+  const [openProductDialog, setOpenProductDialog] = useState<boolean>(false);
 
   const renderValue = () => {
     if (formik) {
@@ -290,109 +291,128 @@ export const FormCart = ({ index, formik, disabled, disabledFormCart }: FormCart
   }, [value]);
 
   return (
-    <FormControl variant="standard" sx={{ width: "100%" }}>
-      {!disabled && !disabledFormCart && (
-        <Box>
-          <Box display="flex">
-            <Autocomplete
-              freeSolo
-              multiple
-              fullWidth
-              disableClearable
-              disableCloseOnSelect
-              options={products}
-              renderTags={() => null}
-              renderInput={params => {
-                const { InputLabelProps, InputProps, ...rest } = params;
-                return (
-                  <StyledInput
-                    {...params.InputProps}
-                    {...rest}
-                    onKeyDown={e => {
-                      // console.log(e.code);
-                      if (e.code === "Enter") {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        // !StringUtils.isNullOrEmty(e.currentTarget.value) &&
-                        //   formik.values["formId"] &&
-                        //   createProduct({
-                        //     formId: formik.values["formId"],
-                        //     name: e.currentTarget.value.split("/").at(0),
-                        //     productPrice: Number(e.currentTarget.value.split("/").at(-2)),
-                        //     quantity: Number(e.currentTarget.value.split("/").at(-1)),
-                        //   } as ProductDTO);
-                      } else if (e.code === "Backspace") {
-                        e.stopPropagation();
-                      } else {
-                        setRawValue(e.currentTarget.value);
-                      }
-                    }}
-                  />
-                );
-              }}
-              getOptionLabel={option => option.name}
-              renderOption={(props, option, { selected }) => (
-                <li {...props}>
-                  <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%" }}>
-                    <Box sx={{ display: "flex", alignItems: "center" }}>
-                      <Checkbox size="small" checked={selected || value.some(value => value.uuid === option.uuid)} />
-                      {option.name}
+    <Box>
+      {" "}
+      <FormControl variant="standard" sx={{ width: "100%" }}>
+        {!disabled && !disabledFormCart && (
+          <Box>
+            <Box display="flex">
+              <Autocomplete
+                freeSolo
+                multiple
+                fullWidth
+                disableClearable
+                disableCloseOnSelect
+                options={products}
+                renderTags={() => null}
+                renderInput={params => {
+                  const { InputLabelProps, InputProps, ...rest } = params;
+                  return (
+                    <StyledInput
+                      {...params.InputProps}
+                      {...rest}
+                      onKeyDown={e => {
+                        // console.log(e.code);
+                        if (e.code === "Enter") {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          // !StringUtils.isNullOrEmty(e.currentTarget.value) &&
+                          //   formik.values["formId"] &&
+                          //   createProduct({
+                          //     formId: formik.values["formId"],
+                          //     name: e.currentTarget.value.split("/").at(0),
+                          //     productPrice: Number(e.currentTarget.value.split("/").at(-2)),
+                          //     quantity: Number(e.currentTarget.value.split("/").at(-1)),
+                          //   } as ProductDTO);
+                        } else if (e.code === "Backspace") {
+                          e.stopPropagation();
+                        } else {
+                          setRawValue(e.currentTarget.value);
+                        }
+                      }}
+                    />
+                  );
+                }}
+                getOptionLabel={option => option.name}
+                renderOption={(props, option, { selected }) => (
+                  <li {...props}>
+                    <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%" }}>
+                      <Box sx={{ display: "flex", alignItems: "center" }}>
+                        <Checkbox size="small" checked={selected || value.some(value => value.uuid === option.uuid)} />
+                        {option.name}
+                      </Box>
+                      <Box>
+                        {option.productPrice}
+                        {" đ"}
+                      </Box>
                     </Box>
-                    <Box>
-                      {option.productPrice}
-                      {" đ"}
-                    </Box>
-                  </Box>
-                </li>
-              )}
-              onChange={(event: any, newValue: any) => {
-                setValue(newValue);
-              }}
-              sx={{ marginRight: 2 }}
-            />
-            {/* <CustomButton
-              text={"Tạo sản phẩm"}
-              type={"outlined"}
-              startIcon="lightAdd"
-              handleOnClick={() => {
-                // TODO: check valid input
-                !StringUtils.isNullOrEmty(rawValue) &&
-                  formik.values["formId"] &&
-                  createProduct({
-                    formId: formik.values["formId"],
-                    name: rawValue.split("/").at(0),
-                    productPrice: Number(rawValue.split("/").at(-2)),
-                    quantity: Number(rawValue.split("/").at(-1)),
-                  } as ProductDTO);
-              }}
-            /> */}
-          </Box>
-          <FormHelperText
-            sx={{
-              color: COLORS.lightText,
-              fontSize: 13,
-              cursor: "auto",
-              paddingTop: 0.75,
+                  </li>
+                )}
+                onChange={(event: any, newValue: any) => {
+                  setValue(newValue);
+                }}
+                sx={{ marginRight: 2 }}
+              />
+              {/* <CustomButton
+            text={"Tạo sản phẩm"}
+            type={"outlined"}
+            startIcon="lightAdd"
+            handleOnClick={() => {
+              // TODO: check valid input
+              !StringUtils.isNullOrEmty(rawValue) &&
+                formik.values["formId"] &&
+                createProduct({
+                  formId: formik.values["formId"],
+                  name: rawValue.split("/").at(0),
+                  productPrice: Number(rawValue.split("/").at(-2)),
+                  quantity: Number(rawValue.split("/").at(-1)),
+                } as ProductDTO);
             }}
-          >
-            {"Tìm kiếm sản phẩm"}
-          </FormHelperText>
-        </Box>
-      )}
+          /> */}
+            </Box>
+            <FormHelperText
+              sx={{
+                color: COLORS.lightText,
+                fontSize: 13,
+                cursor: "auto",
+                paddingTop: 0.75,
+              }}
+            >
+              {"Tìm kiếm sản phẩm"}
+            </FormHelperText>
+          </Box>
+        )}
 
-      {(value.length > 0 || disabled) && (
-        <Box sx={{ marginY: 2 }}>
-          <CustomTable
-            isCart
-            data={value}
-            table={table}
-            columns={columns}
-            highlightOnHover={false}
-            onAddCart={handleAddCart}
-          />
-          <CustomCartFooter formik={formik} index={index} disabled={disabled} disabledFormCart={true} />
-        </Box>
+        {(value.length > 0 || disabledFormCart) && (
+          <Box sx={{ marginY: 2 }}>
+            <CustomTable
+              isCart
+              pointerOnHover={disabledFormCart}
+              highlightOnHover={disabledFormCart}
+              data={value}
+              table={table}
+              columns={columns}
+              onAddCart={handleAddCart}
+              onClickRow={(row: any) => {
+                if (disabledFormCart) {
+                  setItem(row.original);
+                  setOpenProductDialog(true);
+                }
+              }}
+            />
+            <CustomCartFooter formik={formik} index={index} disabled={disabled} disabledFormCart={disabledFormCart} />
+          </Box>
+        )}
+      </FormControl>
+      {openProductDialog && (
+        <DialogViewProduct
+          itemEdit={item}
+          openDialog={openProductDialog}
+          handleCloseDialog={() => {
+            setOpenProductDialog(false);
+          }}
+        />
       )}
-    </FormControl>
+    </Box>
   );
 };

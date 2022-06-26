@@ -44,7 +44,7 @@ export class OrderService extends BaseService {
     return data;
   };
 
-  filterOrders = async (request: FormOrderSearchRequest): Promise<DataResponse<FormResponseDTO[]>> => {
+  filterOrders = async (request: FormOrderSearchRequest): Promise<any> => {
     let data: any = {};
     await AXIOS_INSTANCE.post(`${this.url}/filter`, request, this.getRequestHeaders())
       .then(response => {
@@ -80,7 +80,6 @@ export class OrderService extends BaseService {
       })
       .catch(error => {
         console.log(error);
-        return Promise.reject(error);
       });
     return data;
   };
@@ -88,6 +87,23 @@ export class OrderService extends BaseService {
   getOrderById = async (orderId: string): Promise<DataResponse<FormResponseDTO>> => {
     let data: any = {};
     await AXIOS_INSTANCE.get(`${this.url}/response/${orderId}`, this.getRequestHeaders())
+      .then(response => {
+        if (response.status === 200) {
+          data = response.data;
+        } else {
+          throw new Error("");
+        }
+      })
+      .catch(error => {
+        // console.log(error);
+        return Promise.reject(error);
+      });
+    return data;
+  };
+
+  duplicateOrder = async (orderId: string): Promise<DataResponse<FormResponseDTO>> => {
+    let data: any = {};
+    await AXIOS_INSTANCE.get(`${this.url}/duplicate/${orderId}`, this.getRequestHeaders())
       .then(response => {
         if (response.status === 200) {
           data = response.data;

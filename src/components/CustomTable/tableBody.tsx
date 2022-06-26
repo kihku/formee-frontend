@@ -103,7 +103,7 @@ const CustomTableBody = <D extends object>({
       {rows.length === 0 && (
         <TableRow>
           <StyledTableCell scope="row" colSpan={columns.length + 2} sx={{ textAlign: "center" }}>
-            Bạn không có đơn hàng nào.
+            Không có dữ liệu.
           </StyledTableCell>
         </TableRow>
       )}

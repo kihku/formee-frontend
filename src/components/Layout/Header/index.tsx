@@ -4,19 +4,14 @@ import { CustomAvatar } from "components/CustomAvatar";
 import { CustomChip } from "components/CustomChip";
 import { CustomIcon } from "components/CustomIcon";
 import { useTranslation } from "react-i18next";
-import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { RootState } from "redux/reducers/rootReducer";
 import { COLORS } from "styles";
 
 export const Header = () => {
   const { t, i18n } = useTranslation(["commons"]);
   const navigate = useNavigate();
 
-  const userInfo = useSelector((state: RootState) => {
-    // console.log("use selector called");
-    return state.userInfo;
-  });
+  const userInfo = JSON.parse(String(localStorage.getItem("USER_DATA")));
 
   const changeLanguage = (language: "en" | "vi") => {
     i18n.changeLanguage(language);
@@ -59,10 +54,8 @@ export const Header = () => {
         <CustomChip
           clickable
           text={t("header_home")}
-          backgroundColor={
-            window.location.href === "http://localhost:3000/home" ? COLORS.primaryBackground : COLORS.white
-          }
-          textColor={window.location.href === "http://localhost:3000/home" ? COLORS.primary : COLORS.text}
+          backgroundColor={window.location.href.split("/").at(-1) === "home" ? COLORS.primaryBackground : COLORS.white}
+          textColor={window.location.href.split("/").at(-1) === "home" ? COLORS.primary : COLORS.text}
           size={18}
           handleOnClick={() => {
             navigate("/home");
@@ -71,9 +64,9 @@ export const Header = () => {
         <CustomChip
           clickable
           backgroundColor={
-            window.location.href === "http://localhost:3000/orders" ? COLORS.primaryBackground : COLORS.white
+            window.location.href.split("/").at(-1) === "orders" ? COLORS.primaryBackground : COLORS.white
           }
-          textColor={window.location.href === "http://localhost:3000/orders" ? COLORS.primary : COLORS.text}
+          textColor={window.location.href.split("/").at(-1) === "orders" ? COLORS.primary : COLORS.text}
           text={t("header_orders")}
           size={18}
           handleOnClick={() => {
@@ -83,27 +76,25 @@ export const Header = () => {
         <CustomChip
           clickable
           backgroundColor={
-            window.location.href === "http://localhost:3000/products" ? COLORS.primaryBackground : COLORS.white
+            window.location.href.split("/").at(-1) === "products" ? COLORS.primaryBackground : COLORS.white
           }
-          textColor={window.location.href === "http://localhost:3000/products" ? COLORS.primary : COLORS.text}
+          textColor={window.location.href.split("/").at(-1) === "products" ? COLORS.primary : COLORS.text}
           text={"Sản phẩm"}
           size={18}
           handleOnClick={() => {
             navigate("/products");
           }}
         />
-        {/* <CustomChip
+        <CustomChip
           clickable
-          backgroundColor={
-            window.location.href === "http://localhost:3000/report" ? COLORS.primaryBackground : COLORS.white
-          }
-          textColor={window.location.href === "http://localhost:3000/report" ? COLORS.primary : COLORS.text}
+          backgroundColor={window.location.href.split("/").at(-1) === "repor" ? COLORS.primaryBackground : COLORS.white}
+          textColor={window.location.href.split("/").at(-1) === "repor" ? COLORS.primary : COLORS.text}
           text={t("header_report")}
           size={18}
           handleOnClick={() => {
             navigate("/report");
           }}
-        /> */}
+        />
       </Grid>
       <Grid
         item
@@ -113,12 +104,11 @@ export const Header = () => {
           flexDirection: "row-reverse",
           justifyContent: "end",
           alignItems: "center",
-          // maxHeight: "8vh",
           paddingY: "2vh",
           gap: 0.5,
         }}
       >
-        <CustomAvatar image={userInfo.image} />
+        <CustomAvatar image={userInfo.profilePicture} name={userInfo.fullName} />
         {/* <Box>{userInfo.name}</Box> */}
         <Tooltip title={t("header_settings")}>
           <IconButton
@@ -133,17 +123,13 @@ export const Header = () => {
         <Tooltip title={t("header_help")}>
           <IconButton
             onClick={() => {
-              navigate("/error"); //test
+              // navigate("/error");
             }}
           >
             <CustomIcon name="about" size={28} />
           </IconButton>
         </Tooltip>
-        <Select
-          sx={{ marginLeft: 2 }}
-          input={<InputBase value={String(localStorage.getItem("i18nextLng"))} />}
-          onChange={event => {}}
-        >
+        <Select sx={{ marginLeft: 2 }} input={<InputBase value={String(localStorage.getItem("i18nextLng"))} />}>
           <MenuItem
             value={"vi"}
             onClick={() => {

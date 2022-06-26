@@ -55,7 +55,6 @@ const DialogAddProduct = ({ openDialog, handleCloseDialog }: DialogAddProductPro
   }
 
   async function handleSubmitForm(values: ProductDTO) {
-    console.log("values", values);
     // await new ProductService()
     //   .uploadImageToServer(formik.values.image, formik.values.uuid)
     //   .then(response => console.log(response));
@@ -65,6 +64,7 @@ const DialogAddProduct = ({ openDialog, handleCloseDialog }: DialogAddProductPro
         ...values,
         imageName: String(imageList.at(0)),
         imageList: JSON.stringify(imageList),
+        sales: 0
       })
       .then(response => {
         console.log(response);

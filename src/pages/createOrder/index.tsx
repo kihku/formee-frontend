@@ -23,6 +23,7 @@ import DialogFinishOrder from "./dialogFinish";
 import { CustomSwitch } from "components/CustomSwitch";
 import { openNotification } from "redux/actions/notification";
 import { useDispatch } from "react-redux";
+import StringUtils from "utils/stringUtils";
 
 function CreateOrderPage() {
   const location = useLocation();
@@ -36,18 +37,27 @@ function CreateOrderPage() {
   const [fields, setFields] = useState<FormSectionDTO[]>([]);
   const [openDialog, setOpenDialog] = useState<boolean>(false);
 
-  const validationSchema = Yup.object().shape({});
+  const validationSchema = Yup.object().shape({
+    response: Yup.array()
+      .test("test-phone", "Số điện thoại không được bỏ trống", value => {
+        if (value) {
+          return !StringUtils.isNullOrEmty(value[0]);
+        }
+        return false;
+      })
+      .test("test-name", "Tên người mua không được bỏ trống", value => {
+        if (value) {
+          return !StringUtils.isNullOrEmty(value[1]);
+        }
+        return false;
+      }),
+  });
 
   const handleSubmitForm = async (values: any) => {
     await new OrderService().createOrder({ ...values, response: JSON.stringify(values.response) }).then(response => {
       setResponseId(response.result.uuid);
       setOrderName(response.result.orderName);
       setOpenDialog(true);
-      // navigate("/order/view", {
-      //   state: {
-      //     orderId: response.result.uuid,
-      //   },
-      // });
     });
   };
 
@@ -112,15 +122,6 @@ function CreateOrderPage() {
     });
   };
 
-  // const getCustomers = async () => {
-  //   const userId = getCookie("USER_ID");
-  //   await new CustomerService().getCustomersByUserId(userId).then(response => {
-  //     if (response.result) {
-  //       console.log(response.result);
-  //     }
-  //   });
-  // };
-
   const handleUpdatePermission = async () => {
     if (location.state) {
       let state: any = location.state;
@@ -148,6 +149,11 @@ function CreateOrderPage() {
     getFields();
   }, [form]);
 
+  useEffect(() => {
+    formik.errors["response"] &&
+      dispatch(openNotification({ open: true, content: String(formik.errors["response"]), severity: "error" }));
+  }, [formik.errors["response"]]);
+
   return (
     <Box>
       <Grid container sx={{ minHeight: "95vh" }}>
@@ -174,21 +180,6 @@ function CreateOrderPage() {
                 value={form.responsePermission === "AllowAll"}
                 defaultChecked={form.responsePermission === "AllowAll"}
               />
-              {/* <Box sx={{ display: "flex", gap: 1.5 }}>
-                <CustomButton
-                  text="Quản lý"
-                  type="rounded-outlined"
-                  startIcon="manage"
-                  color={COLORS.primary}
-                  handleOnClick={() => {
-                    navigate("/orders", {
-                      state: {
-                        formId: form.uuid,
-                      },
-                    });
-                  }}
-                />
-              </Box> */}
             </Box>
           </Grid>
           <Grid item xs={12}>

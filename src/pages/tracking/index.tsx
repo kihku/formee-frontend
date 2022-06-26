@@ -17,7 +17,7 @@ import { FormService } from "apis/formService/formService";
 import { useNavigate } from "react-router-dom";
 import { CustomButton } from "components/CustomButton";
 import { COLORS } from "styles";
-import DialogRequestEditOrder from "./requestEditDialog";
+import DialogRequestEditOrder from "./dialogs/requestEditDialog";
 import { CommentDTO } from "models/comment";
 import { HistoryItem } from "pages/orders/components/historyItem";
 import { openNotification } from "redux/actions/notification";
@@ -25,6 +25,8 @@ import { useDispatch } from "react-redux";
 import { CustomChip } from "components/CustomChip";
 import { FormSection } from "components/CreateFieldsForm/FormFields/FormSection";
 import { FormAddress } from "components/CreateFieldsForm/FormFields/FormAddress";
+import DialogConfirmEditOrder from "./dialogs/confirmEditDialog";
+import { CommentService } from "apis/commentService/commentService";
 
 function OrderTrackingPage() {
   const { t } = useTranslation(["forms", "buttons", "orders"]);
@@ -37,9 +39,9 @@ function OrderTrackingPage() {
   const [orderId, setOrderId] = useState<string>("");
   const [fields, setFields] = useState<FormSectionDTO[]>([]);
   const [openRequestDialog, setOpenRequestDialog] = useState<boolean>(false);
-  // const [requested, setRequested] = useState<boolean>(false);
+  const [openConfirmDialog, setOpenConfirmDialog] = useState<boolean>(false);
+  const [confirmed, setConfirmed] = useState<boolean>(false);
   const [enableEditing, setEnableEditing] = useState<boolean>(false);
-  // const [statusIndex, setStatusIndex] = useState<number>(-1);
 
   const validationSchema = Yup.object().shape({});
 
@@ -48,6 +50,7 @@ function OrderTrackingPage() {
       if (Number(response.code) === 200) {
         setEnableEditing(!enableEditing);
         dispatch(openNotification({ open: true, content: response.message, severity: "success" }));
+        getOrderResponse(orderId);
       }
     });
   };
@@ -100,7 +103,6 @@ function OrderTrackingPage() {
     await new FormService().getFormById(formId).then(response => {
       if (response.result) {
         setForm(response.result);
-        // formik.setFieldValue("formId", response.result.uuid);
       }
     });
   };
@@ -113,8 +115,7 @@ function OrderTrackingPage() {
           setFormResponse({ ...response.result, response: JSON.parse(response.result.response) });
           formik.setValues({ ...response.result, response: JSON.parse(response.result.response) });
           setFormId(response.result.formId);
-          // console.log(response.result.requested);
-          // setRequested(Boolean(response.result.requested));
+          setConfirmed(response.result.status === "CONFIRMED");
         }
       })
       .catch(e => {
@@ -122,7 +123,20 @@ function OrderTrackingPage() {
       });
   };
 
-  // console.log("response", formik.values);
+  const handleChangeStatus = async (status: string) => {
+    await new OrderService().updateOrderStatus({ uuid: orderId, status: status }).then(response => {
+      if (Number(response.code) === 200) {
+        setEnableEditing(false);
+        setConfirmed(true);
+        dispatch(openNotification({ open: true, content: response.message, severity: "success" }));
+        getOrderResponse(orderId);
+      }
+    });
+  };
+
+  const handleAddComment = async (comment: CommentDTO) => {
+    await new CommentService().createComment(comment);
+  };
 
   useEffect(() => {
     if (window.location.href) {
@@ -191,43 +205,55 @@ function OrderTrackingPage() {
                     );
                   })}
                 </Grid>
-
-                <Box sx={{ display: "flex", gap: 1.5, justifyContent: "flex-end" }}>
-                  {
-                    <CustomButton
-                      text={
-                        enableEditing
-                          ? "Lưu thay đổi"
-                          : `${form.responsePermission === "OwnerOnly" ? "Yêu cầu chỉnh" : "Chỉnh"} sửa`
-                      }
-                      type="rounded-outlined"
-                      startIcon={enableEditing ? "checkCircle" : "edit"}
-                      color={COLORS.primary}
-                      handleOnClick={() => {
-                        // check permission
-                        if (form.responsePermission === "AllowAll") {
-                          // check if there is a user token
-                          enableEditing ? formik.handleSubmit() : setEnableEditing(true);
-                          // else go to login page
-                        } else {
-                          // OwnerOnly: open request edit dialog
-                          setOpenRequestDialog(true);
+                {!confirmed && !(formResponse.status === "COMPLETED" || formResponse.status === "CANCELLED") && (
+                  <Box sx={{ display: "flex", gap: 1.5, justifyContent: "flex-end" }}>
+                    {
+                      <CustomButton
+                        text={
+                          enableEditing
+                            ? "Lưu thay đổi"
+                            : `${form.responsePermission === "OwnerOnly" ? "Yêu cầu chỉnh" : "Chỉnh"} sửa`
                         }
-                      }}
-                    />
-                  }
-                  {!enableEditing && (
-                    <CustomButton
-                      text="Xác nhận"
-                      type="rounded"
-                      startIcon="checkCircle"
-                      color={COLORS.white}
-                      handleOnClick={() => {
-                        setEnableEditing(false);
-                      }}
-                    />
-                  )}
-                </Box>
+                        type="rounded-outlined"
+                        startIcon={enableEditing ? "checkCircle" : "edit"}
+                        color={COLORS.primary}
+                        handleOnClick={() => {
+                          // check permission
+                          if (form.responsePermission === "AllowAll") {
+                            // check if there is a user token
+                            enableEditing ? setOpenConfirmDialog(true) : setEnableEditing(true);
+                            // else go to login page
+                          } else {
+                            // OwnerOnly: open request edit dialog
+                            setOpenRequestDialog(true);
+                          }
+                        }}
+                      />
+                    }
+                    {enableEditing && (
+                      <CustomButton
+                        text="Huỷ"
+                        type="rounded-outlined"
+                        startIcon="cancelCircle"
+                        color={COLORS.primary}
+                        handleOnClick={() => {
+                          setEnableEditing(false);
+                        }}
+                      />
+                    )}
+                    {!enableEditing && (
+                      <CustomButton
+                        text="Xác nhận"
+                        type="rounded"
+                        startIcon="checkCircle"
+                        color={COLORS.white}
+                        handleOnClick={() => {
+                          handleChangeStatus("CONFIRMED");
+                        }}
+                      />
+                    )}
+                  </Box>
+                )}
               </CustomBackgroundCard>
             </Grid>
           </Grid>
@@ -239,6 +265,20 @@ function OrderTrackingPage() {
             handleCloseDialog={(result: CommentDTO) => {
               setOpenRequestDialog(false);
               getOrderResponse(orderId);
+            }}
+          />
+        )}
+        {openConfirmDialog && (
+          <DialogConfirmEditOrder
+            orderId={formResponse.uuid}
+            openDialog={openConfirmDialog}
+            handleSubmitDialog={(comment: CommentDTO) => {
+              handleAddComment(comment).then(() => {
+                formik.handleSubmit();
+              });
+            }}
+            handleCloseDialog={() => {
+              setOpenConfirmDialog(false);
             }}
           />
         )}

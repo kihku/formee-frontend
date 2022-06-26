@@ -142,7 +142,7 @@ const DialogFinishOrder = ({ responseId, openDialog, handleCloseDialog, orderNam
       <DialogTitle>
         <Box sx={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
           <Box sx={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
-            <CustomTitle text={[{ text: `Tạo đơn hàng ${orderName} thành công`, highlight: true }]} />
+            <CustomTitle text={[{ text: orderName, highlight: true }]} />
           </Box>
           <Box sx={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
             <IconButton onClick={closeDialog}>

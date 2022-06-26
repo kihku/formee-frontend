@@ -29,7 +29,7 @@ export const FormAddress = ({ index, formik, required, disabled, isEditing }: Fo
 
   const renderValue = () => {
     if (formik) {
-      if (!isEditing || disabled) {
+      if (disabled) {
         let head = formik.values["response"].at(index)[0];
         let tail = [...formik.values["response"].at(index)]
           .filter((item, index) => index !== 0)
@@ -57,8 +57,6 @@ export const FormAddress = ({ index, formik, required, disabled, isEditing }: Fo
       }
     }
   };
-
-  console.log("edit", isEditing, "disabled", disabled);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setValue(e.target.value);
@@ -96,7 +94,7 @@ export const FormAddress = ({ index, formik, required, disabled, isEditing }: Fo
 
   useEffect(() => {
     renderValue();
-  }, [formik.values["loadAddress"]]);
+  }, [formik.values["loadAddress"], disabled]);
 
   // console.log("formik", formik.values["response"]);
 
@@ -117,66 +115,64 @@ export const FormAddress = ({ index, formik, required, disabled, isEditing }: Fo
 
   return (
     <FormControl variant="standard" sx={{ width: "100%" }}>
-      {isEditing && (
-        <Grid container>
-          {!disabled && (
-            <Grid item xs={3} sx={{ marginBottom: 2, paddingRight: 2 }}>
-              <StyledInput
-                fullWidth
-                value={value}
-                required={required}
-                disabled={disabled}
-                placeholder={"Số nhà/Đường"}
-                onChange={handleChange}
-                inputProps={{
-                  autoComplete: "new-password",
-                  form: {
-                    autoComplete: "off",
-                  },
-                }}
-              />
-            </Grid>
-          )}
+      <Grid container>
+        {!disabled && (
+          <Grid item xs={3} sx={{ marginBottom: 2, paddingRight: 2 }}>
+            <StyledInput
+              fullWidth
+              value={value}
+              required={required}
+              disabled={disabled}
+              placeholder={"Số nhà/Đường"}
+              onChange={handleChange}
+              inputProps={{
+                autoComplete: "new-password",
+                form: {
+                  autoComplete: "off",
+                },
+              }}
+            />
+          </Grid>
+        )}
 
-          {!disabled && (
-            <Grid item xs={9} sx={{ display: "flex", gap: 2 }}>
-              <CustomSelect
-                disabled={disabled}
-                options={tinhThanhList.map(item => {
-                  return { title: item.name_, value: item.code };
-                })}
-                value={tinhThanh}
-                handleOnChange={e => {
-                  setTinhThanh(e.target.value);
-                  getQuanHuyen(e.target.value);
-                }}
-              />
-              <CustomSelect
-                value={quanHuyen}
-                options={quanHuyenList.map(item => {
-                  return { title: item.name_, value: item.code };
-                })}
-                disabled={StringUtils.isNullOrEmty(tinhThanh)}
-                handleOnChange={e => {
-                  setQuanHuyen(e.target.value);
-                  getPhuongXa(e.target.value);
-                }}
-              />
-              <CustomSelect
-                value={phuongXa}
-                options={phuongXaList.map(item => {
-                  return { title: item.name_, value: item.code };
-                })}
-                disabled={StringUtils.isNullOrEmty(quanHuyen)}
-                handleOnChange={e => {
-                  setPhuongXa(e.target.value);
-                }}
-              />
-            </Grid>
-          )}
-        </Grid>
-      )}
-      {(!isEditing || disabled) && (
+        {!disabled && (
+          <Grid item xs={9} sx={{ display: "flex", gap: 2 }}>
+            <CustomSelect
+              disabled={disabled}
+              options={tinhThanhList.map(item => {
+                return { title: item.name_, value: item.code };
+              })}
+              value={tinhThanh}
+              handleOnChange={e => {
+                setTinhThanh(e.target.value);
+                getQuanHuyen(e.target.value);
+              }}
+            />
+            <CustomSelect
+              value={quanHuyen}
+              options={quanHuyenList.map(item => {
+                return { title: item.name_, value: item.code };
+              })}
+              disabled={StringUtils.isNullOrEmty(tinhThanh)}
+              handleOnChange={e => {
+                setQuanHuyen(e.target.value);
+                getPhuongXa(e.target.value);
+              }}
+            />
+            <CustomSelect
+              value={phuongXa}
+              options={phuongXaList.map(item => {
+                return { title: item.name_, value: item.code };
+              })}
+              disabled={StringUtils.isNullOrEmty(quanHuyen)}
+              handleOnChange={e => {
+                setPhuongXa(e.target.value);
+              }}
+            />
+          </Grid>
+        )}
+      </Grid>
+      {!isEditing && disabled && (
         <Grid container>
           <Grid item xs={12}>
             <StyledInput fullWidth disabled value={fullValue} />

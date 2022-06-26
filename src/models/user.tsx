@@ -1,21 +1,15 @@
 export interface UserDTO {
-  userId: string;
-  userName: string;
-  firstName: string;
-  lastName: string;
+  uuid: string;
+  username: string;
   fullName: string;
-  gender: number;
-  phoneNumber: string;
+  phone: string;
   email: string;
-  birthDate: string;
-  password: string;
+  profilePicture: string;
 }
 
 export const initDataUser: UserDTO = {
-  firstName: "",
-  lastName: "",
-  birthDate: "",
-  phoneNumber: "",
+  fullName: "",
+  phone: "",
   email: "",
-  password: "",
+  profilePicture: "",
 } as UserDTO;
