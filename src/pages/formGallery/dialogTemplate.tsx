@@ -126,7 +126,7 @@ const DialogFormTemplate = ({ item, openDialog, handleCloseDialog }: DialogFormT
     await new FormService()
       .createForm({
         userId: userId,
-        layoutJson: form.layoutJson,
+        layoutJson: `{"sections":[{"title":"A. Thông tin người mua","components":[{"title":"Số điện thoại","type":"PHONE","validation":[],"showOnTable":false,"xs":5},{"title":"Tên người mua","type":"TEXT","validation":[{"type":"REQUIRED","errorMessgage":"Tên người mua không được bỏ trống"}],"showOnTable":true,"xs":2.5},{"title":"Địa chỉ giao hàng","type":"ADDRESS","validation":[{"type":"REQUIRED","errorMessgage":"Địa chỉ giao hàng không được bỏ trống"}],"showOnTable":true,"xs":10},{"title":"Ghi chú","type":"TEXT","validation":[],"showOnTable":false,"xs":2.5}]},{"title":"B. Chi tiết đơn hàng","components":[{"title":"Sản phẩm","type":"CART","validation":[],"showOnTable":false,"xs":10}]}]}`,
         templateId: form.uuid,
         name: formNameFormik.values.name,
       } as FormDTO)
