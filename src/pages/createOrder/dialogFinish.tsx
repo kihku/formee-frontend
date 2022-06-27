@@ -32,6 +32,7 @@ import { FormTextField } from "components/CreateFieldsForm/FormFields/FormTextFi
 import { FormSelect } from "components/CreateFieldsForm/FormFields/FormSelect";
 import { FormCart } from "components/CreateFieldsForm/FormFields/FormCart";
 import { FormAddress } from "components/CreateFieldsForm/FormFields/FormAddress";
+import { URL_PROFILE } from "apis/axiosClient";
 
 export interface DialogFinishOrderProps {
   orderName: string;
@@ -177,12 +178,14 @@ const DialogFinishOrder = ({ responseId, openDialog, handleCloseDialog, orderNam
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  {`http://localhost:3000/tracking/${CommonUtils.encodeUUID(responseId)}`}
+                  {`${URL_PROFILE.PRO}/tracking/${CommonUtils.encodeUUID(responseId)}`}
                 </Link>
                 <Tooltip title="Sao chép liên kết">
                   <IconButton
                     onClick={() => {
-                      navigator.clipboard.writeText(`localhost:3000/tracking/${CommonUtils.encodeUUID(responseId)}`);
+                      navigator.clipboard.writeText(
+                        `${URL_PROFILE.PRO}/tracking/${CommonUtils.encodeUUID(responseId)}`,
+                      );
                       dispatch(
                         openNotification({
                           open: true,

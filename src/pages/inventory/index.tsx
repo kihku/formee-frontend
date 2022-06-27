@@ -24,6 +24,7 @@ import { useDispatch } from "react-redux";
 import DialogAddProduct from "./dialogs/addProductDialog";
 import { productTypeList } from "constants/constants";
 import { CustomChip } from "components/CustomChip";
+import { URL_PROFILE } from "apis/axiosClient";
 
 function ProductsPage() {
   const { t } = useTranslation(["commons", "buttons"]);
@@ -59,7 +60,7 @@ function ProductsPage() {
         return (
           <Box display="flex" justifyContent="left">
             <img
-              src={row.original.imageBase64}
+              src={`${URL_PROFILE.PRO}/images/${row.original.imageName}`}
               width="80"
               height="80"
               style={{

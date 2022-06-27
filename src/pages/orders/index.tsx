@@ -1,4 +1,5 @@
 import { Box, Grid, IconButton, InputLabel, Menu, MenuItem, Tooltip } from "@mui/material";
+import { URL_PROFILE } from "apis/axiosClient";
 import { FormService } from "apis/formService/formService";
 import { OrderService } from "apis/orderService/orderService";
 import CreateFieldsFilter, { CreateFieldsFilterProps } from "components/CreateFieldsFilter";
@@ -212,6 +213,7 @@ function OrdersPage() {
             display="flex"
             justifyContent="left"
             onClick={e => {
+              e.stopPropagation();
               handleOpenMenu(e, row.original);
             }}
           >
@@ -235,7 +237,7 @@ function OrdersPage() {
           <Box display="flex" justifyContent="left" sx={{}}>
             <Tooltip title={"Chỉnh sửa đơn hàng"}>
               <IconButton
-                onClick={(e) => {
+                onClick={e => {
                   e.stopPropagation();
                   navigate("/order/edit", {
                     state: {
@@ -249,7 +251,7 @@ function OrdersPage() {
             </Tooltip>
             <Tooltip title={"Sao chép đơn hàng"}>
               <IconButton
-                onClick={(e) => {
+                onClick={e => {
                   e.stopPropagation();
                   handleDuplicate(row.original.uuid);
                 }}
@@ -259,9 +261,11 @@ function OrdersPage() {
             </Tooltip>
             <Tooltip title={"Sao chép liên kết"}>
               <IconButton
-                onClick={(e) => {
+                onClick={e => {
                   e.stopPropagation();
-                  navigator.clipboard.writeText(`localhost:3000/tracking/${CommonUtils.encodeUUID(row.original.uuid)}`);
+                  navigator.clipboard.writeText(
+                    `${URL_PROFILE.PRO}/tracking/${CommonUtils.encodeUUID(row.original.uuid)}`,
+                  );
                   dispatch(
                     openNotification({
                       open: true,

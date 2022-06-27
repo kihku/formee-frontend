@@ -22,6 +22,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { openNotification } from "redux/actions/notification";
 import { useDispatch } from "react-redux";
 import { FormAddress } from "components/CreateFieldsForm/FormFields/FormAddress";
+import { URL_PROFILE } from "apis/axiosClient";
 
 export interface ReviewOrderPageProps {}
 
@@ -152,7 +153,7 @@ const ReviewOrderPage = ({}: ReviewOrderPageProps) => {
                   color={COLORS.primary}
                   handleOnClick={() => {
                     navigator.clipboard.writeText(
-                      `localhost:3000/tracking/${CommonUtils.encodeUUID(formResponse.uuid)}`,
+                      `${URL_PROFILE.PRO}/tracking/${CommonUtils.encodeUUID(formResponse.uuid)}`,
                     );
                     dispatch(openNotification({ open: true, content: "Order link copied", severity: "success" }));
                   }}

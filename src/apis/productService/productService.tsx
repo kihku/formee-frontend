@@ -62,10 +62,12 @@ export class ProductService extends BaseService {
     return data;
   };
 
-  uploadImageToServer = async (file: File, productId: string): Promise<DataResponse<any>> => {
+  uploadImageToServer = async (fileList: File[], productId: string): Promise<DataResponse<any>> => {
     let data: any = {};
     const formData = new FormData();
-    formData.append("file", file);
+    fileList.map((file, key) => {
+      return formData.append("files[]", file);
+    });
     await AXIOS_INSTANCE.post(`${this.url}/${productId}`, formData, {
       headers: { "Content-Type": "multipart/form-data" },
     })

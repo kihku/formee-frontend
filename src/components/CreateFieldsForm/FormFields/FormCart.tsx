@@ -16,6 +16,7 @@ import StringUtils from "utils/stringUtils";
 import { openNotification } from "redux/actions/notification";
 import { useDispatch } from "react-redux";
 import DialogViewProduct from "pages/inventory/dialogs/viewProductDialog";
+import { URL_PROFILE } from "apis/axiosClient";
 
 interface FormCartProps {
   index: number;
@@ -53,13 +54,13 @@ export const FormCart = ({ index, formik, disabled, disabledFormCart }: FormCart
   const cartTable: Column<ProductDTO>[] = [
     {
       Header: "Sản phẩm",
-      accessor: "imageBase64",
+      accessor: undefined,
       maxWidth: 10,
       Cell: ({ row }: CellProps<ProductDTO, {}>) => {
         return (
           <Box display="flex" justifyContent="left">
             <img
-              src={row.original.imageBase64}
+              src={`${URL_PROFILE.PRO}/images/${row.original.imageName}`}
               width="80"
               height="80"
               style={{
@@ -172,13 +173,13 @@ export const FormCart = ({ index, formik, disabled, disabledFormCart }: FormCart
   const cartTableDisabled: Column<ProductDTO>[] = [
     {
       Header: "Sản phẩm",
-      accessor: "imageBase64",
+      accessor: undefined,
       maxWidth: 10,
       Cell: ({ row }: CellProps<ProductDTO, {}>) => {
         return (
           <Box display="flex" justifyContent="left">
             <img
-              src={row.original.imageBase64}
+              src={`${URL_PROFILE.PRO}/images/${row.original.imageName}`}
               width="80"
               height="80"
               style={{

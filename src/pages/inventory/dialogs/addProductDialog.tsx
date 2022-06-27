@@ -33,6 +33,7 @@ export interface DialogAddProductProps {
 const DialogAddProduct = ({ openDialog, handleCloseDialog }: DialogAddProductProps) => {
   const [currentIndex, setCurrentIndex] = useState<number>(0);
   const [imageList, setImageList] = useState<string[]>([]);
+  const [fileList, setFileList] = useState<File[]>([]);
 
   const validationSchema = Yup.object().shape({
     name: Yup.string().trim().required("Tên sản phẩm không được bỏ trống"),
@@ -55,19 +56,16 @@ const DialogAddProduct = ({ openDialog, handleCloseDialog }: DialogAddProductPro
   }
 
   async function handleSubmitForm(values: ProductDTO) {
-    // await new ProductService()
-    //   .uploadImageToServer(formik.values.image, formik.values.uuid)
-    //   .then(response => console.log(response));
-
     await new ProductService()
       .createProduct({
         ...values,
-        imageName: String(imageList.at(0)),
-        imageList: JSON.stringify(imageList),
-        sales: 0
+        sales: 0,
       })
       .then(response => {
         console.log(response);
+        new ProductService()
+          .uploadImageToServer(fileList, response.result.uuid)
+          .then(response => console.log(response));
         closeDialog();
       });
   }
@@ -75,31 +73,13 @@ const DialogAddProduct = ({ openDialog, handleCloseDialog }: DialogAddProductPro
   async function handleImport(e: ChangeEvent<HTMLInputElement>) {
     if (e.target.files && e.target.files.length > 0) {
       try {
-        let files = Array.from(e.target.files);
+        let files: File[] = Array.from(e.target.files);
+        setFileList(files);
         setImageList(
           files.map((file: any) => {
             return URL.createObjectURL(file);
           }),
         );
-        // formik.setFieldValue(
-        //   "imageList",
-        //   files.map((file: any) => {
-        //     return URL.createObjectURL(file);
-        //   }),
-        // );
-        // console.log(
-        //   files.map((file: any) => {
-        //     return URL.createObjectURL(file);
-        //   }),
-        // );
-        // console.log("files", URL.createObjectURL(e.target.files[0]));
-        let reader = new FileReader();
-        let file = e.target.files[0];
-        reader.readAsDataURL(file);
-        reader.onloadend = () => {
-          // console.log("image", reader.result);
-          formik.setFieldValue("imageBase64", reader.result);
-        };
       } catch (error) {
         console.log(error);
       }

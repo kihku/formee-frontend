@@ -12,6 +12,7 @@ import {
   Select,
   styled,
 } from "@mui/material";
+import { URL_PROFILE } from "apis/axiosClient";
 import { ProductService } from "apis/productService/productService";
 import CreateFields, { CreateFieldsProps } from "components/CreateFields";
 import { CustomButton } from "components/CustomButton";
@@ -32,6 +33,7 @@ export interface DialogEditProductProps {
 const DialogEditProduct = ({ itemEdit, openDialog, handleCloseDialog }: DialogEditProductProps) => {
   const [currentIndex, setCurrentIndex] = useState<number>(0);
   const [imageList, setImageList] = useState<string[]>([]);
+  const [fileList, setFileList] = useState<File[]>([]);
 
   const validationSchema = Yup.object().shape({
     name: Yup.string().trim().required("Product name is requried"),
@@ -52,51 +54,31 @@ const DialogEditProduct = ({ itemEdit, openDialog, handleCloseDialog }: DialogEd
 
   async function handleSubmitForm(values: ProductDTO) {
     console.log("values", values);
-    // await new ProductService()
-    //   .uploadImageToServer(formik.values.image, formik.values.uuid)
-    //   .then(response => console.log(response));
 
     await new ProductService()
       .createProduct({
         ...values,
-        imageName: String(imageList.at(0)),
-        imageList: JSON.stringify(imageList),
+        sales: 0,
       })
       .then(response => {
         console.log(response);
+        new ProductService()
+          .uploadImageToServer(fileList, response.result.uuid)
+          .then(response => console.log(response));
         closeDialog();
       });
-    // closeDialog();
   }
 
   async function handleImport(e: ChangeEvent<HTMLInputElement>) {
     if (e.target.files && e.target.files.length > 0) {
       try {
-        let files = Array.from(e.target.files);
+        let files: File[] = Array.from(e.target.files);
+        setFileList(files);
         setImageList(
           files.map((file: any) => {
             return URL.createObjectURL(file);
           }),
         );
-        // formik.setFieldValue(
-        //   "imageList",
-        //   files.map((file: any) => {
-        //     return URL.createObjectURL(file);
-        //   }),
-        // );
-        // console.log(
-        //   files.map((file: any) => {
-        //     return URL.createObjectURL(file);
-        //   }),
-        // );
-        // console.log("files", URL.createObjectURL(e.target.files[0]));
-        let reader = new FileReader();
-        let file = e.target.files[0];
-        reader.readAsDataURL(file);
-        reader.onloadend = () => {
-          // console.log("image", reader.result);
-          formik.setFieldValue("imageBase64", reader.result);
-        };
       } catch (error) {
         console.log(error);
       }
@@ -119,7 +101,6 @@ const DialogEditProduct = ({ itemEdit, openDialog, handleCloseDialog }: DialogEd
       <DialogContent dividers>
         <Box>
           <Grid container>
-            {/* <CreateFields formik={formik} fields={fields} /> */}
             <Grid item xs={6} sx={{ paddingX: 1 }}>
               <Grid container>
                 {/* name */}
@@ -294,12 +275,40 @@ const DialogEditProduct = ({ itemEdit, openDialog, handleCloseDialog }: DialogEd
                               justifyContent: "center",
                               alignItems: "center",
                             }}
-                            src={item}
+                            src={`${URL_PROFILE.PRO}/images/${item}`}
                             alt="product"
                           />
                         </div>
                       ))}
                   </Carousel>
+                </Grid>
+                <Grid item xs={12}>
+                  <InputLabel shrink sx={{ fontSize: "18px", fontWeight: 500 }}>
+                    {"Hình ảnh"}
+                  </InputLabel>
+                </Grid>
+                <Grid item xs={12}>
+                  <Box paddingBottom="15px">
+                    <input
+                      accept="image/*"
+                      hidden={true}
+                      id="contained-button-file"
+                      multiple={true}
+                      type="file"
+                      onChange={handleImport}
+                    />
+                    <label htmlFor="contained-button-file">
+                      <Button
+                        variant="outlined"
+                        size="small"
+                        component="span"
+                        disableElevation
+                        style={{ height: "32px" }}
+                      >
+                        Chọn tệp tin
+                      </Button>
+                    </label>
+                  </Box>
                 </Grid>
               </Grid>
             </Grid>
