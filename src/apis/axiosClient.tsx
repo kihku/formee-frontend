@@ -7,7 +7,7 @@ export const URL_PROFILE = {
 };
 
 const AXIOS_INSTANCE = axios.create({
-  baseURL: URL_PROFILE.DEV,
+  baseURL: URL_PROFILE.PRO,
   timeout: 10000 * 120,
   headers: {
     "Content-Type": "application/json",
