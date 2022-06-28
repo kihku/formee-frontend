@@ -51,6 +51,7 @@ import ShareRoundedIcon from "@mui/icons-material/ShareRounded";
 import ContentCopyRoundedIcon from "@mui/icons-material/ContentCopyRounded";
 import EditOffRoundedIcon from "@mui/icons-material/EditOffRounded";
 import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
+import FilterAltOffRoundedIcon from "@mui/icons-material/FilterAltOffRounded";
 import { COLORS } from "styles";
 
 export type IconType =
@@ -107,7 +108,8 @@ export type IconType =
   | "share"
   | "duplicate"
   | "disableEdit"
-  | "home";
+  | "home"
+  | "clearFilter";
 
 interface IconProps {
   name: IconType;
@@ -245,5 +247,7 @@ export const CustomIcon = ({ name, size, color }: IconProps) => {
       return <EditOffRoundedIcon sx={iconStyle} />;
     case "home":
       return <HomeRoundedIcon sx={iconStyle} />;
+    case "clearFilter":
+      return <FilterAltOffRoundedIcon sx={iconStyle} />;
   }
 };

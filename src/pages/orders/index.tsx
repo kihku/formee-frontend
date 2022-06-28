@@ -264,7 +264,7 @@ function OrdersPage() {
                 onClick={e => {
                   e.stopPropagation();
                   navigator.clipboard.writeText(
-                    `${URL_PROFILE.PRO}/tracking/${CommonUtils.encodeUUID(row.original.uuid)}`,
+                    `${URL_PROFILE.WEB}/tracking/${CommonUtils.encodeUUID(row.original.uuid)}`,
                   );
                   dispatch(
                     openNotification({
@@ -350,7 +350,7 @@ function OrdersPage() {
   const getOrders = async (request: FormOrderSearchRequest) => {
     await new OrderService().filterOrders(request).then(response => {
       if (response.result) {
-        console.log(response.result);
+        // console.log(response.result);
         setResponses(
           response.result.content.map((item: any) => {
             return { ...item, response: JSON.parse(item.response) };
@@ -414,13 +414,13 @@ function OrdersPage() {
                 justifyContent: "center",
               }}
             >
-              <CustomButton
+              {/* <CustomButton
                 text="button_clear"
                 type="rounded-outlined"
                 startIcon="cancelCircle"
                 color={COLORS.lightText}
                 handleOnClick={() => formik.resetForm()}
-              />
+              /> */}
               <CustomButton
                 text="button_apply"
                 type="rounded-outlined"

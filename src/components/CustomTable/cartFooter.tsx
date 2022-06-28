@@ -35,8 +35,8 @@ const CustomCartFooter: React.FC<CustomCartFooterProps> = ({
   }, [formik.values]);
 
   useEffect(() => {
-    formik.values["discount"] = discount;
-  }, [discount]);
+    setDiscount(formik.values["discount"]);
+  }, []);
 
   return (
     <Grid item xs={12} sx={{ display: "flex", flexDirection: "column", textAlign: "end", gap: 2, paddingTop: 3 }}>

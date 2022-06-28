@@ -27,3 +27,17 @@ export interface CartDTO {
 export const initProduct: ProductDTO = {
   name: "",
 } as ProductDTO;
+
+export interface ProductSearchRequest {
+  keywords: string;
+  types: string[];
+  pageNumber: number;
+  pageSize: number;
+}
+
+export const initProductRequest: ProductSearchRequest = {
+  keywords: "",
+  types: [],
+  pageNumber: 0,
+  pageSize: 10,
+};

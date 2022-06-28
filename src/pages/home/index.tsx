@@ -171,7 +171,7 @@ function HomePage() {
                 onClick={e => {
                   e.stopPropagation();
                   navigator.clipboard.writeText(
-                    `${URL_PROFILE.PRO}/tracking/${CommonUtils.encodeUUID(row.original.uuid)}`,
+                    `${URL_PROFILE.WEB}/tracking/${CommonUtils.encodeUUID(row.original.uuid)}`,
                   );
                   dispatch(
                     openNotification({

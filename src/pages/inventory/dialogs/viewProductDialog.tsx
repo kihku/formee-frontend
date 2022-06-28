@@ -1,4 +1,5 @@
 import { Box, Dialog, DialogContent, DialogTitle, Divider, Grid, InputLabel } from "@mui/material";
+import { URL_PROFILE } from "apis/axiosClient";
 import { CustomButton } from "components/CustomButton";
 import { StyledInput } from "components/CustomTextField";
 import { useFormik } from "formik";
@@ -129,7 +130,7 @@ const DialogViewProduct = ({ itemEdit, openDialog, handleCloseDialog }: DialogVi
                               justifyContent: "center",
                               alignItems: "center",
                             }}
-                            src={item}
+                            src={`${URL_PROFILE.PRO}/images/${item}`}
                             alt="product"
                           />
                         </div>

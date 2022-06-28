@@ -178,13 +178,13 @@ const DialogFinishOrder = ({ responseId, openDialog, handleCloseDialog, orderNam
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  {`${URL_PROFILE.PRO}/tracking/${CommonUtils.encodeUUID(responseId)}`}
+                  {`${URL_PROFILE.WEB}/tracking/${CommonUtils.encodeUUID(responseId)}`}
                 </Link>
                 <Tooltip title="Sao chép liên kết">
                   <IconButton
                     onClick={() => {
                       navigator.clipboard.writeText(
-                        `${URL_PROFILE.PRO}/tracking/${CommonUtils.encodeUUID(responseId)}`,
+                        `${URL_PROFILE.WEB}/tracking/${CommonUtils.encodeUUID(responseId)}`,
                       );
                       dispatch(
                         openNotification({

@@ -1,6 +1,6 @@
 import AXIOS_INSTANCE from "apis/axiosClient";
 import { BaseService, DataResponse } from "apis/baseService";
-import { ProductDTO } from "models/product";
+import { ProductDTO, ProductSearchRequest } from "models/product";
 import { getCookie } from "utils/cookieUtils";
 
 export class ProductService extends BaseService {
@@ -38,7 +38,7 @@ export class ProductService extends BaseService {
 
   deleteById = async (productId: string): Promise<any> => {
     let data: any = {};
-    await AXIOS_INSTANCE.delete(`${this.url}/delete/${productId}`, this.getRequestHeaders())
+    await AXIOS_INSTANCE.delete(`${this.url}/${productId}`, this.getRequestHeaders())
       .then(response => {
         data = response.data;
       })
@@ -52,6 +52,19 @@ export class ProductService extends BaseService {
   getProductsByUserId = async (userId: string): Promise<DataResponse<ProductDTO[]>> => {
     let data: any = {};
     await AXIOS_INSTANCE.get(`${this.url}/inventory/${userId}`, this.getRequestHeaders())
+      .then(response => {
+        data = response.data;
+      })
+      .catch(error => {
+        console.log(error);
+        return Promise.reject(error);
+      });
+    return data;
+  };
+
+  filterProducts = async (request: ProductSearchRequest): Promise<any> => {
+    let data: any = {};
+    await AXIOS_INSTANCE.post(`${this.url}/filter`, request, this.getRequestHeaders())
       .then(response => {
         data = response.data;
       })

@@ -153,7 +153,7 @@ const ReviewOrderPage = ({}: ReviewOrderPageProps) => {
                   color={COLORS.primary}
                   handleOnClick={() => {
                     navigator.clipboard.writeText(
-                      `${URL_PROFILE.PRO}/tracking/${CommonUtils.encodeUUID(formResponse.uuid)}`,
+                      `${URL_PROFILE.WEB}/tracking/${CommonUtils.encodeUUID(formResponse.uuid)}`,
                     );
                     dispatch(openNotification({ open: true, content: "Order link copied", severity: "success" }));
                   }}

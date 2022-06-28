@@ -108,7 +108,14 @@ export const FormCart = ({ index, formik, disabled, disabledFormCart }: FormCart
             <IconButton
               onClick={() => {
                 setValue(prev =>
-                  prev.map(item => (item.uuid === row.original.uuid ? { ...item, quantity: item.quantity - 1 } : item)),
+                  prev.map(item => {
+                    if (item.uuid === row.original.uuid) {
+                      if (item.quantity === 1) {
+                        handleRemoveCart(row.original);
+                      } else return { ...item, quantity: item.quantity - 1 };
+                    }
+                    return item;
+                  }),
                 );
               }}
             >
@@ -117,23 +124,25 @@ export const FormCart = ({ index, formik, disabled, disabledFormCart }: FormCart
             {row.original.quantity}
             <IconButton
               onClick={() => {
-                // TODO: fix condition
-                console.log(Number(value.find(item => item.uuid === row.original.uuid)?.quantity));
-                if (row.original.inventory < Number(value.find(item => item.uuid === row.original.uuid)?.quantity)) {
-                  setValue(prev =>
-                    prev.map(item =>
-                      item.uuid === row.original.uuid ? { ...item, quantity: item.quantity + 1 } : item,
-                    ),
-                  );
-                } else {
-                  dispatch(
-                    openNotification({
-                      open: true,
-                      content: "Số lượng sản phẩm vượt quá số lượng trong kho",
-                      severity: "error",
-                    }),
-                  );
-                }
+                setValue(prev =>
+                  prev.map(item => {
+                    if (item.uuid === row.original.uuid) {
+                      if (item.quantity < row.original.inventory) {
+                        return { ...item, quantity: item.quantity + 1 };
+                      } else {
+                        dispatch(
+                          openNotification({
+                            open: true,
+                            content: "Số lượng sản phẩm vượt quá số lượng trong kho",
+                            severity: "error",
+                          }),
+                        );
+                        return item;
+                      }
+                    }
+                    return item;
+                  }),
+                );
               }}
             >
               <CustomIcon name="add" color={COLORS.primaryLight} />
@@ -261,15 +270,6 @@ export const FormCart = ({ index, formik, disabled, disabledFormCart }: FormCart
     setValue(prev => prev.filter(row => row.uuid !== item.uuid));
   };
 
-  const createProduct = async (item: ProductDTO) => {
-    await new ProductService().createProduct(item).then(response => {
-      if (response.result) {
-        setProducts(prev => [...prev, { ...response.result, quantity: 1 }]);
-        setValue(prev => [...prev, { ...response.result, quantity: item.quantity }]);
-      }
-    });
-  };
-
   const getProducts = async () => {
     let userId = getCookie("USER_ID");
     await new ProductService().getProductsByUserId(userId).then(response => {
@@ -317,14 +317,6 @@ export const FormCart = ({ index, formik, disabled, disabledFormCart }: FormCart
                         if (e.code === "Enter") {
                           e.preventDefault();
                           e.stopPropagation();
-                          // !StringUtils.isNullOrEmty(e.currentTarget.value) &&
-                          //   formik.values["formId"] &&
-                          //   createProduct({
-                          //     formId: formik.values["formId"],
-                          //     name: e.currentTarget.value.split("/").at(0),
-                          //     productPrice: Number(e.currentTarget.value.split("/").at(-2)),
-                          //     quantity: Number(e.currentTarget.value.split("/").at(-1)),
-                          //   } as ProductDTO);
                         } else if (e.code === "Backspace") {
                           e.stopPropagation();
                         } else {
@@ -344,7 +336,8 @@ export const FormCart = ({ index, formik, disabled, disabledFormCart }: FormCart
                       </Box>
                       <Box>
                         {option.productPrice}
-                        {" đ"}
+                        {" đ "}
+                        {`(Kho: ${option.inventory})`}
                       </Box>
                     </Box>
                   </li>
@@ -354,22 +347,6 @@ export const FormCart = ({ index, formik, disabled, disabledFormCart }: FormCart
                 }}
                 sx={{ marginRight: 2 }}
               />
-              {/* <CustomButton
-            text={"Tạo sản phẩm"}
-            type={"outlined"}
-            startIcon="lightAdd"
-            handleOnClick={() => {
-              // TODO: check valid input
-              !StringUtils.isNullOrEmty(rawValue) &&
-                formik.values["formId"] &&
-                createProduct({
-                  formId: formik.values["formId"],
-                  name: rawValue.split("/").at(0),
-                  productPrice: Number(rawValue.split("/").at(-2)),
-                  quantity: Number(rawValue.split("/").at(-1)),
-                } as ProductDTO);
-            }}
-          /> */}
             </Box>
             <FormHelperText
               sx={{

@@ -15,7 +15,7 @@ import CustomTable from "components/CustomTable";
 import { CustomBackgroundCard } from "components/CustomBackgroundCard";
 import { useTranslation } from "react-i18next";
 import { CustomIcon } from "components/CustomIcon";
-import { ProductDTO } from "models/product";
+import { initProductRequest, ProductDTO, ProductSearchRequest } from "models/product";
 import { ProductService } from "apis/productService/productService";
 import { getCookie } from "utils/cookieUtils";
 import DialogEditProduct from "./dialogs/editProductDialog";
@@ -43,7 +43,7 @@ function ProductsPage() {
   const validationSchema = Yup.object().shape({});
 
   const formik = useFormik({
-    initialValues: { status: [], createdDate: new Date() },
+    initialValues: initProductRequest,
     onSubmit: handleSubmitForm,
     validationSchema: validationSchema,
     validateOnChange: false,
@@ -149,7 +149,8 @@ function ProductsPage() {
         return (
           <Box display="flex" justifyContent="left" sx={{}} onClick={() => {}}>
             <IconButton
-              onClick={() => {
+              onClick={e => {
+                e.stopPropagation();
                 setItem(row.original);
                 setOpenEditDialog(true);
               }}
@@ -157,7 +158,8 @@ function ProductsPage() {
               <CustomIcon name="edit" />
             </IconButton>
             <IconButton
-              onClick={() => {
+              onClick={e => {
+                e.stopPropagation();
                 deleteProduct(row.original.uuid);
               }}
             >
@@ -179,16 +181,16 @@ function ProductsPage() {
     useRowSelect,
   );
 
-  async function handleSubmitForm(values: any) {
-    console.log("values", values);
+  async function handleSubmitForm(values: ProductSearchRequest) {
+    getProducts(values);
   }
 
-  const getProducts = async () => {
-    let userId = getCookie("USER_ID");
-    await new ProductService().getProductsByUserId(userId).then(response => {
+  const getProducts = async (values: ProductSearchRequest) => {
+    await new ProductService().filterProducts(values).then(response => {
       if (response.result) {
-        setProducts(response.result);
-        setPageParams({ ...pageParams, total: response.result.length });
+        console.log(response.result.content);
+        setProducts(response.result.content);
+        setPageParams({ ...pageParams, total: response.result.totalElements });
       }
     });
   };
@@ -196,19 +198,13 @@ function ProductsPage() {
   const deleteProduct = async (productId: string) => {
     await new ProductService().deleteById(productId).then(response => {
       dispatch(openNotification({ open: true, content: response.message, severity: "success" }));
-      getProducts();
+      formik.handleSubmit();
     });
   };
 
   useEffect(() => {
-    setProducts(
-      products.slice(pageParams.pageNumber * pageParams.pageSize, (pageParams.pageNumber + 1) * pageParams.pageSize),
-    );
-  }, [pageParams]);
-
-  useEffect(() => {
-    getProducts();
-  }, []);
+    formik.handleSubmit();
+  }, [pageParams.pageNumber, pageParams.pageSize]);
 
   return (
     <Box>
@@ -233,12 +229,12 @@ function ProductsPage() {
               justifyContent: "center",
             }}
           >
-            <CustomButton
+            {/* <CustomButton
               text="button_clear"
               type="rounded-outlined"
               startIcon="cancelCircle"
               color={COLORS.lightText}
-            />
+            /> */}
             <CustomButton text="button_apply" type="rounded-outlined" startIcon="checkCircle" />
           </Grid>
         </Grid>
@@ -296,7 +292,7 @@ function ProductsPage() {
             openDialog={openEditDialog}
             handleCloseDialog={() => {
               setOpenEditDialog(false);
-              getProducts();
+              formik.handleSubmit();
             }}
           />
         )}
@@ -305,7 +301,7 @@ function ProductsPage() {
             openDialog={openAddDialog}
             handleCloseDialog={() => {
               setOpenAddDialog(false);
-              getProducts();
+              formik.handleSubmit();
             }}
           />
         )}
