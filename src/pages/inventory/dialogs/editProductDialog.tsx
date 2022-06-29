@@ -37,8 +37,11 @@ const DialogEditProduct = ({ itemEdit, openDialog, handleCloseDialog, productTyp
   const [fileList, setFileList] = useState<File[]>([]);
 
   const validationSchema = Yup.object().shape({
-    name: Yup.string().trim().required("Product name is requried"),
-    productPrice: Yup.string().trim().required("Product price is requried"),
+    name: Yup.string().trim().required("Tên sản phẩm không được bỏ trống"),
+    productPrice: Yup.string().trim().required("Giá bán không được bỏ trống"),
+    costPrice: Yup.string().trim().required("Giá gốc không được bỏ trống"),
+    typeId: Yup.string().trim().required("Loại sản phẩm không được bỏ trống"),
+    inventory: Yup.string().trim().required("Số lượng trong kho không được bỏ trống"),
   });
 
   const formik = useFormik({
@@ -185,32 +188,6 @@ const DialogEditProduct = ({ itemEdit, openDialog, handleCloseDialog, productTyp
                   <StyledInput
                     fullWidth
                     type="number"
-                    value={formik.values.productPrice}
-                    onChange={e => {
-                      formik.setFieldValue("productPrice", e.target.value);
-                    }}
-                  />
-                </Grid>
-                <Grid item xs={12} sx={{ marginBottom: 1 }}>
-                  <FormHelperText
-                    sx={{
-                      color: "red",
-                    }}
-                  >
-                    {formik.errors["productPrice"] && formik.errors["productPrice"]}
-                  </FormHelperText>
-                </Grid>
-
-                {/* product price */}
-                <Grid item xs={12}>
-                  <InputLabel shrink sx={{ fontSize: "18px", fontWeight: 500 }}>
-                    {"Giá bán *"}
-                  </InputLabel>
-                </Grid>
-                <Grid item xs={12} sx={{ marginBottom: 1 }}>
-                  <StyledInput
-                    fullWidth
-                    type="number"
                     value={formik.values.costPrice}
                     onChange={e => {
                       formik.setFieldValue("costPrice", e.target.value);
@@ -224,6 +201,32 @@ const DialogEditProduct = ({ itemEdit, openDialog, handleCloseDialog, productTyp
                     }}
                   >
                     {formik.errors["costPrice"] && formik.errors["costPrice"]}
+                  </FormHelperText>
+                </Grid>
+
+                {/* product price */}
+                <Grid item xs={12}>
+                  <InputLabel shrink sx={{ fontSize: "18px", fontWeight: 500 }}>
+                    {"Giá bán *"}
+                  </InputLabel>
+                </Grid>
+                <Grid item xs={12} sx={{ marginBottom: 1 }}>
+                  <StyledInput
+                    fullWidth
+                    type="number"
+                    value={formik.values.productPrice}
+                    onChange={e => {
+                      formik.setFieldValue("productPrice", e.target.value);
+                    }}
+                  />
+                </Grid>
+                <Grid item xs={12} sx={{ marginBottom: 1 }}>
+                  <FormHelperText
+                    sx={{
+                      color: "red",
+                    }}
+                  >
+                    {formik.errors["productPrice"] && formik.errors["productPrice"]}
                   </FormHelperText>
                 </Grid>
 
