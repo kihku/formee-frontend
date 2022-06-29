@@ -174,7 +174,7 @@ const DialogAddProduct = ({ openDialog, handleCloseDialog, productTypes }: Dialo
                   <StyledInput
                     fullWidth
                     type="number"
-                    value={formik.values.productPrice}
+                    value={formik.values.costPrice}
                     onChange={e => {
                       formik.setFieldValue("costPrice", e.target.value);
                     }}
