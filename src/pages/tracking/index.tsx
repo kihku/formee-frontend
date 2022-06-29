@@ -1,32 +1,30 @@
 import { Box, Grid } from "@mui/material";
-import { CustomTitle } from "components/CustomTitle";
-import * as Yup from "yup";
-import { useFormik } from "formik";
-import { FormDTO, FormResponseDTO, FormSectionDTO } from "models/form";
-import { CustomBackgroundCard } from "components/CustomBackgroundCard";
-import { useTranslation } from "react-i18next";
+import { PublicService } from "apis/publicService/publicService";
 import CreateFieldsForm from "components/CreateFieldsForm";
-import { orderStatusList } from "constants/constants";
-import { FormTextField } from "components/CreateFieldsForm/FormFields/FormTextField";
-import { FormSelect } from "components/CreateFieldsForm/FormFields/FormSelect";
-import { FormCart } from "components/CreateFieldsForm/FormFields/FormCart";
-import { useEffect, useState } from "react";
-import { OrderService } from "apis/orderService/orderService";
-import CommonUtils from "utils/commonUtils";
-import { FormService } from "apis/formService/formService";
-import { useNavigate } from "react-router-dom";
-import { CustomButton } from "components/CustomButton";
-import { COLORS } from "styles";
-import DialogRequestEditOrder from "./dialogs/requestEditDialog";
-import { CommentDTO } from "models/comment";
-import { HistoryItem } from "pages/orders/components/historyItem";
-import { openNotification } from "redux/actions/notification";
-import { useDispatch } from "react-redux";
-import { CustomChip } from "components/CustomChip";
-import { FormSection } from "components/CreateFieldsForm/FormFields/FormSection";
 import { FormAddress } from "components/CreateFieldsForm/FormFields/FormAddress";
+import { FormCart } from "components/CreateFieldsForm/FormFields/FormCart";
+import { FormSection } from "components/CreateFieldsForm/FormFields/FormSection";
+import { FormSelect } from "components/CreateFieldsForm/FormFields/FormSelect";
+import { FormTextField } from "components/CreateFieldsForm/FormFields/FormTextField";
+import { CustomBackgroundCard } from "components/CustomBackgroundCard";
+import { CustomButton } from "components/CustomButton";
+import { CustomChip } from "components/CustomChip";
+import { CustomTitle } from "components/CustomTitle";
+import { orderStatusList } from "constants/constants";
+import { useFormik } from "formik";
+import { CommentDTO } from "models/comment";
+import { FormDTO, FormResponseDTO, FormSectionDTO } from "models/form";
+import { HistoryItem } from "pages/orders/components/historyItem";
+import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { openNotification } from "redux/actions/notification";
+import { COLORS } from "styles";
+import CommonUtils from "utils/commonUtils";
+import * as Yup from "yup";
 import DialogConfirmEditOrder from "./dialogs/confirmEditDialog";
-import { CommentService } from "apis/commentService/commentService";
+import DialogRequestEditOrder from "./dialogs/requestEditDialog";
 
 function OrderTrackingPage() {
   const { t } = useTranslation(["forms", "buttons", "orders"]);
@@ -46,13 +44,15 @@ function OrderTrackingPage() {
   const validationSchema = Yup.object().shape({});
 
   const handleSubmitForm = async (values: any) => {
-    await new OrderService().updateOrder({ ...values, response: JSON.stringify(values.response) }).then(response => {
-      if (Number(response.code) === 200) {
-        setEnableEditing(!enableEditing);
-        dispatch(openNotification({ open: true, content: response.message, severity: "success" }));
-        getOrderResponse(orderId);
-      }
-    });
+    await new PublicService()
+      .updateOrder({ ...values, response: JSON.stringify(values.response), requested: true })
+      .then(response => {
+        if (Number(response.code) === 200) {
+          setEnableEditing(!enableEditing);
+          dispatch(openNotification({ open: true, content: response.message, severity: "success" }));
+          getOrderResponse(orderId);
+        }
+      });
   };
 
   const formik = useFormik({
@@ -100,7 +100,7 @@ function OrderTrackingPage() {
   };
 
   const getForm = async (formId: string) => {
-    await new FormService().getFormById(formId).then(response => {
+    await new PublicService().getFormById(formId).then(response => {
       if (response.result) {
         setForm(response.result);
       }
@@ -108,7 +108,7 @@ function OrderTrackingPage() {
   };
 
   const getOrderResponse = async (orderId: string) => {
-    await new OrderService()
+    await new PublicService()
       .getOrderById(orderId)
       .then(response => {
         if (response.result) {
@@ -124,7 +124,7 @@ function OrderTrackingPage() {
   };
 
   const handleChangeStatus = async (status: string) => {
-    await new OrderService().updateOrderStatus({ uuid: orderId, status: status }).then(response => {
+    await new PublicService().updateOrderStatus({ uuid: orderId, status: status }).then(response => {
       if (Number(response.code) === 200) {
         setEnableEditing(false);
         setConfirmed(true);
@@ -135,13 +135,14 @@ function OrderTrackingPage() {
   };
 
   const handleAddComment = async (comment: CommentDTO) => {
-    await new CommentService().createComment(comment);
+    await new PublicService().createComment(comment);
   };
 
   useEffect(() => {
     if (window.location.href) {
       let encodedId: string = String(window.location.href.split("/").at(-1));
       let decodedId: string = CommonUtils.decodeUUID(encodedId);
+      console.log(encodedId, decodedId);
       setOrderId(decodedId);
       getOrderResponse(decodedId);
     }

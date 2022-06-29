@@ -4,7 +4,6 @@ import { CustomButton } from "components/CustomButton";
 import { CustomTextField } from "components/CustomTextField";
 import { useFormik } from "formik";
 import { CommentDTO } from "models/comment";
-import { useDispatch } from "react-redux";
 import * as Yup from "yup";
 
 export interface DialogConfirmEditOrderProps {
@@ -15,8 +14,6 @@ export interface DialogConfirmEditOrderProps {
 }
 
 const DialogConfirmEditOrder = (props: DialogConfirmEditOrderProps) => {
-  const dispatch = useDispatch();
-
   const validationSchema = Yup.object().shape({});
 
   const closeDialog = () => {

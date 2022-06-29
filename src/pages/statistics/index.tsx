@@ -32,7 +32,8 @@ function StatisticsPage() {
             type: "png",
           },
         },
-        showTitle: false,
+        showTitle: true,
+        right: "5%"
       },
       title: {
         text: "Thống kê thu nhập theo tháng",
@@ -116,7 +117,8 @@ function StatisticsPage() {
             type: "png",
           },
         },
-        showTitle: false,
+        showTitle: true,
+        right: "5%"
       },
       title: {
         text: "Thống kê khách hàng theo tháng",
@@ -204,8 +206,10 @@ function StatisticsPage() {
             type: "png",
           },
         },
-        showTitle: false,
+        showTitle: true,
+        right: "5%"
       },
+      grid: { containLabel: true },
       title: {
         text: "Thống kê loại sản phẩm",
         textStyle: {
@@ -267,7 +271,8 @@ function StatisticsPage() {
             type: "png",
           },
         },
-        showTitle: false,
+        showTitle: true,
+        right: "5%"
       },
       grid: { containLabel: true },
       title: {
@@ -432,9 +437,9 @@ function StatisticsPage() {
               <Box
                 sx={{ fontWeight: 500, fontSize: "25px", marginBottom: 1, color: COLORS.primary, textAlign: "center" }}
               >
-                {stats.find(stat => stat.type === "PRODUCT")?.data["totalInventory"]}
+                {stats.find(stat => stat.type === "PRODUCT")?.data["totalTypes"]}
               </Box>
-              <Box sx={{ textAlign: "center" }}>{"Tổng kho"}</Box>
+              <Box sx={{ textAlign: "center" }}>{"Phân loại"}</Box>
             </Box>
           </Box>
         </CustomBackgroundCard>

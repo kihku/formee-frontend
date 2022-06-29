@@ -24,7 +24,7 @@ const LayoutCommon = () => {
 
   const checkToken = async () => {
     const TOKEN = getCookie("USER_TOKEN");
-    if (window.location.pathname !== "/login" && TOKEN) {
+    if (window.location.pathname !== "/login" && !window.location.pathname.includes("tracking") && TOKEN) {
       try {
         const payload: { exp: number } = await jwt_decode(TOKEN);
         const nowDate = moment(new Date());
@@ -40,8 +40,6 @@ const LayoutCommon = () => {
       } catch (error) {
         logOut();
       }
-    } else {
-      logOut();
     }
   };
 

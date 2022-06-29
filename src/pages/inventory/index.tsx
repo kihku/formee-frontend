@@ -1,39 +1,41 @@
 /* eslint-disable jsx-a11y/alt-text */
-import { Box, Grid, IconButton, Tooltip } from "@mui/material";
-import { CustomTextField } from "components/CustomTextField";
+import { Box, Divider, Grid, IconButton, Tooltip } from "@mui/material";
+import { URL_PROFILE } from "apis/axiosClient";
+import { ProductService } from "apis/productService/productService";
+import { CustomBackgroundCard } from "components/CustomBackgroundCard";
+import { CustomButton } from "components/CustomButton";
+import { CustomChip } from "components/CustomChip";
+import { CustomIcon } from "components/CustomIcon";
+import CustomTable from "components/CustomTable";
+import { StyledInput } from "components/CustomTextField";
 import { CustomTitle } from "components/CustomTitle";
+import { productTypeList } from "constants/constants";
+import { useFormik } from "formik";
+import { Pageable } from "models/baseModels";
+import { initProductRequest, ProductDTO, ProductSearchRequest, ProductTypeDTO } from "models/product";
+import { useEffect, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useDispatch } from "react-redux";
+import { CellProps, Column, useRowSelect, useTable } from "react-table";
+import { openNotification } from "redux/actions/notification";
 import { COLORS } from "styles";
 import * as Yup from "yup";
-import CreateFieldsFilter, { CreateFieldsFilterProps } from "components/CreateFieldsFilter";
-import { useFormik } from "formik";
-import { CustomOption, Pageable } from "models/baseModels";
-import { CustomButton } from "components/CustomButton";
-import { useEffect, useMemo, useState } from "react";
-import { CellProps, Column, useRowSelect, useTable } from "react-table";
-import DateUtils from "utils/dateUtils";
-import CustomTable from "components/CustomTable";
-import { CustomBackgroundCard } from "components/CustomBackgroundCard";
-import { useTranslation } from "react-i18next";
-import { CustomIcon } from "components/CustomIcon";
-import { initProductRequest, ProductDTO, ProductSearchRequest } from "models/product";
-import { ProductService } from "apis/productService/productService";
-import { getCookie } from "utils/cookieUtils";
-import DialogEditProduct from "./dialogs/editProductDialog";
-import { openNotification } from "redux/actions/notification";
-import { useDispatch } from "react-redux";
+import { ProductTypeItem } from "./components/productTypeItem";
 import DialogAddProduct from "./dialogs/addProductDialog";
-import { productTypeList } from "constants/constants";
-import { CustomChip } from "components/CustomChip";
-import { URL_PROFILE } from "apis/axiosClient";
+import DialogAddProductType from "./dialogs/addTypeDialog";
+import DialogEditProduct from "./dialogs/editProductDialog";
 
 function ProductsPage() {
   const { t } = useTranslation(["commons", "buttons"]);
   const dispatch = useDispatch();
 
   const [item, setItem] = useState<ProductDTO>({} as ProductDTO);
+  const [typeItem, setTypeItem] = useState<ProductTypeDTO>({} as ProductTypeDTO);
   const [products, setProducts] = useState<ProductDTO[]>([]);
+  const [productTypes, setProductTypes] = useState<ProductTypeDTO[]>([]);
   const [openAddDialog, setOpenAddDialog] = useState<boolean>(false);
   const [openEditDialog, setOpenEditDialog] = useState<boolean>(false);
+  const [openAddTypeDialog, setOpenAddTypeDialog] = useState<boolean>(false);
   const [pageParams, setPageParams] = useState<Pageable>({
     total: 0,
     pageNumber: 0,
@@ -48,8 +50,6 @@ function ProductsPage() {
     validationSchema: validationSchema,
     validateOnChange: false,
   });
-
-  const fields: CreateFieldsFilterProps<any, CustomOption>[] = [];
 
   const tableContent: Column<ProductDTO>[] = [
     {
@@ -77,15 +77,15 @@ function ProductsPage() {
     },
     {
       Header: "Loại sản phẩm",
-      accessor: "type",
+      accessor: "typeId",
       maxWidth: 10,
       Cell: ({ row }: CellProps<ProductDTO, {}>) => {
         return (
           <Box display="flex" justifyContent="left">
             <CustomChip
-              text={productTypeList.find(item => item.value === row.original.type)?.title}
-              backgroundColor={COLORS.redBackground}
-              textColor={COLORS.red}
+              text={productTypes.find(item => item.uuid === row.original.typeId)?.name}
+              backgroundColor={productTypes.find(item => item.uuid === row.original.typeId)?.backgroundColor}
+              textColor={productTypes.find(item => item.uuid === row.original.typeId)?.color}
             />
           </Box>
         );
@@ -171,7 +171,7 @@ function ProductsPage() {
     },
   ];
 
-  const columns = useMemo(() => tableContent, []);
+  const columns = useMemo(() => tableContent, [productTypes]);
 
   const table = useTable(
     {
@@ -188,7 +188,6 @@ function ProductsPage() {
   const getProducts = async (values: ProductSearchRequest) => {
     await new ProductService().filterProducts(values).then(response => {
       if (response.result) {
-        console.log(response.result.content);
         setProducts(response.result.content);
         setPageParams({ ...pageParams, total: response.result.totalElements });
       }
@@ -202,31 +201,92 @@ function ProductsPage() {
     });
   };
 
+  const getProductTypes = async () => {
+    await new ProductService().getAllTypes().then(response => {
+      if (response.result) {
+        setProductTypes(response.result);
+      }
+    });
+  };
+
+  const createProductType = async (values: ProductTypeDTO) => {
+    await new ProductService().createProductType(values).then(response => {
+      if (Number(response.code) === 200) {
+        dispatch(openNotification({ open: true, content: response.message, severity: "success" }));
+        setOpenAddTypeDialog(false);
+        getProductTypes();
+      } else {
+        dispatch(openNotification({ open: true, content: response.message, severity: "error" }));
+      }
+    });
+  };
+
+  const deleteProductType = async (typeId: string) => {
+    await new ProductService().deleteTypeById(typeId).then(response => {
+      if (Number(response.code) === 200) {
+        dispatch(openNotification({ open: true, content: response.message, severity: "success" }));
+        getProductTypes();
+      } else {
+        dispatch(openNotification({ open: true, content: response.message, severity: "error" }));
+      }
+    });
+  };
+
   useEffect(() => {
     formik.handleSubmit();
   }, [pageParams.pageNumber, pageParams.pageSize]);
+
+  useEffect(() => {
+    getProductTypes();
+  }, []);
 
   return (
     <Box>
       <Grid container sx={{ minHeight: "95vh" }}>
         <Grid item xs={2.5} sx={{ padding: 3, backgroundColor: COLORS.white }}>
           <Grid item xs={12} sx={{ fontWeight: 700, fontSize: "25px", marginBottom: 3 }}>
-            {t("helper_filters")}
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                width: "100%",
+                alignItems: "center",
+              }}
+            >
+              <Box> {t("helper_filters")}</Box>
+              <Tooltip title="Xoá bộ lọc">
+                <IconButton
+                  onClick={() => {
+                    formik.resetForm();
+                    formik.handleSubmit();
+                  }}
+                >
+                  <CustomIcon name="clearFilter" />
+                </IconButton>
+              </Tooltip>
+            </Box>
           </Grid>
-          <Grid item xs={12}>
-            <CustomTextField placeholder={t("helper_search")} />
+          <Grid item xs={12} sx={{ marginBottom: 3 }}>
+            <StyledInput
+              fullWidth
+              type="text"
+              name="keywords"
+              placeholder={t("helper_search")}
+              value={formik.values.keywords}
+              onChange={e => formik.setFieldValue("keywords", e.target.value)}
+            />
           </Grid>
-          <CreateFieldsFilter formik={formik} fields={fields} />
+          {/* <CreateFieldsFilter formik={formik} fields={fields} /> */}
           <Grid
             item
             xs={12}
             sx={{
-              marginTop: 2,
+              // marginTop: 2,
               display: "flex",
               flexDirection: "row",
               gap: 2,
               flexWrap: "wrap",
-              justifyContent: "center",
+              justifyContent: "flex-end",
             }}
           >
             {/* <CustomButton
@@ -235,7 +295,60 @@ function ProductsPage() {
               startIcon="cancelCircle"
               color={COLORS.lightText}
             /> */}
-            <CustomButton text="button_apply" type="rounded-outlined" startIcon="checkCircle" />
+            <CustomButton
+              text="button_apply"
+              type="rounded-outlined"
+              startIcon="checkCircle"
+              handleOnClick={() => {
+                formik.handleSubmit();
+              }}
+            />
+          </Grid>
+          <Grid item xs={12} sx={{ marginTop: 3 }}>
+            <Divider sx={{ width: "100%", borderBottomWidth: "2px" }} />
+          </Grid>
+          <Grid item xs={12} sx={{ marginTop: 2 }}>
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                width: "100%",
+                alignItems: "center",
+                // marginBottom: 1,
+              }}
+            >
+              <Box sx={{ fontWeight: 600, fontSize: "15px", color: COLORS.primary }}>{"LOẠI SẢN PHẨM"}</Box>
+              <Tooltip title="Thêm loại mới">
+                <IconButton
+                  onClick={() => {
+                    setOpenAddTypeDialog(true);
+                  }}
+                >
+                  <CustomIcon name="lightAdd" color={COLORS.primary} />
+                </IconButton>
+              </Tooltip>
+            </Box>
+            <Box sx={{ display: "flex", flexDirection: "column" }}>
+              {productTypes.map((type, key) => {
+                return (
+                  <ProductTypeItem
+                    key={key}
+                    item={type}
+                    handleEditType={(item: ProductTypeDTO) => {
+                      setTypeItem(item);
+                      setOpenAddTypeDialog(true);
+                    }}
+                    handleDeleteType={(item: ProductTypeDTO) => {
+                      deleteProductType(item.uuid);
+                    }}
+                    handleOnClick={(item: ProductTypeDTO) => {
+                      formik.setFieldValue("typeId", item.uuid);
+                      getProducts({ ...formik.values, typeId: item.uuid });
+                    }}
+                  />
+                );
+              })}
+            </Box>
           </Grid>
         </Grid>
         <Grid item xs={9.5} sx={{ padding: 5 }}>
@@ -289,6 +402,7 @@ function ProductsPage() {
         {openEditDialog && (
           <DialogEditProduct
             itemEdit={item}
+            productTypes={productTypes}
             openDialog={openEditDialog}
             handleCloseDialog={() => {
               setOpenEditDialog(false);
@@ -299,10 +413,21 @@ function ProductsPage() {
         {openAddDialog && (
           <DialogAddProduct
             openDialog={openAddDialog}
+            productTypes={productTypes}
             handleCloseDialog={() => {
               setOpenAddDialog(false);
               formik.handleSubmit();
             }}
+          />
+        )}
+        {openAddTypeDialog && (
+          <DialogAddProductType
+            itemEdit={typeItem}
+            openDialog={openAddTypeDialog}
+            handleCloseDialog={() => {
+              setOpenAddTypeDialog(false);
+            }}
+            handleSubmitDialog={createProductType}
           />
         )}
       </Grid>

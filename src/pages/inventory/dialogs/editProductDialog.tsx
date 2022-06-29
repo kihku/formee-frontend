@@ -19,7 +19,7 @@ import { CustomButton } from "components/CustomButton";
 import { CustomTextField, StyledInput } from "components/CustomTextField";
 import { productTypeList } from "constants/constants";
 import { useFormik } from "formik";
-import { initProduct, ProductDTO } from "models/product";
+import { initProduct, ProductDTO, ProductTypeDTO } from "models/product";
 import { ChangeEvent, useEffect, useState } from "react";
 import Carousel from "react-material-ui-carousel";
 import * as Yup from "yup";
@@ -27,10 +27,11 @@ import * as Yup from "yup";
 export interface DialogEditProductProps {
   itemEdit: ProductDTO;
   openDialog: boolean;
+  productTypes: ProductTypeDTO[];
   handleCloseDialog: () => void;
 }
 
-const DialogEditProduct = ({ itemEdit, openDialog, handleCloseDialog }: DialogEditProductProps) => {
+const DialogEditProduct = ({ itemEdit, openDialog, handleCloseDialog, productTypes }: DialogEditProductProps) => {
   const [currentIndex, setCurrentIndex] = useState<number>(0);
   const [imageList, setImageList] = useState<string[]>([]);
   const [fileList, setFileList] = useState<File[]>([]);
@@ -153,14 +154,14 @@ const DialogEditProduct = ({ itemEdit, openDialog, handleCloseDialog }: DialogEd
                 <Grid item xs={12} sx={{ marginBottom: 1 }}>
                   <Select
                     fullWidth
-                    value={formik.values.type}
+                    value={formik.values.typeId}
                     onChange={e => {
-                      formik.setFieldValue("type", e.target.value);
+                      formik.setFieldValue("typeId", e.target.value);
                     }}
                     input={<StyledInput />}
                   >
-                    {productTypeList.map((option, key) => {
-                      return <MenuItem value={option.value}>{option.title}</MenuItem>;
+                    {productTypes.map((option, key) => {
+                      return <MenuItem value={option.uuid}>{option.name}</MenuItem>;
                     })}
                   </Select>
                 </Grid>
@@ -170,7 +171,7 @@ const DialogEditProduct = ({ itemEdit, openDialog, handleCloseDialog }: DialogEd
                       color: "red",
                     }}
                   >
-                    {formik.errors["type"] && formik.errors["type"]}
+                    {formik.errors["typeId"] && formik.errors["typeId"]}
                   </FormHelperText>
                 </Grid>
 

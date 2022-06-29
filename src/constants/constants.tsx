@@ -56,3 +56,13 @@ export const productTypeList: CustomOption[] = [
   { title: "Dịch vụ", value: "SERVICE" },
   { title: "Sách báo", value: "BOOKS" },
 ];
+
+export const productTypeColors: CustomOption[] = [
+  { title: COLORS.blue, value: COLORS.blueBackground },
+  { title: COLORS.green, value: COLORS.greenBackground },
+  { title: COLORS.orange, value: COLORS.orangeBackground },
+  { title: COLORS.yellow, value: COLORS.yellowBackground },
+  { title: COLORS.red, value: COLORS.redBackground },
+  { title: COLORS.primaryLight, value: COLORS.primaryBackground },
+  { title: COLORS.lightText, value: COLORS.grayBackground },
+];

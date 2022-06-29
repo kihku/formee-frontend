@@ -6,31 +6,26 @@ import {
   DialogTitle,
   FormHelperText,
   Grid,
-  IconButton,
   InputLabel,
   MenuItem,
-  Select,
-  styled,
+  Select
 } from "@mui/material";
 import { ProductService } from "apis/productService/productService";
-import CreateFields, { CreateFieldsProps } from "components/CreateFields";
 import { CustomButton } from "components/CustomButton";
-import { CustomSelect } from "components/CustomSelect";
-import { CustomTextField, StyledInput } from "components/CustomTextField";
-import { productTypeList } from "constants/constants";
+import { StyledInput } from "components/CustomTextField";
 import { useFormik } from "formik";
-import { initProduct, ProductDTO } from "models/product";
-import { ChangeEvent, useEffect, useState } from "react";
+import { initProduct, ProductDTO, ProductTypeDTO } from "models/product";
+import { ChangeEvent, useState } from "react";
 import Carousel from "react-material-ui-carousel";
 import * as Yup from "yup";
 
 export interface DialogAddProductProps {
-  //   itemEdit: ProductDTO;
   openDialog: boolean;
+  productTypes: ProductTypeDTO[];
   handleCloseDialog: () => void;
 }
 
-const DialogAddProduct = ({ openDialog, handleCloseDialog }: DialogAddProductProps) => {
+const DialogAddProduct = ({ openDialog, handleCloseDialog, productTypes }: DialogAddProductProps) => {
   const [currentIndex, setCurrentIndex] = useState<number>(0);
   const [imageList, setImageList] = useState<string[]>([]);
   const [fileList, setFileList] = useState<File[]>([]);
@@ -39,7 +34,7 @@ const DialogAddProduct = ({ openDialog, handleCloseDialog }: DialogAddProductPro
     name: Yup.string().trim().required("Tên sản phẩm không được bỏ trống"),
     productPrice: Yup.string().trim().required("Giá bán không được bỏ trống"),
     costPrice: Yup.string().trim().required("Giá gốc không được bỏ trống"),
-    type: Yup.string().trim().required("Loại sản phẩm không được bỏ trống"),
+    typeId: Yup.string().trim().required("Loại sản phẩm không được bỏ trống"),
     inventory: Yup.string().trim().required("Số lượng trong kho không được bỏ trống"),
   });
 
@@ -85,13 +80,6 @@ const DialogAddProduct = ({ openDialog, handleCloseDialog }: DialogAddProductPro
       }
     }
   }
-
-  //   useEffect(() => {
-  //     formik.setValues(itemEdit);
-  //     setImageList(JSON.parse(itemEdit.imageList));
-  //   }, [itemEdit]);
-
-  // console.log("formik", formik.values);
 
   return (
     <Dialog fullWidth maxWidth="md" open={openDialog} onClose={closeDialog}>
@@ -155,14 +143,14 @@ const DialogAddProduct = ({ openDialog, handleCloseDialog }: DialogAddProductPro
                 <Grid item xs={12} sx={{ marginBottom: 1 }}>
                   <Select
                     fullWidth
-                    value={formik.values.type}
+                    value={formik.values.typeId}
                     onChange={e => {
-                      formik.setFieldValue("type", e.target.value);
+                      formik.setFieldValue("typeId", e.target.value);
                     }}
                     input={<StyledInput />}
                   >
-                    {productTypeList.map((option, key) => {
-                      return <MenuItem value={option.value}>{option.title}</MenuItem>;
+                    {productTypes.map((option, key) => {
+                      return <MenuItem value={option.uuid}>{option.name}</MenuItem>;
                     })}
                   </Select>
                 </Grid>
@@ -172,7 +160,7 @@ const DialogAddProduct = ({ openDialog, handleCloseDialog }: DialogAddProductPro
                       color: "red",
                     }}
                   >
-                    {formik.errors["type"] && formik.errors["type"]}
+                    {formik.errors["typeId"] && formik.errors["typeId"]}
                   </FormHelperText>
                 </Grid>
 
@@ -180,6 +168,32 @@ const DialogAddProduct = ({ openDialog, handleCloseDialog }: DialogAddProductPro
                 <Grid item xs={12}>
                   <InputLabel shrink sx={{ fontSize: "18px", fontWeight: 500 }}>
                     {"Giá gốc *"}
+                  </InputLabel>
+                </Grid>
+                <Grid item xs={12} sx={{ marginBottom: 1 }}>
+                  <StyledInput
+                    fullWidth
+                    type="number"
+                    value={formik.values.productPrice}
+                    onChange={e => {
+                      formik.setFieldValue("costPrice", e.target.value);
+                    }}
+                  />
+                </Grid>
+                <Grid item xs={12} sx={{ marginBottom: 1 }}>
+                  <FormHelperText
+                    sx={{
+                      color: "red",
+                    }}
+                  >
+                    {formik.errors["costPrice"] && formik.errors["costPrice"]}
+                  </FormHelperText>
+                </Grid>
+
+                {/* product price */}
+                <Grid item xs={12}>
+                  <InputLabel shrink sx={{ fontSize: "18px", fontWeight: 500 }}>
+                    {"Giá bán *"}
                   </InputLabel>
                 </Grid>
                 <Grid item xs={12} sx={{ marginBottom: 1 }}>
@@ -199,32 +213,6 @@ const DialogAddProduct = ({ openDialog, handleCloseDialog }: DialogAddProductPro
                     }}
                   >
                     {formik.errors["productPrice"] && formik.errors["productPrice"]}
-                  </FormHelperText>
-                </Grid>
-
-                {/* product price */}
-                <Grid item xs={12}>
-                  <InputLabel shrink sx={{ fontSize: "18px", fontWeight: 500 }}>
-                    {"Giá bán *"}
-                  </InputLabel>
-                </Grid>
-                <Grid item xs={12} sx={{ marginBottom: 1 }}>
-                  <StyledInput
-                    fullWidth
-                    type="number"
-                    value={formik.values.costPrice}
-                    onChange={e => {
-                      formik.setFieldValue("costPrice", e.target.value);
-                    }}
-                  />
-                </Grid>
-                <Grid item xs={12} sx={{ marginBottom: 1 }}>
-                  <FormHelperText
-                    sx={{
-                      color: "red",
-                    }}
-                  >
-                    {formik.errors["costPrice"] && formik.errors["costPrice"]}
                   </FormHelperText>
                 </Grid>
 
@@ -318,7 +306,7 @@ const DialogAddProduct = ({ openDialog, handleCloseDialog }: DialogAddProductPro
               <Box sx={{ display: "flex", gap: 1.5, paddingX: "10px", marginBottom: 1 }}>
                 <CustomButton
                   text="Lưu"
-                  type="default"
+                  type="rounded"
                   startIcon="save"
                   handleOnClick={() => {
                     formik.handleSubmit();
@@ -326,7 +314,7 @@ const DialogAddProduct = ({ openDialog, handleCloseDialog }: DialogAddProductPro
                 />
                 <CustomButton
                   text="Đóng"
-                  type="outlined"
+                  type="rounded-outlined"
                   handleOnClick={() => {
                     closeDialog();
                   }}

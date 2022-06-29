@@ -271,8 +271,7 @@ export const FormCart = ({ index, formik, disabled, disabledFormCart }: FormCart
   };
 
   const getProducts = async () => {
-    let userId = getCookie("USER_ID");
-    await new ProductService().getProductsByUserId(userId).then(response => {
+    await new ProductService().getProductsByUser().then(response => {
       response.result &&
         setProducts(
           response.result.map(product => {
@@ -293,7 +292,6 @@ export const FormCart = ({ index, formik, disabled, disabledFormCart }: FormCart
 
   return (
     <Box>
-      {" "}
       <FormControl variant="standard" sx={{ width: "100%" }}>
         {!disabled && !disabledFormCart && (
           <Box>
@@ -327,6 +325,7 @@ export const FormCart = ({ index, formik, disabled, disabledFormCart }: FormCart
                   );
                 }}
                 getOptionLabel={option => option.name}
+                getOptionDisabled={option => option.inventory === 0}
                 renderOption={(props, option, { selected }) => (
                   <li {...props}>
                     <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%" }}>

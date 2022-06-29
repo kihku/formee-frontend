@@ -1,5 +1,5 @@
 import { Box, Dialog, DialogContent, DialogTitle, Grid } from "@mui/material";
-import { CommentService } from "apis/commentService/commentService";
+import { PublicService } from "apis/publicService/publicService";
 import CreateFields, { CreateFieldsProps } from "components/CreateFields";
 import { CustomButton } from "components/CustomButton";
 import { CustomTextField } from "components/CustomTextField";
@@ -28,7 +28,7 @@ const DialogRequestEditOrder = (props: DialogRequestEditOrderProps) => {
   };
 
   const handleSubmitForm = async (values: CommentDTO) => {
-    await new CommentService().createComment({ ...values, fromEdit: false }).then(response => {
+    await new PublicService().createComment({ ...values, fromEdit: false }).then(response => {
       if (Number(response.code) === 200) {
         dispatch(openNotification({ open: true, content: response.message, severity: "success" }));
         closeDialog(response.result);
