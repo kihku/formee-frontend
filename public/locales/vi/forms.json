@@ -1,8 +1,14 @@
 {
-    "form_view": "Xem biểu mẫu",
-    "form_settings_title": "Cấu hình câu hỏi",
-    "form_settings_label": "Tiêu đề",
-    "form_settings_description": "Mô tả",
-    "form_settings_type": "Loại câu hỏi",
-    "form_settings_validation": "Điều kiện"
+    "form_phone_helper": "Tìm kiếm khách hàng với số điện thoại",
+    "form_address_placeholder": "Số nhà/Đường",
+    "form_cart_button": "Tạo sản phẩm",
+    "form_cart_helper": "Tìm kiếm sản phẩm",
+    "form_cart_sub_total": "Tổng đơn hàng",
+    "form_cart_discount": "Giảm giá",
+    "form_cart_total": "Tổng tiền",
+    "form_shipping_id": "Mã vận đơn",
+    "form_shipping_search": "Tra cứu vận đơn",
+    "form_shipping_cod": "Phí COD",
+    "form_shipping_cod_total": "Tổng đơn hàng (bao gồm phí ship COD): ",
+    "form_payment_paid": "Đã thanh toán"
 }

@@ -1,8 +1,14 @@
 {
-    "form_view": "Form View",
-    "form_settings_title": "Field Settings",
-    "form_settings_label": "Label",
-    "form_settings_description": "Description",
-    "form_settings_type": "Type",
-    "form_settings_validation": "Validation"
+    "form_phone_helper": "Find customers with phone number",
+    "form_address_placeholder": "Street address",
+    "form_cart_button": "Create products",
+    "form_cart_helper": "Search for products",
+    "form_cart_sub_total": "Subtotal",
+    "form_cart_discount": "Discount",
+    "form_cart_total": "Total",
+    "form_shipping_id": "Tracking ID",
+    "form_shipping_search": "Go to tracking page",
+    "form_shipping_cod": "COD Fee",
+    "form_shipping_cod_total": "Total (including COD fee): ",
+    "form_payment_paid": "Paid"
 }

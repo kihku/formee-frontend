@@ -1,8 +1,7 @@
 {
     "order": "Order",
     "order_edit": "Edit order",
-    "order_download": "Download order",
-    "order_link": "Share order link",
-    "template_link": "Share template link",
-    "order_new": "Create new order"
+    "order_new": "Create new order",
+    "order_permission": "Edit permission",
+    "order_form_name": "Order name"
 }

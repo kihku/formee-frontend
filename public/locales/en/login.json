@@ -1,0 +1,13 @@
+{
+    "login_title": "Welcome back to FORMEE!",
+    "login_subtitle": "Sign in to continue where you left off",
+    "login_email": "Email",
+    "login_password": "Password",
+    "login_google": "Or continue with",
+    "login_new_acc": "New to FORMEE?",
+    "login_sign_up": "SIGN UP",
+    "login_sign_in": "SIGN IN",
+    "sign_up_title": "Welcome to FORMEE!",
+    "sign_up_subtitle": "Register your account",
+    "sign_up_existing_acc": "Already have an account?"
+}

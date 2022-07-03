@@ -1,8 +1,7 @@
 {
     "order": "Đơn hàng",
     "order_edit": "Chỉnh sửa đơn hàng",
-    "order_download": "Tải đơn hàng",
-    "order_link": "Chia sẻ liên kết",
-    "template_link": "Chia sẻ liên kết",
-    "order_new": "Tạo đơn hàng mới"
+    "order_new": "Tạo đơn hàng mới",
+    "order_permission": "Quyền chỉnh sửa đơn hàng",
+    "order_form_name": "Tên đơn hàng"
 }

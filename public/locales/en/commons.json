@@ -1,14 +1,14 @@
 {
     "header_home": "Home",
     "header_orders": "Orders",
-    "header_form": "Form",
+    "header_products": "Products",
     "header_report": "Report",
-    "header_components": "Components",
     "header_help": "Help",
     "header_notifications": "Notifications",
     "header_settings": "Settings",
+    "header_language_en": "English",
+    "header_language_vi": "Vietnamese",
     "helper_search": "Search",
     "helper_filters": "Filters",
-    "table_rows_per_page": "Rows per page",
-    "table_view_details": "View order details"
+    "table_rows_per_page": "Rows per page"
 }
