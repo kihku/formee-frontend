@@ -1,23 +1,18 @@
 import { Box, Grid } from "@mui/material";
+import CreateFieldsFilter, { CreateFieldsFilterProps } from "components/CreateFieldsFilter";
+import { CreateFieldsFormProps } from "components/CreateFieldsForm";
+import { CustomBackgroundCard } from "components/CustomBackgroundCard";
+import { CustomButton } from "components/CustomButton";
+import { CustomSelect } from "components/CustomSelect";
 import { CustomTextField } from "components/CustomTextField";
 import { CustomTitle } from "components/CustomTitle";
-import { COLORS } from "styles";
-import * as Yup from "yup";
-import CreateFieldsFilter, { CreateFieldsFilterProps } from "components/CreateFieldsFilter";
+import { componentTypes, validationTypes } from "constants/forms";
 import { useFormik } from "formik";
 import { CustomOption } from "models/baseModels";
-import { CustomButton } from "components/CustomButton";
-import { useState } from "react";
-import { FormDTO, FormLayoutDTO } from "models/form";
-import { CustomBackgroundCard } from "components/CustomBackgroundCard";
+import { FormLayoutDTO } from "models/form";
 import { useTranslation } from "react-i18next";
-import { CustomSelect } from "components/CustomSelect";
-import { componentTypes, validationTypes } from "constants/forms";
-import CreateFieldsForm, { CreateFieldsFormProps } from "components/CreateFieldsForm";
-import {  orderStatusList } from "constants/constants";
-import { FormTextField } from "components/CreateFieldsForm/FormFields/FormTextField";
-import { FormSelect } from "components/CreateFieldsForm/FormFields/FormSelect";
-import { FormCart } from "components/CreateFieldsForm/FormFields/FormCart";
+import { COLORS } from "styles";
+import * as Yup from "yup";
 
 function CreateFormPage() {
   const formName = "Untitled Form";

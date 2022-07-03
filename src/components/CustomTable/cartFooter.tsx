@@ -1,21 +1,24 @@
 import { Box, Grid, InputAdornment, Typography } from "@mui/material";
 import { StyledInput } from "components/CustomTextField";
 import React, { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { COLORS } from "styles";
 
 export interface CustomCartFooterProps {
   formik: any;
   index: number;
   disabled?: boolean;
-  disabledFormCart?: boolean;
+  disabledForm?: boolean;
 }
 
 const CustomCartFooter: React.FC<CustomCartFooterProps> = ({
   formik,
   index,
   disabled,
-  disabledFormCart,
+  disabledForm,
 }: CustomCartFooterProps) => {
+  const { t } = useTranslation(["forms"]);
+
   const [total, setTotal] = useState<number>(0);
   const [subTotal, setSubTotal] = useState<number>(0);
   const [discount, setDiscount] = useState<number>(0);
@@ -35,6 +38,10 @@ const CustomCartFooter: React.FC<CustomCartFooterProps> = ({
   }, [formik.values]);
 
   useEffect(() => {
+    formik.setFieldValue("discount", discount);
+  }, [discount]);
+
+  useEffect(() => {
     setDiscount(formik.values["discount"]);
   }, []);
 
@@ -44,7 +51,7 @@ const CustomCartFooter: React.FC<CustomCartFooterProps> = ({
         <Grid item xs={9}></Grid>
         <Grid item xs={3} sx={{ marginY: 1 }}>
           <Box sx={{ display: "flex", justifyContent: "space-between", fontWeight: 500 }}>
-            <Box>Tổng đơn hàng</Box>
+            <Box>{t("form_cart_sub_total")}</Box>
             <Box>
               {subTotal}
               {" đ"}
@@ -55,8 +62,8 @@ const CustomCartFooter: React.FC<CustomCartFooterProps> = ({
         <Grid item xs={9}></Grid>
         <Grid item xs={3} sx={{ marginY: 1 }}>
           <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", fontWeight: 500 }}>
-            <Box>Giảm giá</Box>
-            {disabled || disabledFormCart ? (
+            <Box>{t("form_cart_discount")}</Box>
+            {disabled || disabledForm ? (
               <Box>{formik.values["discount"] + " %"}</Box>
             ) : (
               <StyledInput
@@ -96,7 +103,7 @@ const CustomCartFooter: React.FC<CustomCartFooterProps> = ({
               color: COLORS.primary,
             }}
           >
-            <Box>Tổng tiền</Box>
+            <Box>{t("form_cart_total")}</Box>
             <Box>
               {total}
               {" đ"}

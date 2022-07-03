@@ -448,7 +448,7 @@ function StatisticsPage() {
         <CustomBackgroundCard sizeX={"auto"} sizeY={"auto"} padding={-1}>
           <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 3 }}>
             <Box sx={{ fontWeight: 500, fontSize: "20px" }}>{"Thống kê khách hàng"}</Box>
-            <Box
+            {/* <Box
               onClick={() => {
                 navigate("/customers");
               }}
@@ -465,7 +465,7 @@ function StatisticsPage() {
                 {"Quản lý khách hàng"}
               </Typography>
               <CustomIcon name={"rightArrow"} />
-            </Box>
+            </Box> */}
           </Box>
           <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
             <Box>

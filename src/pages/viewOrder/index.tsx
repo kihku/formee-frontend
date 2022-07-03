@@ -15,7 +15,6 @@ import { useEffect, useState } from "react";
 import { FormTextField } from "components/CreateFieldsForm/FormFields/FormTextField";
 import { FormSelect } from "components/CreateFieldsForm/FormFields/FormSelect";
 import { FormCart } from "components/CreateFieldsForm/FormFields/FormCart";
-import { orderStatusList } from "constants/constants";
 import { FormService } from "apis/formService/formService";
 import CommonUtils from "utils/commonUtils";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -63,7 +62,7 @@ const ReviewOrderPage = ({}: ReviewOrderPageProps) => {
             xs: component.xs,
             type: component.type,
             label: component.title,
-            options: component.type === "STATUS" ? orderStatusList : [],
+            options: [],
             required: component.validation.some((val: any) => val.type === "REQUIRED"),
             Component:
               component.type === "TEXT" || component.type === "PHONE"

@@ -11,10 +11,10 @@ export const Layout = ({ children, title }: LayoutProps) => {
   useEffect(() => {
     title && CommonUtils.setPageTitle(title);
     // eslint-disable-next-line no-restricted-globals
-    screen.orientation.lock("portrait").then(
-      success => {},
-      fail => {},
-    );
+    // screen.orientation.lock("portrait").then(
+    //   success => {},
+    //   fail => {},
+    // );
   }, [title]);
 
   return (

@@ -11,6 +11,7 @@ import "./i18n";
 import GeneralErrorPage from "pages/generalError";
 import OrderTrackingPage from "pages/tracking";
 import LayoutCommon from "components/LayoutCommon";
+import SignUpPage from "pages/login/signUp";
 
 export const CustomLoadingSpinner = () => {
   return (
@@ -27,8 +28,8 @@ function App() {
         <div className="base-layout">
           <LayoutCommon />
           <Routes>
-            <Route path="/error" element={<GeneralErrorPage />} />
-            <Route path="/" element={<Navigate to="/login" />} />
+            <Route path="/" element={<Navigate to="/register" />} />
+            <Route path="/register" element={<SignUpPage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/tracking/*" element={<OrderTrackingPage />} />
             {PUBLIC_ROUTES.map((page, key) => {

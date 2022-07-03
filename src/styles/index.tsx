@@ -15,6 +15,7 @@ export const COLORS = {
   greenBackground: "#e0f1e4",
   red: "#e1879f",
   redBackground: "#f6dbe3",
+  redError: "#f27e7e",
   grayBackground: "#f9f9f9",
   gray: "#f2f5f5",
   yellow: "#ffd24d",

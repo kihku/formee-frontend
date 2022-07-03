@@ -8,7 +8,7 @@ import {
   Grid,
   InputLabel,
   MenuItem,
-  Select
+  Select,
 } from "@mui/material";
 import { ProductService } from "apis/productService/productService";
 import { CustomButton } from "components/CustomButton";
@@ -17,15 +17,17 @@ import { useFormik } from "formik";
 import { initProduct, ProductDTO, ProductTypeDTO } from "models/product";
 import { ChangeEvent, useState } from "react";
 import Carousel from "react-material-ui-carousel";
+import StringUtils from "utils/stringUtils";
 import * as Yup from "yup";
 
 export interface DialogAddProductProps {
   openDialog: boolean;
   productTypes: ProductTypeDTO[];
   handleCloseDialog: () => void;
+  selectedTypeId: string;
 }
 
-const DialogAddProduct = ({ openDialog, handleCloseDialog, productTypes }: DialogAddProductProps) => {
+const DialogAddProduct = ({ openDialog, handleCloseDialog, productTypes, selectedTypeId }: DialogAddProductProps) => {
   const [currentIndex, setCurrentIndex] = useState<number>(0);
   const [imageList, setImageList] = useState<string[]>([]);
   const [fileList, setFileList] = useState<File[]>([]);
@@ -34,12 +36,12 @@ const DialogAddProduct = ({ openDialog, handleCloseDialog, productTypes }: Dialo
     name: Yup.string().trim().required("Tên sản phẩm không được bỏ trống"),
     productPrice: Yup.string().trim().required("Giá bán không được bỏ trống"),
     costPrice: Yup.string().trim().required("Giá gốc không được bỏ trống"),
-    typeId: Yup.string().trim().required("Loại sản phẩm không được bỏ trống"),
+    // typeId: Yup.string().trim().required("Loại sản phẩm không được bỏ trống"),
     inventory: Yup.string().trim().required("Số lượng trong kho không được bỏ trống"),
   });
 
   const formik = useFormik({
-    initialValues: initProduct,
+    initialValues: StringUtils.isNullOrEmty(selectedTypeId) ? initProduct : { ...initProduct, typeId: selectedTypeId },
     onSubmit: handleSubmitForm,
     validationSchema: validationSchema,
     validateOnChange: false,
@@ -137,7 +139,7 @@ const DialogAddProduct = ({ openDialog, handleCloseDialog, productTypes }: Dialo
                 {/* type */}
                 <Grid item xs={12}>
                   <InputLabel shrink sx={{ fontSize: "18px", fontWeight: 500 }}>
-                    {"Loại sản phẩm *"}
+                    {"Loại sản phẩm"}
                   </InputLabel>
                 </Grid>
                 <Grid item xs={12} sx={{ marginBottom: 1 }}>
@@ -154,7 +156,7 @@ const DialogAddProduct = ({ openDialog, handleCloseDialog, productTypes }: Dialo
                     })}
                   </Select>
                 </Grid>
-                <Grid item xs={12} sx={{ marginBottom: 1 }}>
+                {/* <Grid item xs={12} sx={{ marginBottom: 1 }}>
                   <FormHelperText
                     sx={{
                       color: "red",
@@ -162,7 +164,7 @@ const DialogAddProduct = ({ openDialog, handleCloseDialog, productTypes }: Dialo
                   >
                     {formik.errors["typeId"] && formik.errors["typeId"]}
                   </FormHelperText>
-                </Grid>
+                </Grid> */}
 
                 {/* cost price */}
                 <Grid item xs={12}>

@@ -1,38 +1,42 @@
 /* eslint-disable jsx-a11y/alt-text */
-import FormControl from "@mui/material/FormControl";
 import { Autocomplete, Box, Checkbox, FormHelperText, IconButton } from "@mui/material";
-import { useEffect, useMemo, useState } from "react";
-import { ProductDTO } from "models/product";
-import { CellProps, Column, useTable } from "react-table";
-import CustomTable from "components/CustomTable";
-import { CustomIcon } from "components/CustomIcon";
-import { COLORS } from "styles";
-import { StyledInput } from "components/CustomTextField";
-import { ProductService } from "apis/productService/productService";
-import CustomCartFooter from "components/CustomTable/cartFooter";
-import { getCookie } from "utils/cookieUtils";
-import { CustomButton } from "components/CustomButton";
-import StringUtils from "utils/stringUtils";
-import { openNotification } from "redux/actions/notification";
-import { useDispatch } from "react-redux";
-import DialogViewProduct from "pages/inventory/dialogs/viewProductDialog";
+import FormControl from "@mui/material/FormControl";
 import { URL_PROFILE } from "apis/axiosClient";
+import { ProductService } from "apis/productService/productService";
+import { CustomButton } from "components/CustomButton";
+import { CustomIcon } from "components/CustomIcon";
+import CustomTable from "components/CustomTable";
+import CustomCartFooter from "components/CustomTable/cartFooter";
+import { StyledInput } from "components/CustomTextField";
+import { ProductDTO } from "models/product";
+import DialogViewProduct from "pages/inventory/dialogs/viewProductDialog";
+import { useEffect, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { CellProps, Column, useTable } from "react-table";
+import { openNotification } from "redux/actions/notification";
+import { COLORS } from "styles";
+import StringUtils from "utils/stringUtils";
 
 interface FormCartProps {
   index: number;
   formik?: any;
   handleOnChange?: (event: any) => void;
   disabled?: boolean;
-  disabledFormCart?: boolean;
+  disabledForm?: boolean;
 }
 
-export const FormCart = ({ index, formik, disabled, disabledFormCart }: FormCartProps) => {
+export const FormCart = ({ index, formik, disabled, disabledForm }: FormCartProps) => {
+  const { t } = useTranslation(["forms"]);
+  const currentLanguage = String(localStorage.getItem("i18nextLng"));
+
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const [value, setValue] = useState<ProductDTO[]>([]);
   const [products, setProducts] = useState<ProductDTO[]>([]);
   const [item, setItem] = useState<ProductDTO>({} as ProductDTO);
-  const [rawValue, setRawValue] = useState<string>("");
   const [openProductDialog, setOpenProductDialog] = useState<boolean>(false);
 
   const renderValue = () => {
@@ -51,7 +55,7 @@ export const FormCart = ({ index, formik, disabled, disabledFormCart }: FormCart
       ]);
   };
 
-  const cartTable: Column<ProductDTO>[] = [
+  const cartTableVi: Column<ProductDTO>[] = [
     {
       Header: "Sản phẩm",
       accessor: undefined,
@@ -59,17 +63,19 @@ export const FormCart = ({ index, formik, disabled, disabledFormCart }: FormCart
       Cell: ({ row }: CellProps<ProductDTO, {}>) => {
         return (
           <Box display="flex" justifyContent="left">
-            <img
-              src={`${URL_PROFILE.PRO}/images/${row.original.imageName}`}
-              width="80"
-              height="80"
-              style={{
-                backgroundColor: COLORS.grayBackground,
-                display: "flex",
-                alignItems: "center",
-                placeContent: "center",
-              }}
-            />
+            {!StringUtils.isNullOrEmty(row.original.imageName) && (
+              <img
+                src={`${URL_PROFILE.PRO}/images/${row.original.imageName}`}
+                width="80"
+                height="auto"
+                style={{
+                  backgroundColor: COLORS.grayBackground,
+                  display: "flex",
+                  alignItems: "center",
+                  placeContent: "center",
+                }}
+              />
+            )}
           </Box>
         );
       },
@@ -179,7 +185,137 @@ export const FormCart = ({ index, formik, disabled, disabledFormCart }: FormCart
     },
   ];
 
-  const cartTableDisabled: Column<ProductDTO>[] = [
+  const cartTableEng: Column<ProductDTO>[] = [
+    {
+      Header: "Product",
+      accessor: undefined,
+      maxWidth: 10,
+      Cell: ({ row }: CellProps<ProductDTO, {}>) => {
+        return (
+          <Box display="flex" justifyContent="left">
+            {!StringUtils.isNullOrEmty(row.original.imageName) && (
+              <img
+                src={`${URL_PROFILE.PRO}/images/${row.original.imageName}`}
+                width="80"
+                height="auto"
+                style={{
+                  backgroundColor: COLORS.grayBackground,
+                  display: "flex",
+                  alignItems: "center",
+                  placeContent: "center",
+                }}
+              />
+            )}
+          </Box>
+        );
+      },
+    },
+    {
+      Header: "Name",
+      accessor: "name",
+      maxWidth: 10,
+      Cell: ({ row }: CellProps<ProductDTO, {}>) => {
+        return (
+          <Box display="flex" justifyContent="left">
+            {row.original.name}
+          </Box>
+        );
+      },
+    },
+    {
+      Header: "Price",
+      accessor: "productPrice",
+      maxWidth: 5,
+      Cell: ({ row }: CellProps<ProductDTO, {}>) => {
+        return (
+          <Box display="flex" justifyContent="left">
+            {row.original.productPrice}
+          </Box>
+        );
+      },
+    },
+    {
+      Header: "Quantity",
+      accessor: "quantity",
+      maxWidth: 10,
+      Cell: ({ row }: CellProps<ProductDTO, {}>) => {
+        return (
+          <Box display="flex" justifyContent="left" alignItems="center" gap={1}>
+            <IconButton
+              onClick={() => {
+                setValue(prev =>
+                  prev.map(item => {
+                    if (item.uuid === row.original.uuid) {
+                      if (item.quantity === 1) {
+                        handleRemoveCart(row.original);
+                      } else return { ...item, quantity: item.quantity - 1 };
+                    }
+                    return item;
+                  }),
+                );
+              }}
+            >
+              <CustomIcon name="remove" color={COLORS.primaryLight} />
+            </IconButton>
+            {row.original.quantity}
+            <IconButton
+              onClick={() => {
+                setValue(prev =>
+                  prev.map(item => {
+                    if (item.uuid === row.original.uuid) {
+                      if (item.quantity < row.original.inventory) {
+                        return { ...item, quantity: item.quantity + 1 };
+                      } else {
+                        dispatch(
+                          openNotification({
+                            open: true,
+                            content: "Quantity exceeds the current state of inventory",
+                            severity: "error",
+                          }),
+                        );
+                        return item;
+                      }
+                    }
+                    return item;
+                  }),
+                );
+              }}
+            >
+              <CustomIcon name="add" color={COLORS.primaryLight} />
+            </IconButton>
+          </Box>
+        );
+      },
+    },
+    {
+      Header: "Total",
+      accessor: undefined,
+      maxWidth: 10,
+      Cell: ({ row }: CellProps<ProductDTO, {}>) => {
+        return (
+          <Box display="flex" justifyContent="left">
+            {row.original.productPrice * row.original.quantity}
+          </Box>
+        );
+      },
+    },
+    {
+      Header: "Actions",
+      accessor: undefined,
+      maxWidth: 10,
+      Cell: ({ row }: CellProps<ProductDTO, {}>) => {
+        return (
+          <Box display="flex" justifyContent="left">
+            <IconButton onClick={() => handleRemoveCart(row.original)}>
+              <CustomIcon name={"delete"} />
+            </IconButton>
+          </Box>
+        );
+      },
+    },
+  ];
+
+  const cartTableDisabledVi: Column<ProductDTO>[] = [
     {
       Header: "Sản phẩm",
       accessor: undefined,
@@ -187,18 +323,19 @@ export const FormCart = ({ index, formik, disabled, disabledFormCart }: FormCart
       Cell: ({ row }: CellProps<ProductDTO, {}>) => {
         return (
           <Box display="flex" justifyContent="left">
-            <img
-              src={`${URL_PROFILE.PRO}/images/${row.original.imageName}`}
-              width="80"
-              height="80"
-              style={{
-                backgroundColor: COLORS.grayBackground,
-                // borderRadius: "10px",
-                display: "flex",
-                alignItems: "center",
-                placeContent: "center",
-              }}
-            />
+            {!StringUtils.isNullOrEmty(row.original.imageName) && (
+              <img
+                src={`${URL_PROFILE.PRO}/images/${row.original.imageName}`}
+                width="80"
+                height="auto"
+                style={{
+                  backgroundColor: COLORS.grayBackground,
+                  display: "flex",
+                  alignItems: "center",
+                  placeContent: "center",
+                }}
+              />
+            )}
           </Box>
         );
       },
@@ -255,7 +392,94 @@ export const FormCart = ({ index, formik, disabled, disabledFormCart }: FormCart
     },
   ];
 
-  const columns = useMemo(() => (disabled ? cartTableDisabled : cartTable), []);
+  const cartTableDisabledEng: Column<ProductDTO>[] = [
+    {
+      Header: "Product",
+      accessor: undefined,
+      maxWidth: 10,
+      Cell: ({ row }: CellProps<ProductDTO, {}>) => {
+        return (
+          <Box display="flex" justifyContent="left">
+            {!StringUtils.isNullOrEmty(row.original.imageName) && (
+              <img
+                src={`${URL_PROFILE.PRO}/images/${row.original.imageName}`}
+                width="80"
+                height="auto"
+                style={{
+                  backgroundColor: COLORS.grayBackground,
+                  display: "flex",
+                  alignItems: "center",
+                  placeContent: "center",
+                }}
+              />
+            )}
+          </Box>
+        );
+      },
+    },
+    {
+      Header: "Name",
+      accessor: "name",
+      maxWidth: 10,
+      Cell: ({ row }: CellProps<ProductDTO, {}>) => {
+        return (
+          <Box display="flex" justifyContent="left">
+            {row.original.name}
+          </Box>
+        );
+      },
+    },
+    {
+      Header: "Price",
+      accessor: "productPrice",
+      maxWidth: 5,
+      Cell: ({ row }: CellProps<ProductDTO, {}>) => {
+        return (
+          <Box display="flex" justifyContent="left">
+            {row.original.productPrice}
+            {" đ"}
+          </Box>
+        );
+      },
+    },
+    {
+      Header: "Quantity",
+      accessor: "quantity",
+      maxWidth: 10,
+      Cell: ({ row }: CellProps<ProductDTO, {}>) => {
+        return (
+          <Box display="flex" justifyContent="left" alignItems="center" gap={1}>
+            {row.original.quantity}
+          </Box>
+        );
+      },
+    },
+    {
+      Header: "Total",
+      accessor: undefined,
+      maxWidth: 10,
+      Cell: ({ row }: CellProps<ProductDTO, {}>) => {
+        return (
+          <Box display="flex" justifyContent="left">
+            {row.original.productPrice * row.original.quantity}
+            {" đ"}
+          </Box>
+        );
+      },
+    },
+  ];
+
+  const columns = useMemo(
+    () =>
+      disabled
+        ? currentLanguage === "en"
+          ? cartTableDisabledEng
+          : cartTableDisabledVi
+        : currentLanguage === "en"
+        ? cartTableEng
+        : cartTableVi,
+    [],
+  );
 
   const table = useTable({
     columns,
@@ -293,7 +517,7 @@ export const FormCart = ({ index, formik, disabled, disabledFormCart }: FormCart
   return (
     <Box>
       <FormControl variant="standard" sx={{ width: "100%" }}>
-        {!disabled && !disabledFormCart && (
+        {!disabled && !disabledForm && (
           <Box>
             <Box display="flex">
               <Autocomplete
@@ -311,14 +535,11 @@ export const FormCart = ({ index, formik, disabled, disabledFormCart }: FormCart
                       {...params.InputProps}
                       {...rest}
                       onKeyDown={e => {
-                        // console.log(e.code);
                         if (e.code === "Enter") {
                           e.preventDefault();
                           e.stopPropagation();
                         } else if (e.code === "Backspace") {
                           e.stopPropagation();
-                        } else {
-                          setRawValue(e.currentTarget.value);
                         }
                       }}
                     />
@@ -336,7 +557,7 @@ export const FormCart = ({ index, formik, disabled, disabledFormCart }: FormCart
                       <Box>
                         {option.productPrice}
                         {" đ "}
-                        {`(Kho: ${option.inventory})`}
+                        {`(${currentLanguage === "en" ? "Inventory" : "Kho"}: ${option.inventory})`}
                       </Box>
                     </Box>
                   </li>
@@ -345,6 +566,18 @@ export const FormCart = ({ index, formik, disabled, disabledFormCart }: FormCart
                   setValue(newValue);
                 }}
                 sx={{ marginRight: 2 }}
+              />
+              <CustomButton
+                text={t("form_cart_button")}
+                type={"outlined"}
+                startIcon="lightAdd"
+                handleOnClick={() => {
+                  navigate("/products", {
+                    state: {
+                      openAddDialog: true,
+                    },
+                  });
+                }}
               />
             </Box>
             <FormHelperText
@@ -355,29 +588,29 @@ export const FormCart = ({ index, formik, disabled, disabledFormCart }: FormCart
                 paddingTop: 0.75,
               }}
             >
-              {"Tìm kiếm sản phẩm"}
+              {t("form_cart_helper")}
             </FormHelperText>
           </Box>
         )}
 
-        {(value.length > 0 || disabledFormCart) && (
+        {(value.length > 0 || disabledForm) && (
           <Box sx={{ marginY: 2 }}>
             <CustomTable
               isCart
-              pointerOnHover={disabledFormCart}
-              highlightOnHover={disabledFormCart}
+              pointerOnHover={disabledForm}
+              highlightOnHover={disabledForm}
               data={value}
               table={table}
               columns={columns}
               onAddCart={handleAddCart}
               onClickRow={(row: any) => {
-                if (disabledFormCart) {
+                if (disabledForm) {
                   setItem(row.original);
                   setOpenProductDialog(true);
                 }
               }}
             />
-            <CustomCartFooter formik={formik} index={index} disabled={disabled} disabledFormCart={disabledFormCart} />
+            <CustomCartFooter formik={formik} index={index} disabled={disabled} disabledForm={disabledForm} />
           </Box>
         )}
       </FormControl>

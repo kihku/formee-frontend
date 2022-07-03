@@ -3,14 +3,16 @@ import { PublicService } from "apis/publicService/publicService";
 import CreateFieldsForm from "components/CreateFieldsForm";
 import { FormAddress } from "components/CreateFieldsForm/FormFields/FormAddress";
 import { FormCart } from "components/CreateFieldsForm/FormFields/FormCart";
+import { FormPayment } from "components/CreateFieldsForm/FormFields/FormPayment";
 import { FormSection } from "components/CreateFieldsForm/FormFields/FormSection";
 import { FormSelect } from "components/CreateFieldsForm/FormFields/FormSelect";
+import { FormShipping } from "components/CreateFieldsForm/FormFields/FormShipping";
 import { FormTextField } from "components/CreateFieldsForm/FormFields/FormTextField";
 import { CustomBackgroundCard } from "components/CustomBackgroundCard";
 import { CustomButton } from "components/CustomButton";
 import { CustomChip } from "components/CustomChip";
 import { CustomTitle } from "components/CustomTitle";
-import { orderStatusList } from "constants/constants";
+import { orderStatusListEng, orderStatusListVi } from "constants/constants";
 import { useFormik } from "formik";
 import { CommentDTO } from "models/comment";
 import { FormDTO, FormResponseDTO, FormSectionDTO } from "models/form";
@@ -28,6 +30,8 @@ import DialogRequestEditOrder from "./dialogs/requestEditDialog";
 
 function OrderTrackingPage() {
   const { t } = useTranslation(["forms", "buttons", "orders"]);
+  const currentLanguage = String(localStorage.getItem("i18nextLng"));
+
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -44,15 +48,13 @@ function OrderTrackingPage() {
   const validationSchema = Yup.object().shape({});
 
   const handleSubmitForm = async (values: any) => {
-    await new PublicService()
-      .updateOrder({ ...values, response: JSON.stringify(values.response), requested: true })
-      .then(response => {
-        if (Number(response.code) === 200) {
-          setEnableEditing(!enableEditing);
-          dispatch(openNotification({ open: true, content: response.message, severity: "success" }));
-          getOrderResponse(orderId);
-        }
-      });
+    await new PublicService().updateOrder({ ...values, response: JSON.stringify(values.response) }).then(response => {
+      if (Number(response.code) === 200) {
+        setEnableEditing(!enableEditing);
+        dispatch(openNotification({ open: true, content: response.message, severity: "success" }));
+        getOrderResponse(orderId);
+      }
+    });
   };
 
   const formik = useFormik({
@@ -78,17 +80,19 @@ function OrderTrackingPage() {
             xs: component.xs,
             type: component.type,
             label: component.title,
-            options: component.type === "STATUS" ? orderStatusList : [],
+            options: [],
             required: component.validation.some((val: any) => val.type === "REQUIRED"),
             Component:
               component.type === "TEXT" || component.type === "PHONE"
                 ? FormTextField
-                : component.type === "STATUS"
-                ? FormSelect
+                : component.type === "SHIPPING"
+                ? FormShipping
                 : component.type === "CART"
                 ? FormCart
                 : component.type === "ADDRESS"
                 ? FormAddress
+                : component.type === "PAYMENT"
+                ? FormPayment
                 : undefined,
           });
           index++;
@@ -172,15 +176,27 @@ function OrderTrackingPage() {
               <Box sx={{ display: "flex", gap: 1.5 }}>
                 <CustomTitle
                   text={[
-                    { text: "Theo dõi đơn hàng " + String(form.name), highlight: false },
+                    { text: "Theo dõi đơn hàng", highlight: false },
                     { text: "/", highlight: false },
                     { text: String(formResponse.orderName), highlight: true },
                   ]}
                 />
                 <CustomChip
-                  text={orderStatusList.find(item => item.value === formik.values.status)?.title}
-                  backgroundColor={orderStatusList.find(item => item.value === formik.values.status)?.backgroundColor}
-                  textColor={orderStatusList.find(item => item.value === formik.values.status)?.color}
+                  text={
+                    (currentLanguage === "en" ? orderStatusListEng : orderStatusListVi).find(
+                      item => item.value === formResponse.status,
+                    )?.title
+                  }
+                  backgroundColor={
+                    (currentLanguage === "en" ? orderStatusListEng : orderStatusListVi).find(
+                      item => item.value === formResponse.status,
+                    )?.backgroundColor
+                  }
+                  textColor={
+                    (currentLanguage === "en" ? orderStatusListEng : orderStatusListVi).find(
+                      item => item.value === formResponse.status,
+                    )?.color
+                  }
                 />
               </Box>
             </Box>
@@ -190,13 +206,13 @@ function OrderTrackingPage() {
               <CustomBackgroundCard sizeX="80vw" sizeY="auto">
                 <CreateFieldsForm
                   disabled={!enableEditing}
-                  disabledFormCart={true}
+                  disabledForm={true}
                   enableEditing={false}
                   formik={formik}
                   sections={fields}
                 />
                 <Grid item xs={12} sx={{ marginBottom: 3 }}>
-                  <FormSection index={2} title={"C. Lịch sử"} />
+                  <FormSection index={2} title={"Lịch sử"} color={COLORS.red} />
                   {formResponse.comments?.map(comment => {
                     return (
                       <HistoryItem
@@ -206,7 +222,7 @@ function OrderTrackingPage() {
                     );
                   })}
                 </Grid>
-                {!confirmed && !(formResponse.status === "COMPLETED" || formResponse.status === "CANCELLED") && (
+                {!confirmed && (formResponse.status === "PENDING" || formResponse.status === "REQUESTED") && (
                   <Box sx={{ display: "flex", gap: 1.5, justifyContent: "flex-end" }}>
                     {
                       <CustomButton

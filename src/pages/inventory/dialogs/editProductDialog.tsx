@@ -5,19 +5,14 @@ import {
   DialogContent,
   DialogTitle,
   FormHelperText,
-  Grid,
-  IconButton,
-  InputLabel,
+  Grid, InputLabel,
   MenuItem,
-  Select,
-  styled,
+  Select
 } from "@mui/material";
 import { URL_PROFILE } from "apis/axiosClient";
 import { ProductService } from "apis/productService/productService";
-import CreateFields, { CreateFieldsProps } from "components/CreateFields";
 import { CustomButton } from "components/CustomButton";
-import { CustomTextField, StyledInput } from "components/CustomTextField";
-import { productTypeList } from "constants/constants";
+import { StyledInput } from "components/CustomTextField";
 import { useFormik } from "formik";
 import { initProduct, ProductDTO, ProductTypeDTO } from "models/product";
 import { ChangeEvent, useEffect, useState } from "react";

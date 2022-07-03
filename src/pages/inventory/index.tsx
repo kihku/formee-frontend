@@ -9,16 +9,18 @@ import { CustomIcon } from "components/CustomIcon";
 import CustomTable from "components/CustomTable";
 import { StyledInput } from "components/CustomTextField";
 import { CustomTitle } from "components/CustomTitle";
-import { productTypeList } from "constants/constants";
 import { useFormik } from "formik";
 import { Pageable } from "models/baseModels";
 import { initProductRequest, ProductDTO, ProductSearchRequest, ProductTypeDTO } from "models/product";
 import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch } from "react-redux";
+import { useLocation } from "react-router-dom";
 import { CellProps, Column, useRowSelect, useTable } from "react-table";
+import { closeConfirmation, openConfirmation } from "redux/actions/confirmDialog";
 import { openNotification } from "redux/actions/notification";
 import { COLORS } from "styles";
+import StringUtils from "utils/stringUtils";
 import * as Yup from "yup";
 import { ProductTypeItem } from "./components/productTypeItem";
 import DialogAddProduct from "./dialogs/addProductDialog";
@@ -28,9 +30,11 @@ import DialogEditProduct from "./dialogs/editProductDialog";
 function ProductsPage() {
   const { t } = useTranslation(["commons", "buttons"]);
   const dispatch = useDispatch();
+  const location = useLocation();
 
   const [item, setItem] = useState<ProductDTO>({} as ProductDTO);
   const [typeItem, setTypeItem] = useState<ProductTypeDTO>({} as ProductTypeDTO);
+  const [selectedType, setSelectedType] = useState<ProductTypeDTO>({} as ProductTypeDTO);
   const [products, setProducts] = useState<ProductDTO[]>([]);
   const [productTypes, setProductTypes] = useState<ProductTypeDTO[]>([]);
   const [openAddDialog, setOpenAddDialog] = useState<boolean>(false);
@@ -59,18 +63,19 @@ function ProductsPage() {
       Cell: ({ row }: CellProps<ProductDTO, {}>) => {
         return (
           <Box display="flex" justifyContent="left">
-            <img
-              src={`${URL_PROFILE.PRO}/images/${row.original.imageName}`}
-              width="80"
-              height="80"
-              style={{
-                backgroundColor: COLORS.grayBackground,
-                // borderRadius: "10px",
-                display: "flex",
-                alignItems: "center",
-                placeContent: "center",
-              }}
-            />
+            {!StringUtils.isNullOrEmty(row.original.imageName) && (
+              <img
+                src={`${URL_PROFILE.PRO}/images/${row.original.imageName}`}
+                width="80"
+                height="auto"
+                style={{
+                  backgroundColor: COLORS.grayBackground,
+                  display: "flex",
+                  alignItems: "center",
+                  placeContent: "center",
+                }}
+              />
+            )}
           </Box>
         );
       },
@@ -82,11 +87,13 @@ function ProductsPage() {
       Cell: ({ row }: CellProps<ProductDTO, {}>) => {
         return (
           <Box display="flex" justifyContent="left">
-            <CustomChip
-              text={productTypes.find(item => item.uuid === row.original.typeId)?.name}
-              backgroundColor={productTypes.find(item => item.uuid === row.original.typeId)?.backgroundColor}
-              textColor={productTypes.find(item => item.uuid === row.original.typeId)?.color}
-            />
+            {!StringUtils.isNullOrEmty(row.original.typeId) && (
+              <CustomChip
+                text={productTypes.find(item => item.uuid === row.original.typeId)?.name}
+                backgroundColor={productTypes.find(item => item.uuid === row.original.typeId)?.backgroundColor}
+                textColor={productTypes.find(item => item.uuid === row.original.typeId)?.color}
+              />
+            )}
           </Box>
         );
       },
@@ -97,7 +104,14 @@ function ProductsPage() {
       maxWidth: 10,
       Cell: ({ row }: CellProps<ProductDTO, {}>) => {
         return (
-          <Box display="flex" justifyContent="left">
+          <Box
+            display="flex"
+            justifyContent="left"
+            sx={{
+              color: row.original.inventory === 0 ? COLORS.redError : COLORS.text,
+              fontWeight: row.original.inventory === 0 ? 600 : 400,
+            }}
+          >
             {row.original.name}
           </Box>
         );
@@ -109,7 +123,14 @@ function ProductsPage() {
       maxWidth: 10,
       Cell: ({ row }: CellProps<ProductDTO, {}>) => {
         return (
-          <Box display="flex" justifyContent="left">
+          <Box
+            display="flex"
+            justifyContent="left"
+            sx={{
+              color: row.original.inventory === 0 ? COLORS.redError : COLORS.text,
+              fontWeight: row.original.inventory === 0 ? 600 : 400,
+            }}
+          >
             {row.original.costPrice}
             {" đ"}
           </Box>
@@ -122,7 +143,14 @@ function ProductsPage() {
       maxWidth: 10,
       Cell: ({ row }: CellProps<ProductDTO, {}>) => {
         return (
-          <Box display="flex" justifyContent="left">
+          <Box
+            display="flex"
+            justifyContent="left"
+            sx={{
+              color: row.original.inventory === 0 ? COLORS.redError : COLORS.text,
+              fontWeight: row.original.inventory === 0 ? 600 : 400,
+            }}
+          >
             {row.original.productPrice}
             {" đ"}
           </Box>
@@ -135,7 +163,14 @@ function ProductsPage() {
       maxWidth: 5,
       Cell: ({ row }: CellProps<ProductDTO, {}>) => {
         return (
-          <Box display="flex" justifyContent="left">
+          <Box
+            display="flex"
+            justifyContent="left"
+            sx={{
+              color: row.original.inventory === 0 ? COLORS.redError : COLORS.text,
+              fontWeight: row.original.inventory === 0 ? 600 : 400,
+            }}
+          >
             {row.original.inventory}
           </Box>
         );
@@ -160,7 +195,7 @@ function ProductsPage() {
             <IconButton
               onClick={e => {
                 e.stopPropagation();
-                deleteProduct(row.original.uuid);
+                deleteProduct(row.original);
               }}
             >
               <CustomIcon name="delete" />
@@ -194,11 +229,27 @@ function ProductsPage() {
     });
   };
 
-  const deleteProduct = async (productId: string) => {
-    await new ProductService().deleteById(productId).then(response => {
-      dispatch(openNotification({ open: true, content: response.message, severity: "success" }));
-      formik.handleSubmit();
-    });
+  const deleteProduct = async (product: ProductDTO) => {
+    dispatch(
+      openConfirmation({
+        id: "confirmDialog",
+        open: true,
+        title: "Xóa sản phẩm",
+        content: "Bạn có chắc chắn muốn xóa " + product.name + " ?",
+        value: "",
+        onClose: isOk => handleCloseDelete(Boolean(isOk), product.uuid),
+      }),
+    );
+  };
+
+  const handleCloseDelete = async (isOk: boolean, productId: any) => {
+    if (isOk) {
+      await new ProductService().deleteById(productId).then(response => {
+        dispatch(openNotification({ open: true, content: response.message, severity: "success" }));
+        formik.handleSubmit();
+      });
+    }
+    dispatch(closeConfirmation());
   };
 
   const getProductTypes = async () => {
@@ -221,15 +272,31 @@ function ProductsPage() {
     });
   };
 
-  const deleteProductType = async (typeId: string) => {
-    await new ProductService().deleteTypeById(typeId).then(response => {
-      if (Number(response.code) === 200) {
-        dispatch(openNotification({ open: true, content: response.message, severity: "success" }));
-        getProductTypes();
-      } else {
-        dispatch(openNotification({ open: true, content: response.message, severity: "error" }));
-      }
-    });
+  const deleteProductType = async (type: ProductTypeDTO) => {
+    dispatch(
+      openConfirmation({
+        id: "confirmDialog",
+        open: true,
+        title: "Xóa loại sản phẩm",
+        content: "Bạn có chắc chắn muốn xóa " + type.name + " ?",
+        value: "",
+        onClose: isOk => handleCloseDeleteType(Boolean(isOk), type.uuid),
+      }),
+    );
+  };
+
+  const handleCloseDeleteType = async (isOk: boolean, typeId: any) => {
+    if (isOk) {
+      await new ProductService().deleteTypeById(typeId).then(response => {
+        if (Number(response.code) === 200) {
+          dispatch(openNotification({ open: true, content: response.message, severity: "success" }));
+          getProductTypes();
+        } else {
+          dispatch(openNotification({ open: true, content: response.message, severity: "error" }));
+        }
+      });
+    }
+    dispatch(closeConfirmation());
   };
 
   useEffect(() => {
@@ -238,6 +305,11 @@ function ProductsPage() {
 
   useEffect(() => {
     getProductTypes();
+    if (location.state) {
+      let state: any = location.state;
+      let openAddDialog: boolean = Boolean(state.openAddDialog);
+      setOpenAddDialog(openAddDialog);
+    }
   }, []);
 
   return (
@@ -339,11 +411,15 @@ function ProductsPage() {
                       setOpenAddTypeDialog(true);
                     }}
                     handleDeleteType={(item: ProductTypeDTO) => {
-                      deleteProductType(item.uuid);
+                      deleteProductType(item);
                     }}
                     handleOnClick={(item: ProductTypeDTO) => {
                       formik.setFieldValue("typeId", item.uuid);
                       getProducts({ ...formik.values, typeId: item.uuid });
+                    }}
+                    handleAddProduct={(item: ProductTypeDTO) => {
+                      setSelectedType(item);
+                      setOpenAddDialog(true);
                     }}
                   />
                 );
@@ -414,6 +490,7 @@ function ProductsPage() {
           <DialogAddProduct
             openDialog={openAddDialog}
             productTypes={productTypes}
+            selectedTypeId={selectedType.uuid}
             handleCloseDialog={() => {
               setOpenAddDialog(false);
               formik.handleSubmit();

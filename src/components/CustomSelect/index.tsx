@@ -9,11 +9,20 @@ interface CustomSelectProps {
   defaultValue?: any;
   handleOnChange: (event: any) => void;
   disabled?: boolean;
+  customWidth?: string;
 }
 
-export const CustomSelect = ({ label, options, value, defaultValue, handleOnChange, disabled }: CustomSelectProps) => {
+export const CustomSelect = ({
+  label,
+  options,
+  value,
+  defaultValue,
+  handleOnChange,
+  disabled,
+  customWidth,
+}: CustomSelectProps) => {
   return (
-    <FormControl variant="standard" sx={{ width: "100%" }} disabled={disabled}>
+    <FormControl variant="standard" sx={{ width: customWidth ? customWidth : "100%" }} disabled={disabled}>
       <Select value={value} defaultValue={defaultValue} onChange={handleOnChange} input={<StyledInput />}>
         {options.map((option, key) => {
           return <MenuItem value={option.value}>{option.title}</MenuItem>;

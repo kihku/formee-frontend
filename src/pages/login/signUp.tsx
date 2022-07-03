@@ -3,7 +3,7 @@ import { UserService } from "apis/userService/userService";
 import { CustomButton } from "components/CustomButton";
 import { StyledInput } from "components/CustomTextField";
 import { initializeApp } from "firebase/app";
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword, getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { useFormik } from "formik";
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
@@ -32,7 +32,7 @@ const app = initializeApp(firebaseConfig);
 // Initialize Firebase Authentication and get a reference to the service
 const auth = getAuth(app);
 
-function LoginPage() {
+function SignUpPage() {
   const { t } = useTranslation(["login"]);
 
   const navigate = useNavigate();
@@ -54,13 +54,13 @@ function LoginPage() {
 
   const formik = useFormik({
     initialValues: { email: "", password: "" } as any,
-    onSubmit: () => {},
+    onSubmit: handleCreateAccount,
     validationSchema: validationSchema,
     validateOnChange: false,
   });
 
-  async function handleSignIn(values: any) {
-    signInWithEmailAndPassword(auth, formik.values.email, formik.values.password)
+  async function handleCreateAccount(values: any) {
+    createUserWithEmailAndPassword(auth, formik.values.email, formik.values.password)
       .then(result => {
         result.user.getIdToken(true).then(idToken => {
           handleLogin(idToken, result.user.uid);
@@ -140,7 +140,7 @@ function LoginPage() {
                 height: "100%",
                 width: "100%",
                 minHeight: "80vh",
-                backgroundImage: "url(/images/startImage.jpg)",
+                backgroundImage: "url(/images/signUpImage.jpg)",
                 backgroundRepeat: "no-repeat",
                 backgroundSize: "cover",
                 backgroundPosition: "center",
@@ -166,25 +166,26 @@ function LoginPage() {
               }}
             >
               <ThemeProvider theme={lightTheme}>
-                <Typography sx={{ color: COLORS.lightText }}>{t("login_new_acc")}</Typography>
+                <Typography sx={{ color: COLORS.lightText }}>{t("sign_up_subtitle")}</Typography>
 
                 <CustomButton
-                  text={t("login_sign_up")}
+                  text={t("login_sign_in")}
                   type="rounded-outlined"
                   endIcon="rightArrow"
                   color={COLORS.lightText}
                   handleOnClick={() => {
-                    navigate("/register");
+                    // handleSignIn(formik.values);
+                    navigate("/login");
                   }}
                 />
               </ThemeProvider>
             </Box>
             <Box sx={{ paddingTop: "4%", paddingBottom: "4%", zoom: "120%" }}>
               <Typography fontWeight={700} fontSize={35}>
-                {t("login_title")}
+                {t("sign_up_title")}
               </Typography>
               <Typography fontWeight={500} color={COLORS.lightText}>
-                {t("login_subtitle")}
+                {t("sign_up_subtitle")}
               </Typography>
               <Box
                 sx={{
@@ -259,10 +260,10 @@ function LoginPage() {
               }}
             >
               <CustomButton
-                text={t("login_sign_in")}
+                text={t("login_sign_up")}
                 type="rounded"
                 handleOnClick={() => {
-                  handleSignIn(formik.values);
+                  formik.handleSubmit();
                 }}
               />
               <Typography
@@ -281,4 +282,4 @@ function LoginPage() {
     </Paper>
   );
 }
-export default LoginPage;
+export default SignUpPage;

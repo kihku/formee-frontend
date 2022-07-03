@@ -12,7 +12,7 @@ import { CustomSelect } from "components/CustomSelect";
 import CustomTable from "components/CustomTable";
 import { StyledInput } from "components/CustomTextField";
 import { CustomTitle } from "components/CustomTitle";
-import { editStatusList, orderStatusList } from "constants/constants";
+import { editStatusListEng, editStatusListVi, orderStatusListEng, orderStatusListVi } from "constants/constants";
 import { useFormik } from "formik";
 import { CustomOption, Pageable } from "models/baseModels";
 import { FormDTO, FormOrderSearchRequest, FormResponseDTO, initFilterRequest } from "models/form";
@@ -20,22 +20,21 @@ import DialogFinishOrder from "pages/createOrder/dialogFinish";
 import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch } from "react-redux";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { CellProps, Column, useRowSelect, useTable } from "react-table";
+import { closeConfirmation, openConfirmation } from "redux/actions/confirmDialog";
 import { openNotification } from "redux/actions/notification";
 import { COLORS } from "styles";
 import CommonUtils from "utils/commonUtils";
-import { getCookie } from "utils/cookieUtils";
 import DateUtils from "utils/dateUtils";
 import StringUtils from "utils/stringUtils";
 import * as Yup from "yup";
-import DialogOrderDetails from "./dialogs/dialogDetails";
 
 function OrdersPage() {
-  const location = useLocation();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { t } = useTranslation(["commons", "buttons"]);
+  const currentLanguage = String(localStorage.getItem("i18nextLng"));
 
   const [form, setForm] = useState<FormDTO>({} as FormDTO);
   const [formList, setFormList] = useState<FormDTO[]>([]);
@@ -60,8 +59,6 @@ function OrdersPage() {
     setAnchorEl(null);
   };
 
-  // console.log("aaaa", pageParams);
-
   const validationSchema = Yup.object().shape({});
 
   const formik = useFormik({
@@ -76,7 +73,6 @@ function OrdersPage() {
       label: "Form",
       name: "form",
       type: "select",
-      options: orderStatusList,
       Component: () => {
         return (
           <CustomSelect
@@ -95,12 +91,13 @@ function OrdersPage() {
       label: "Trạng thái",
       name: "orderStatus",
       type: "checkbox",
-      options: orderStatusList,
       Component: () => {
         return (
           <CustomCheckbox
             size={20}
-            options={orderStatusList.filter(opt => opt.value !== "")}
+            options={(currentLanguage === "en" ? orderStatusListEng : orderStatusListVi).filter(
+              opt => opt.value !== "",
+            )}
             chosenValues={formik.values.orderStatus}
             handleOnChange={e => {
               if (formik.values.orderStatus.every(item => item !== e.target.value)) {
@@ -190,7 +187,6 @@ function OrdersPage() {
         );
       },
     },
-    // ...getColumns(),
     {
       Header: "Ngày tạo",
       accessor: "createdDate",
@@ -214,15 +210,27 @@ function OrdersPage() {
             justifyContent="left"
             onClick={e => {
               e.stopPropagation();
-              handleOpenMenu(e, row.original);
+              row.original.status !== "CANCELLED" && handleOpenMenu(e, row.original);
             }}
           >
             <CustomChip
-              isSelect
-              clickable
-              text={orderStatusList.find(item => item.value === row.original.status)?.title}
-              backgroundColor={orderStatusList.find(item => item.value === row.original.status)?.backgroundColor}
-              textColor={orderStatusList.find(item => item.value === row.original.status)?.color}
+              isSelect={row.original.status !== "CANCELLED"}
+              clickable={row.original.status !== "CANCELLED"}
+              text={
+                (currentLanguage === "en" ? orderStatusListEng : orderStatusListVi).find(
+                  item => item.value === row.original.status,
+                )?.title
+              }
+              backgroundColor={
+                (currentLanguage === "en" ? orderStatusListEng : orderStatusListVi).find(
+                  item => item.value === row.original.status,
+                )?.backgroundColor
+              }
+              textColor={
+                (currentLanguage === "en" ? orderStatusListEng : orderStatusListVi).find(
+                  item => item.value === row.original.status,
+                )?.color
+              }
             />
           </Box>
         );
@@ -237,16 +245,18 @@ function OrdersPage() {
           <Box display="flex" justifyContent="left" sx={{}}>
             <Tooltip title={"Chỉnh sửa đơn hàng"}>
               <IconButton
+                disabled={row.original.status === "CANCELLED"}
                 onClick={e => {
                   e.stopPropagation();
-                  navigate("/order/edit", {
-                    state: {
-                      orderId: row.original.uuid,
-                    },
-                  });
+                  row.original.status !== "CANCELLED" &&
+                    navigate("/order/edit", {
+                      state: {
+                        orderId: row.original.uuid,
+                      },
+                    });
                 }}
               >
-                <CustomIcon name="edit" />
+                <CustomIcon name={row.original.status !== "CANCELLED" ? "edit" : "disableEdit"} />
               </IconButton>
             </Tooltip>
             <Tooltip title={"Sao chép đơn hàng"}>
@@ -278,13 +288,21 @@ function OrdersPage() {
                 <CustomIcon name="copyLink" />
               </IconButton>
             </Tooltip>
+            <Tooltip title={"Huỷ đơn hàng"}>
+              <IconButton
+                onClick={e => {
+                  e.stopPropagation();
+                  handleCancelOrder(row.original);
+                }}
+              >
+                <CustomIcon name="close" />
+              </IconButton>
+            </Tooltip>
           </Box>
         );
       },
     },
   ];
-
-  // console.log(tableContent);
 
   const columns = useMemo(() => tableContent, [form]);
 
@@ -297,7 +315,6 @@ function OrdersPage() {
   );
 
   async function handleSubmitForm(values: FormOrderSearchRequest) {
-    // console.log("values", values);
     getOrders({
       ...values,
       pageNumber: pageParams.pageNumber,
@@ -306,11 +323,6 @@ function OrdersPage() {
       endDate: StringUtils.isNullOrEmty(values.endDate) ? "" : values.endDate + " 23:59:59",
     });
   }
-
-  // const handleOpenDetailDialog = (items: FormResponseDTO) => {
-  //   setItem(item);
-  //   setOpenDetailDialog(true);
-  // };
 
   const handleChangeStatus = async (status: string) => {
     await new OrderService().updateOrderStatus({ uuid: item.uuid, status: status }).then(response => {
@@ -326,6 +338,8 @@ function OrdersPage() {
       if (Number(response.code) === 200) {
         dispatch(openNotification({ open: true, content: response.message, severity: "success" }));
         formik.handleSubmit();
+      } else {
+        dispatch(openNotification({ open: true, content: response.message, severity: "error" }));
       }
     });
   };
@@ -347,10 +361,36 @@ function OrdersPage() {
       });
   };
 
+  const handleCancelOrder = async (order: FormResponseDTO) => {
+    dispatch(
+      openConfirmation({
+        id: "confirmDialog",
+        open: true,
+        title: "Huỷ đơn hàng",
+        content: "Bạn có chắc chắn muốn huỷ " + order.orderName + " ?",
+        value: "",
+        onClose: isOk => handleCloseCancelOrder(Boolean(isOk), order.uuid),
+      }),
+    );
+  };
+
+  const handleCloseCancelOrder = async (isOk: boolean, orderId: string) => {
+    if (isOk) {
+      await new OrderService().updateOrderStatus({ uuid: orderId, status: "CANCELLED" }).then(response => {
+        if (Number(response.code) === 200) {
+          dispatch(openNotification({ open: true, content: response.message, severity: "success" }));
+          formik.handleSubmit();
+        } else {
+          dispatch(openNotification({ open: true, content: response.message, severity: "error" }));
+        }
+      });
+    }
+    dispatch(closeConfirmation());
+  };
+
   const getOrders = async (request: FormOrderSearchRequest) => {
     await new OrderService().filterOrders(request).then(response => {
       if (response.result) {
-        // console.log(response.result);
         setResponses(
           response.result.content.map((item: any) => {
             return { ...item, response: JSON.parse(item.response) };
@@ -362,15 +402,12 @@ function OrdersPage() {
   };
 
   const getFormList = async () => {
-    let userId = getCookie("USER_ID");
-    await new FormService().getFormsByUserId(userId).then(response => {
+    await new FormService().getFormsByUser().then(response => {
       if (response.result) {
         setFormList(response.result);
       }
     });
   };
-
-  // console.log("responses", responses);
 
   useEffect(() => {
     formik.handleSubmit();
@@ -381,15 +418,32 @@ function OrdersPage() {
     formik.handleSubmit();
   }, []);
 
-  // console.log("formik", formik.values);
-
   return (
     <Box>
       <Grid container sx={{ minHeight: "95vh" }}>
         <Grid item xs={2.5} sx={{ padding: 3, backgroundColor: COLORS.white }}>
           <Grid container sx={{ position: "sticky", top: 20 }}>
             <Grid item xs={12} sx={{ fontWeight: 700, fontSize: "25px", marginBottom: 3 }}>
-              {t("helper_filters")}
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  width: "100%",
+                  alignItems: "center",
+                }}
+              >
+                <Box> {t("helper_filters")}</Box>
+                <Tooltip title="Xoá bộ lọc">
+                  <IconButton
+                    onClick={() => {
+                      formik.resetForm();
+                      formik.handleSubmit();
+                    }}
+                  >
+                    <CustomIcon name="clearFilter" />
+                  </IconButton>
+                </Tooltip>
+              </Box>
             </Grid>
             <Grid item xs={12} sx={{ marginBottom: 1 }}>
               <StyledInput
@@ -411,16 +465,9 @@ function OrdersPage() {
                 flexDirection: "row",
                 gap: 2,
                 flexWrap: "wrap",
-                justifyContent: "center",
+                justifyContent: "flex-end",
               }}
             >
-              {/* <CustomButton
-                text="button_clear"
-                type="rounded-outlined"
-                startIcon="cancelCircle"
-                color={COLORS.lightText}
-                handleOnClick={() => formik.resetForm()}
-              /> */}
               <CustomButton
                 text="button_apply"
                 type="rounded-outlined"
@@ -492,7 +539,7 @@ function OrdersPage() {
                   horizontal: "left",
                 }}
               >
-                {editStatusList.map(status => {
+                {(currentLanguage === "en" ? editStatusListEng : editStatusListVi).map(status => {
                   return (
                     <MenuItem
                       onClick={e => {
@@ -507,16 +554,6 @@ function OrdersPage() {
             </CustomBackgroundCard>
           </Grid>
         </Grid>
-        {/* {openDetailDialog && (
-          <DialogOrderDetails
-            form={form}
-            response={item}
-            openDialog={openDetailDialog}
-            handleCloseDialog={() => {
-              setOpenDetailDialog(false);
-            }}
-          />
-        )} */}
         {openDetailDialog && (
           <DialogFinishOrder
             orderName={item.orderName}

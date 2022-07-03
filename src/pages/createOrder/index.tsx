@@ -1,35 +1,34 @@
-import { Box, Grid, InputLabel } from "@mui/material";
+import { Box, Grid, InputLabel, MenuItem, Select, Typography } from "@mui/material";
+import { FormService } from "apis/formService/formService";
+import { OrderService } from "apis/orderService/orderService";
+import CreateFieldsForm from "components/CreateFieldsForm";
+import { FormAddress } from "components/CreateFieldsForm/FormFields/FormAddress";
+import { FormCart } from "components/CreateFieldsForm/FormFields/FormCart";
+import { FormPayment } from "components/CreateFieldsForm/FormFields/FormPayment";
+import { FormPhoneSearch } from "components/CreateFieldsForm/FormFields/FormPhoneSearch";
+import { FormShipping } from "components/CreateFieldsForm/FormFields/FormShipping";
+import { FormTextField } from "components/CreateFieldsForm/FormFields/FormTextField";
+import { CustomBackgroundCard } from "components/CustomBackgroundCard";
+import { CustomButton } from "components/CustomButton";
+import { CustomTextField, StyledInput } from "components/CustomTextField";
 import { CustomTitle } from "components/CustomTitle";
-import { COLORS } from "styles";
-import * as Yup from "yup";
 import { useFormik } from "formik";
 import { FormDTO, FormSectionDTO } from "models/form";
-import { CustomBackgroundCard } from "components/CustomBackgroundCard";
-import { useTranslation } from "react-i18next";
-import CreateFieldsForm from "components/CreateFieldsForm";
-import { orderStatusList } from "constants/constants";
-import { FormTextField } from "components/CreateFieldsForm/FormFields/FormTextField";
-import { FormSelect } from "components/CreateFieldsForm/FormFields/FormSelect";
-import { FormCart } from "components/CreateFieldsForm/FormFields/FormCart";
-import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { CustomButton } from "components/CustomButton";
-import { FormService } from "apis/formService/formService";
-import { FormAddress } from "components/CreateFieldsForm/FormFields/FormAddress";
-import { OrderService } from "apis/orderService/orderService";
-import { CustomTextField } from "components/CustomTextField";
-import { FormPhoneSearch } from "components/CreateFieldsForm/FormFields/FormPhoneSearch";
-import DialogFinishOrder from "./dialogFinish";
-import { CustomSwitch } from "components/CustomSwitch";
-import { openNotification } from "redux/actions/notification";
+import { useTranslation } from "react-i18next";
 import { useDispatch } from "react-redux";
+import { useLocation } from "react-router-dom";
+import { openNotification } from "redux/actions/notification";
+import { COLORS } from "styles";
 import StringUtils from "utils/stringUtils";
+import * as Yup from "yup";
+import DialogFinishOrder from "./dialogFinish";
 
 function CreateOrderPage() {
   const location = useLocation();
   const dispatch = useDispatch();
-  const navigate = useNavigate();
-  const { t } = useTranslation(["forms", "buttons", "orders"]);
+  const { t } = useTranslation(["forms", "orders"]);
+  const currentLanguage = String(localStorage.getItem("i18nextLng"));
 
   const [form, setForm] = useState<FormDTO>({} as FormDTO);
   const [responseId, setResponseId] = useState<string>("");
@@ -45,11 +44,24 @@ function CreateOrderPage() {
         }
         return false;
       })
+      .test("invalid-phone", "Số điện thoại không hợp lệ", value => {
+        if (value) {
+          return /^(0?)(3[2-9]|5[6|8|9]|7[0|6-9]|8[0-6|8|9]|9[0-4|6-9])[0-9]{7}$/.test(value[0]);
+        }
+        return true;
+      })
       .test("test-name", "Tên người mua không được bỏ trống", value => {
         if (value) {
           return !StringUtils.isNullOrEmty(value[1]);
         }
         return false;
+      })
+
+      .test("no-products", "Chưa có sản phẩm nào được chọn", value => {
+        if (value) {
+          return value[4].length > 0;
+        }
+        return true;
       }),
   });
 
@@ -62,7 +74,7 @@ function CreateOrderPage() {
   };
 
   const formik = useFormik({
-    initialValues: { uuid: "", response: [], orderName: "", discount: "0" } as any,
+    initialValues: { uuid: "", response: [], orderName: "", discount: "0", responsePermission: "AllowAll" } as any,
     onSubmit: handleSubmitForm,
     validationSchema: validationSchema,
     validateOnChange: false,
@@ -86,19 +98,21 @@ function CreateOrderPage() {
             xs: component.xs,
             type: component.type,
             label: component.title,
-            options: component.type === "STATUS" ? orderStatusList : [],
+            options: [],
             required: component.validation.some((val: any) => val.type === "REQUIRED"),
             Component:
               component.type === "TEXT"
                 ? FormTextField
-                : component.type === "STATUS"
-                ? FormSelect
+                : component.type === "SHIPPING"
+                ? FormShipping
                 : component.type === "CART"
                 ? FormCart
                 : component.type === "ADDRESS"
                 ? FormAddress
                 : component.type === "PHONE"
                 ? FormPhoneSearch
+                : component.type === "PAYMENT"
+                ? FormPayment
                 : undefined,
           });
           index++;
@@ -118,6 +132,7 @@ function CreateOrderPage() {
       if (response.result) {
         setForm(response.result);
         formik.setFieldValue("formId", response.result.uuid);
+        formik.setFieldValue("responsePermission", response.result.responsePermission);
       }
     });
   };
@@ -129,6 +144,7 @@ function CreateOrderPage() {
       await new FormService().updatePermission(formId).then(response => {
         if (Number(response.code) === 200) {
           dispatch(openNotification({ open: true, content: response.message, severity: "success" }));
+          formik.setFieldValue("responsePermission", form.responsePermission === "AllowAll" ? "OwnerOnly" : "AllowAll");
           setForm(prev => {
             return { ...prev, responsePermission: prev.responsePermission === "AllowAll" ? "OwnerOnly" : "AllowAll" };
           });
@@ -141,7 +157,6 @@ function CreateOrderPage() {
     if (location.state) {
       let state: any = location.state;
       getForm(String(state.formId));
-      // getCustomers();
     }
   }, []);
 
@@ -159,7 +174,7 @@ function CreateOrderPage() {
       <Grid container sx={{ minHeight: "95vh" }}>
         <Grid item xs={12} sx={{ padding: 5 }}>
           <Grid item xs={12} sx={{ fontWeight: 800, fontSize: "25px", marginBottom: 4 }}>
-            <Box
+            <Grid
               sx={{
                 display: "flex",
                 justifyContent: "space-between",
@@ -174,20 +189,40 @@ function CreateOrderPage() {
                   { text: t("orders:order_new"), highlight: true },
                 ]}
               />
-              <CustomSwitch
-                tooltipText="Cho phép khách hàng chỉnh sửa đơn hàng"
-                handleOnChange={handleUpdatePermission}
-                value={form.responsePermission === "AllowAll"}
-                defaultChecked={form.responsePermission === "AllowAll"}
-              />
-            </Box>
+              <Box
+                sx={{ display: "flex", flexDirection: "row", justifyContent: "flex-end", alignItems: "center", gap: 2 }}
+              >
+                <Typography sx={{ color: COLORS.primaryLight }}>{t("orders:order_permission")}</Typography>
+                <Select
+                  value={formik.values["responsePermission"]}
+                  defaultValue={formik.values["responsePermission"]}
+                  onChange={handleUpdatePermission}
+                  input={<StyledInput />}
+                >
+                  {[
+                    {
+                      title: currentLanguage === "en" ? "Anyone with the link can edit" : "Ai cũng có quyền chỉnh sửa",
+                      value: "AllowAll",
+                    },
+                    {
+                      title: currentLanguage === "en" ? "Anyone with the link can view" : "Người mua chỉ có quyền xem",
+                      value: "OwnerOnly",
+                    },
+                  ].map((option, key) => {
+                    return <MenuItem value={option.value}>{option.title}</MenuItem>;
+                  })}
+                </Select>
+              </Box>
+            </Grid>
           </Grid>
           <Grid item xs={12}>
             <CustomBackgroundCard sizeX="auto" sizeY="auto">
               <Grid item xs={12}>
                 <Grid container>
                   <Grid item xs={2}>
-                    <InputLabel sx={{ whiteSpace: "normal", textOverflow: "unset" }}>{"Tên đơn hàng"}</InputLabel>
+                    <InputLabel sx={{ whiteSpace: "normal", textOverflow: "unset" }}>
+                      {t("orders:order_form_name")}
+                    </InputLabel>
                   </Grid>
                   <Grid item xs={5} sx={{ marginBottom: 2, paddingX: "10px" }}>
                     <CustomTextField formik={formik} name="orderName" />
@@ -197,7 +232,7 @@ function CreateOrderPage() {
               <CreateFieldsForm disabled={false} enableEditing={false} formik={formik} sections={fields} />
               <Grid item xs={12} sx={{ display: "flex", justifyContent: "flex-end", gap: 2, marginTop: 2 }}>
                 <CustomButton
-                  text="Tạo đơn hàng"
+                  text={t("orders:order_new")}
                   type="rounded-outlined"
                   startIcon="checkCircle"
                   color={COLORS.primary}
@@ -216,6 +251,7 @@ function CreateOrderPage() {
             openDialog={openDialog}
             handleCloseDialog={() => {
               setOpenDialog(false);
+              window.location.reload();
             }}
           />
         )}

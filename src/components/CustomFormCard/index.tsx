@@ -13,7 +13,7 @@ export const CustomFormCard = ({ item, handleOnClick }: FormCardProps) => {
 
   const cardstyle = {
     borderRadius: 5,
-    border: "2.5px solid " + COLORS.primary,
+    border: "2.5px solid " + item.color,
     maxWidth: 400,
     maxHeight: 180,
   };
@@ -37,12 +37,7 @@ export const CustomFormCard = ({ item, handleOnClick }: FormCardProps) => {
                 });
           }}
         >
-          <CardMedia
-            component="img"
-            height="150px"
-            image={item.image ? `data:image/png;base64,${item.image}` : "/images/default.svg"}
-            alt="form image"
-          />
+          <CardMedia component="img" height="150px" image={item.imagePath} alt="form image" />
         </CardActionArea>
       </Card>
       <Box>

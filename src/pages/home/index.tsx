@@ -1,51 +1,42 @@
-import { Box, Grid, IconButton, Menu, MenuItem, Tooltip, Typography, Zoom } from "@mui/material";
+import { Box, Card, CardActionArea, Grid, IconButton, Menu, MenuItem, Tooltip, Typography, Zoom } from "@mui/material";
 import { URL_PROFILE } from "apis/axiosClient";
 import { FormService } from "apis/formService/formService";
 import { OrderService } from "apis/orderService/orderService";
-import { TemplateService } from "apis/template/templateService";
 import { CustomBackgroundCard } from "components/CustomBackgroundCard";
-import { CustomButton } from "components/CustomButton";
 import { CustomChip } from "components/CustomChip";
 import { CustomFormCard } from "components/CustomFormCard";
 import { CustomIcon } from "components/CustomIcon";
 import CustomTable from "components/CustomTable";
-import { editStatusList, orderStatusList } from "constants/constants";
+import { editStatusListEng, editStatusListVi, orderStatusListEng, orderStatusListVi } from "constants/constants";
 import { FormDTO, FormResponseDTO } from "models/form";
 import DialogFinishOrder from "pages/createOrder/dialogFinish";
-import DialogFormTemplate from "pages/formGallery/dialogTemplate";
 import { useEffect, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { CellProps, Column, useTable } from "react-table";
 import { openNotification } from "redux/actions/notification";
 import { COLORS } from "styles";
 import CommonUtils from "utils/commonUtils";
-import { getCookie } from "utils/cookieUtils";
 import DateUtils from "utils/dateUtils";
+import DialogAddForm from "./dialogNewForm";
 
 function HomePage() {
-  const userId = getCookie("USER_ID");
+  const { t } = useTranslation(["home", "table"]);
+  const currentLanguage = String(localStorage.getItem("i18nextLng"));
+
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  // const [templates, setTemplates] = useState<FormDTO[]>([]);
-  const [form, setForm] = useState<FormDTO>({} as FormDTO);
   const [item, setItem] = useState<FormResponseDTO>({} as FormResponseDTO);
   const [recentForms, setRecentForms] = useState<FormDTO[]>([]);
-  const [chosenItem, setChosenItem] = useState<FormDTO>({} as FormDTO);
-  const [openTemplateDialog, setOpenTemplateDialog] = useState<boolean>(false);
+  const [openAddFormDialog, setOpenAddFormDialog] = useState<boolean>(false);
   const [recentOrders, setRecentOrders] = useState<FormResponseDTO[]>([]);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [openDetailDialog, setOpenDetailDialog] = useState<boolean>(false);
 
-  // const getFormTemplates = async () => {
-  //   await new TemplateService().getTemplateGallery().then(response => {
-  //     setTemplates(response.result);
-  //   });
-  // };
-
   const getRecentForms = async () => {
-    await new FormService().getRecentForms(userId).then(response => {
+    await new FormService().getRecentForms().then(response => {
       setRecentForms(response.result);
     });
   };
@@ -61,12 +52,7 @@ function HomePage() {
     setAnchorEl(null);
   };
 
-  // const handleOpenDialog = (item: FormDTO) => {
-  //   setChosenItem(item);
-  //   setOpenTemplateDialog(true);
-  // };
-
-  const tableContent: Column<FormResponseDTO>[] = [
+  const tableContentVi: Column<FormResponseDTO>[] = [
     {
       Header: "Tên đơn hàng",
       accessor: "orderName",
@@ -91,18 +77,6 @@ function HomePage() {
         );
       },
     },
-    // {
-    //   Header: "Địa chỉ",
-    //   accessor: undefined,
-    //   maxWidth: 10,
-    //   Cell: ({ row }: CellProps<FormResponseDTO, {}>) => {
-    //     return (
-    //       <Box display="flex" justifyContent="left">
-    //         {JSON.parse(row.original.response).at(2)}
-    //       </Box>
-    //     );
-    //   },
-    // },
     {
       Header: "Trạng thái",
       accessor: undefined,
@@ -114,15 +88,27 @@ function HomePage() {
             justifyContent="left"
             onClick={e => {
               e.stopPropagation();
-              handleOpenMenu(e, row.original);
+              row.original.status !== "CANCELLED" && handleOpenMenu(e, row.original);
             }}
           >
             <CustomChip
-              isSelect
-              clickable
-              text={orderStatusList.find(item => item.value === row.original.status)?.title}
-              backgroundColor={orderStatusList.find(item => item.value === row.original.status)?.backgroundColor}
-              textColor={orderStatusList.find(item => item.value === row.original.status)?.color}
+              isSelect={row.original.status !== "CANCELLED"}
+              clickable={row.original.status !== "CANCELLED"}
+              text={
+                (currentLanguage === "en" ? orderStatusListEng : orderStatusListVi).find(
+                  item => item.value === row.original.status,
+                )?.title
+              }
+              backgroundColor={
+                (currentLanguage === "en" ? orderStatusListEng : orderStatusListVi).find(
+                  item => item.value === row.original.status,
+                )?.backgroundColor
+              }
+              textColor={
+                (currentLanguage === "en" ? orderStatusListEng : orderStatusListVi).find(
+                  item => item.value === row.original.status,
+                )?.color
+              }
             />
           </Box>
         );
@@ -147,26 +133,23 @@ function HomePage() {
       Cell: ({ row }: CellProps<FormResponseDTO, {}>) => {
         return (
           <Box display="flex" justifyContent="left" sx={{}}>
-            <Tooltip title={"Edit order"}>
+            <Tooltip title={"Chỉnh sửa đơn hàng"}>
               <IconButton
-                disabled={row.original.status === "COMPLETED" || row.original.status === "CANCELLED"}
+                disabled={row.original.status === "CANCELLED"}
                 onClick={e => {
                   e.stopPropagation();
-                  navigate("/order/edit", {
-                    state: {
-                      orderId: row.original.uuid,
-                    },
-                  });
+                  row.original.status !== "CANCELLED" &&
+                    navigate("/order/edit", {
+                      state: {
+                        orderId: row.original.uuid,
+                      },
+                    });
                 }}
               >
-                <CustomIcon
-                  name={
-                    row.original.status === "COMPLETED" || row.original.status === "CANCELLED" ? "disableEdit" : "edit"
-                  }
-                />
+                <CustomIcon name={row.original.status !== "CANCELLED" ? "edit" : "disableEdit"} />
               </IconButton>
             </Tooltip>
-            <Tooltip title={"Copy order link"}>
+            <Tooltip title={"Sao chép liên kết"}>
               <IconButton
                 onClick={e => {
                   e.stopPropagation();
@@ -191,16 +174,137 @@ function HomePage() {
     },
   ];
 
-  const columns = useMemo(() => tableContent, []);
+  const tableContentEng: Column<FormResponseDTO>[] = [
+    {
+      Header: "Order name",
+      accessor: "orderName",
+      maxWidth: 10,
+      Cell: ({ row }: CellProps<FormResponseDTO, {}>) => {
+        return (
+          <Box display="flex" justifyContent="left">
+            {row.original.orderName}
+          </Box>
+        );
+      },
+    },
+    {
+      Header: "Customer name",
+      accessor: undefined,
+      maxWidth: 10,
+      Cell: ({ row }: CellProps<FormResponseDTO, {}>) => {
+        return (
+          <Box display="flex" justifyContent="left">
+            {JSON.parse(row.original.response).at(1)}
+          </Box>
+        );
+      },
+    },
+    {
+      Header: "Status",
+      accessor: undefined,
+      maxWidth: 10,
+      Cell: ({ row }: CellProps<FormResponseDTO, {}>) => {
+        return (
+          <Box
+            display="flex"
+            justifyContent="left"
+            onClick={e => {
+              e.stopPropagation();
+              row.original.status !== "CANCELLED" && handleOpenMenu(e, row.original);
+            }}
+          >
+            <CustomChip
+              isSelect={row.original.status !== "CANCELLED"}
+              clickable={row.original.status !== "CANCELLED"}
+              text={
+                (currentLanguage === "en" ? orderStatusListEng : orderStatusListVi).find(
+                  item => item.value === row.original.status,
+                )?.title
+              }
+              backgroundColor={
+                (currentLanguage === "en" ? orderStatusListEng : orderStatusListVi).find(
+                  item => item.value === row.original.status,
+                )?.backgroundColor
+              }
+              textColor={
+                (currentLanguage === "en" ? orderStatusListEng : orderStatusListVi).find(
+                  item => item.value === row.original.status,
+                )?.color
+              }
+            />
+          </Box>
+        );
+      },
+    },
+    {
+      Header: "Created date",
+      accessor: "createdDate",
+      maxWidth: 10,
+      Cell: ({ row }: CellProps<FormResponseDTO, {}>) => {
+        return (
+          <Box display="flex" justifyContent="left">
+            {DateUtils.toDDMMYYYY(row.original.createdDate)}
+          </Box>
+        );
+      },
+    },
+    {
+      Header: "Actions",
+      accessor: undefined,
+      maxWidth: 5,
+      Cell: ({ row }: CellProps<FormResponseDTO, {}>) => {
+        return (
+          <Box display="flex" justifyContent="left" sx={{}}>
+            <Tooltip title={"Edit order"}>
+              <IconButton
+                disabled={row.original.status === "CANCELLED"}
+                onClick={e => {
+                  e.stopPropagation();
+                  row.original.status !== "CANCELLED" &&
+                    navigate("/order/edit", {
+                      state: {
+                        orderId: row.original.uuid,
+                      },
+                    });
+                }}
+              >
+                <CustomIcon name={row.original.status !== "CANCELLED" ? "edit" : "disableEdit"} />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title={"Copy link"}>
+              <IconButton
+                onClick={e => {
+                  e.stopPropagation();
+                  navigator.clipboard.writeText(
+                    `${URL_PROFILE.WEB}/tracking/${CommonUtils.encodeUUID(row.original.uuid)}`,
+                  );
+                  dispatch(
+                    openNotification({
+                      open: true,
+                      content: "Link to order has been copied to clipboard",
+                      severity: "success",
+                    }),
+                  );
+                }}
+              >
+                <CustomIcon name="copyLink" />
+              </IconButton>
+            </Tooltip>
+          </Box>
+        );
+      },
+    },
+  ];
+
+  const columns = useMemo(() => (currentLanguage === "en" ? tableContentEng : tableContentVi), []);
 
   const table = useTable({
     columns,
     data: recentOrders,
   });
 
-  const handleOpenDialog = (item: FormDTO) => {
-    setChosenItem(item);
-    setOpenTemplateDialog(true);
+  const handleOpenDialog = () => {
+    setOpenAddFormDialog(true);
   };
 
   const handleChangeStatus = async (status: string) => {
@@ -221,9 +325,9 @@ function HomePage() {
   };
 
   useEffect(() => {
-    // getFormTemplates();
     getRecentOrders();
     getRecentForms();
+    console.log(currentLanguage);
   }, []);
 
   return (
@@ -251,33 +355,8 @@ function HomePage() {
               <Typography
                 sx={{ marginY: "2%", fontSize: "25px", fontWeight: 600, color: COLORS.primary, alignItems: "center" }}
               >
-                Tạo đơn hàng mới
+                {t("home_order_new")}
               </Typography>
-              <Box
-                onClick={() => {
-                  handleOpenDialog({
-                    isDefault: true,
-                    layoutJson: "",
-                    userId: getCookie("USER_ID"),
-                  } as FormDTO);
-                }}
-                sx={{ marginY: "2%", display: "flex", alignItems: "center", cursor: "pointer" }}
-              >
-                <Typography
-                  sx={{
-                    marginTop: "2%",
-                    fontSize: "18px",
-                    fontWeight: 400,
-                    color: COLORS.lightText,
-                    ":hover": { textDecoration: "underline" },
-                  }}
-                >
-                  Tạo form mới
-                </Typography>
-                <IconButton>
-                  <CustomIcon name={"lightAdd"} />
-                </IconButton>
-              </Box>
             </Box>
             <Grid
               container
@@ -295,6 +374,37 @@ function HomePage() {
                   </Zoom>
                 );
               })}
+              <Grid item xs={4} sx={{ paddingX: 2, paddingY: 1 }}>
+                <Box
+                  sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                  }}
+                >
+                  <Card
+                    elevation={0}
+                    sx={{
+                      borderRadius: 5,
+                      border: "2.5px solid " + COLORS.primary,
+                      height: "150px",
+                    }}
+                  >
+                    <CardActionArea
+                      onClick={() => {
+                        handleOpenDialog();
+                      }}
+                      sx={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%" }}
+                    >
+                      <CustomIcon name="lightAdd" size={100} color={COLORS.primary} />
+                    </CardActionArea>
+                  </Card>
+                  <Box>
+                    <Typography fontSize={20} sx={{ marginTop: 2, color: COLORS.primary }}>
+                      {t("home_order_create")}
+                    </Typography>
+                  </Box>
+                </Box>
+              </Grid>
             </Grid>
           </Grid>
           <Grid item xs={7}>
@@ -316,7 +426,7 @@ function HomePage() {
                   color: COLORS.primary,
                 }}
               >
-                Đơn hàng gần đây
+                {t("home_order_recent")}
               </Typography>
               <Box
                 onClick={() => {
@@ -332,7 +442,7 @@ function HomePage() {
                     ":hover": { textDecoration: "underline" },
                   }}
                 >
-                  {"Xem tất cả"}
+                  {t("home_order_view_all")}
                 </Typography>
                 <IconButton>
                   <CustomIcon name={"rightArrow"} />
@@ -375,7 +485,7 @@ function HomePage() {
                   horizontal: "left",
                 }}
               >
-                {editStatusList.map(status => {
+                {(currentLanguage === "en" ? editStatusListEng : editStatusListVi).map(status => {
                   return (
                     <MenuItem
                       onClick={e => {
@@ -391,12 +501,11 @@ function HomePage() {
           </Grid>
         </Grid>
       </CustomBackgroundCard>
-      {openTemplateDialog && (
-        <DialogFormTemplate
-          item={chosenItem}
-          openDialog={openTemplateDialog}
+      {openAddFormDialog && (
+        <DialogAddForm
+          openDialog={openAddFormDialog}
           handleCloseDialog={() => {
-            setOpenTemplateDialog(false);
+            setOpenAddFormDialog(false);
           }}
         />
       )}

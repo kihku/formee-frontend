@@ -1,34 +1,35 @@
 import { CustomOption } from "models/baseModels";
-import { FormDTO, FormLayoutDTO, FormResponseDTO } from "models/form";
 import { COLORS } from "styles";
 
-export const genderOptions: CustomOption[] = [
-  { title: "Male", value: 0 },
-  { title: "Female", value: 1 },
+export const componentOptionsVi: CustomOption[] = [
+  { title: "Thông tin giao hàng", value: "SHIPPING" },
+  { title: "Hình thức thanh toán", value: "PAYMENT" },
 ];
 
-export const formTypeOptions: CustomOption[] = [
-  { title: "Food", value: 0 },
-  { title: "Fashion", value: 1 },
-  { title: "Drinks", value: 2 },
-  { title: "Handmade", value: 3 },
+export const componentOptionsEng: CustomOption[] = [
+  { title: "Shipping information", value: "SHIPPING" },
+  { title: "Payment information", value: "PAYMENT" },
 ];
 
-export const testOptions: CustomOption[] = [
-  {
-    title: "Favorite",
-    value: 0,
-    icon: "starOutlined",
-    checkedIcon: "star",
-    color: "#f2ac85",
-    checkedColor: "#f2ac85",
-    disableRipple: true,
-  },
-  { title: "Bookmark", value: 1, icon: "bookmarkOutlined", checkedIcon: "bookmark", disableRipple: true },
-  { title: "Normal", value: 2 },
+export const defaultImageList: CustomOption[] = [
+  { title: "Default", value: "default" },
+  { title: "Food", value: "food" },
+  { title: "Clothes", value: "clothes" },
+  { title: "Drinks", value: "drinks" },
+  { title: "Fruits", value: "fruits" },
 ];
 
-export const orderStatusList: CustomOption[] = [
+export const defaultColorList: CustomOption[] = [
+  { title: "purple", value: COLORS.primary },
+  { title: "blue", value: COLORS.blue },
+  { title: "green", value: COLORS.green },
+  { title: "orange", value: COLORS.orange },
+  { title: "yellow", value: COLORS.yellow },
+  { title: "red", value: COLORS.red },
+  { title: "gray", value: COLORS.lightText },
+];
+
+export const orderStatusListVi: CustomOption[] = [
   { title: "", value: "", color: COLORS.lightText },
   { title: "Chờ xác nhận", value: "PENDING", color: COLORS.lightText },
   { title: "Đang chuẩn bị", value: "PREPARING", color: COLORS.orange, backgroundColor: COLORS.orangeBackground },
@@ -39,30 +40,118 @@ export const orderStatusList: CustomOption[] = [
   { title: "Chờ chỉnh sửa", value: "REQUESTED", color: COLORS.yellow, backgroundColor: COLORS.yellowBackground },
 ];
 
-export const editStatusList: CustomOption[] = [
+export const orderStatusListEng: CustomOption[] = [
+  { title: "", value: "", color: COLORS.lightText },
+  { title: "Pending", value: "PENDING", color: COLORS.lightText },
+  { title: "Preparing", value: "PREPARING", color: COLORS.orange, backgroundColor: COLORS.orangeBackground },
+  { title: "On the way", value: "ON_THE_WAY", color: COLORS.blue, backgroundColor: COLORS.blueBackground },
+  { title: "Completed", value: "COMPLETED", color: COLORS.green, backgroundColor: COLORS.greenBackground },
+  { title: "Cancelled", value: "CANCELLED", color: COLORS.red, backgroundColor: COLORS.redBackground },
+  { title: "Confirmed", value: "CONFIRMED", color: COLORS.primaryLight, backgroundColor: COLORS.primaryBackground },
+  { title: "Requested", value: "REQUESTED", color: COLORS.yellow, backgroundColor: COLORS.yellowBackground },
+];
+
+export const editStatusListVi: CustomOption[] = [
   { title: "Đang chuẩn bị", value: "PREPARING", color: COLORS.orange, backgroundColor: COLORS.orangeBackground },
   { title: "Đang giao hàng", value: "ON_THE_WAY", color: COLORS.blue, backgroundColor: COLORS.blueBackground },
   { title: "Hoàn thành", value: "COMPLETED", color: COLORS.green, backgroundColor: COLORS.greenBackground },
-  { title: "Huỷ", value: "CANCELLED", color: COLORS.red, backgroundColor: COLORS.redBackground },
 ];
 
-export const productTypeList: CustomOption[] = [
-  { title: "Thời trang", value: "CLOTHES" },
-  { title: "Mỹ phẩm", value: "COSMETICS" },
-  { title: "Thực phẩm", value: "FOOD" },
-  { title: "Trang sức", value: "JEWELRY" },
-  { title: "Y tế", value: "HEALTH" },
-  { title: "Điện tử", value: "ELECTRONICS" },
-  { title: "Dịch vụ", value: "SERVICE" },
-  { title: "Sách báo", value: "BOOKS" },
+export const editStatusListEng: CustomOption[] = [
+  { title: "Preparing", value: "PREPARING", color: COLORS.orange, backgroundColor: COLORS.orangeBackground },
+  { title: "On the way", value: "ON_THE_WAY", color: COLORS.blue, backgroundColor: COLORS.blueBackground },
+  { title: "Completed", value: "COMPLETED", color: COLORS.green, backgroundColor: COLORS.greenBackground },
 ];
 
 export const productTypeColors: CustomOption[] = [
+  { title: COLORS.primaryLight, value: COLORS.primaryBackground },
   { title: COLORS.blue, value: COLORS.blueBackground },
   { title: COLORS.green, value: COLORS.greenBackground },
   { title: COLORS.orange, value: COLORS.orangeBackground },
   { title: COLORS.yellow, value: COLORS.yellowBackground },
   { title: COLORS.red, value: COLORS.redBackground },
-  { title: COLORS.primaryLight, value: COLORS.primaryBackground },
   { title: COLORS.lightText, value: COLORS.grayBackground },
 ];
+
+export const shippingServices: CustomOption[] = [
+  { title: "", value: "" },
+  { title: "Giao hàng nhanh", value: "GHN" },
+  { title: "Giao hàng tiết kiệm", value: "GHTK" },
+  { title: "Ninja Van", value: "NJV" },
+  { title: "J&T Express", value: "JT" },
+  { title: "BEST Express", value: "BEST" },
+  { title: "VNPost", value: "VNPOST" },
+  { title: "Viettel Post", value: "VIETTEL" },
+];
+
+export const paymentMethodsVi: CustomOption[] = [
+  { title: "", value: "" },
+  { title: "Thanh toán trả trước", value: "PRE_PAID" },
+  { title: "Thanh toán khi nhận hàng", value: "COD" },
+];
+
+export const paymentMethodsEng: CustomOption[] = [
+  { title: "", value: "" },
+  { title: "Pre-paid", value: "PRE_PAID" },
+  { title: "Cash On Delivery", value: "COD" },
+];
+
+export const defaultFormLayoutVi: any = {
+  sections: [
+    {
+      title: "A. Thông tin người mua",
+      components: [
+        { title: "Số điện thoại", type: "PHONE", validation: [], showOnTable: false, xs: 5 },
+        {
+          title: "Tên người mua",
+          type: "TEXT",
+          validation: [],
+          showOnTable: true,
+          xs: 2.5,
+        },
+        {
+          title: "Địa chỉ giao hàng",
+          type: "ADDRESS",
+          validation: [],
+          showOnTable: true,
+          xs: 10,
+        },
+        { title: "Ghi chú", type: "TEXT", validation: [], showOnTable: false, xs: 2.5 },
+      ],
+    },
+    {
+      title: "B. Chi tiết đơn hàng",
+      components: [{ title: "Sản phẩm", type: "CART", validation: [], showOnTable: false, xs: 10 }],
+    },
+  ],
+};
+
+export const defaultFormLayoutEng: any = {
+  sections: [
+    {
+      title: "A. Customer information",
+      components: [
+        { title: "Phone number", type: "PHONE", validation: [], showOnTable: false, xs: 5 },
+        {
+          title: "Customer name",
+          type: "TEXT",
+          validation: [],
+          showOnTable: true,
+          xs: 2.5,
+        },
+        {
+          title: "Shipping address",
+          type: "ADDRESS",
+          validation: [],
+          showOnTable: true,
+          xs: 10,
+        },
+        { title: "Notes", type: "TEXT", validation: [], showOnTable: false, xs: 2.5 },
+      ],
+    },
+    {
+      title: "B. Order information",
+      components: [{ title: "Products", type: "CART", validation: [], showOnTable: false, xs: 10 }],
+    },
+  ],
+};

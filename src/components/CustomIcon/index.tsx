@@ -53,6 +53,9 @@ import EditOffRoundedIcon from "@mui/icons-material/EditOffRounded";
 import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
 import FilterAltOffRoundedIcon from "@mui/icons-material/FilterAltOffRounded";
 import ColorizeRoundedIcon from "@mui/icons-material/ColorizeRounded";
+import SwitchAccessShortcutAddRoundedIcon from "@mui/icons-material/SwitchAccessShortcutAddRounded";
+import TravelExploreRoundedIcon from '@mui/icons-material/TravelExploreRounded';
+import ContentPasteSearchRoundedIcon from '@mui/icons-material/ContentPasteSearchRounded';
 import { COLORS } from "styles";
 
 export type IconType =
@@ -111,7 +114,8 @@ export type IconType =
   | "disableEdit"
   | "home"
   | "clearFilter"
-  | "colorPicker";
+  | "colorPicker"
+  | "shipping";
 
 interface IconProps {
   name: IconType;
@@ -253,5 +257,7 @@ export const CustomIcon = ({ name, size, color }: IconProps) => {
       return <FilterAltOffRoundedIcon sx={iconStyle} />;
     case "colorPicker":
       return <ColorizeRoundedIcon sx={iconStyle} />;
+    case "shipping":
+      return <TravelExploreRoundedIcon sx={iconStyle} />;
   }
 };

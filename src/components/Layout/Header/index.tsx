@@ -79,7 +79,7 @@ export const Header = () => {
             window.location.href.split("/").at(-1) === "products" ? COLORS.primaryBackground : COLORS.white
           }
           textColor={window.location.href.split("/").at(-1) === "products" ? COLORS.primary : COLORS.text}
-          text={"Sản phẩm"}
+          text={t("header_products")}
           size={18}
           handleOnClick={() => {
             navigate("/products");
@@ -134,6 +134,7 @@ export const Header = () => {
             value={"vi"}
             onClick={() => {
               changeLanguage("vi");
+              window.location.reload();
             }}
           >
             <Box
@@ -148,13 +149,14 @@ export const Header = () => {
               }}
             >
               <img src={"/images/language-vi.png"} width={"20vh"} height={"20vh"} />
-              Tiếng Việt
+              {t("header_language_vi")}
             </Box>
           </MenuItem>
           <MenuItem
             value={"en"}
             onClick={() => {
               changeLanguage("en");
+              window.location.reload();
             }}
           >
             <Box
@@ -169,7 +171,7 @@ export const Header = () => {
               }}
             >
               <img src={"/images/language-en.png"} width={"20vh"} height={"20vh"} />
-              English
+              {t("header_language_en")}
             </Box>
           </MenuItem>
         </Select>

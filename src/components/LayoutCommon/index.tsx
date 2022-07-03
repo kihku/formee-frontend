@@ -1,4 +1,5 @@
 import { Box } from "@mui/material";
+import { ConfirmDialogControl } from "components/ConfirmDialog/control";
 import CustomSnackBar from "components/CustomSnackbar";
 import { getAuth } from "firebase/auth";
 import jwt_decode from "jwt-decode";
@@ -24,13 +25,12 @@ const LayoutCommon = () => {
 
   const checkToken = async () => {
     const TOKEN = getCookie("USER_TOKEN");
-    if (window.location.pathname !== "/login" && !window.location.pathname.includes("tracking") && TOKEN) {
+    if (!window.location.pathname.includes("login") && !window.location.pathname.includes("tracking") && TOKEN) {
       try {
         const payload: { exp: number } = await jwt_decode(TOKEN);
         const nowDate = moment(new Date());
         const expDate = moment(new Date(payload.exp * 1000));
         if (moment(nowDate).isAfter(expDate)) {
-          console.log("refreshing token");
           getAuth()
             .currentUser?.getIdToken(true)
             .then(token => {
@@ -46,6 +46,7 @@ const LayoutCommon = () => {
   return (
     <Box>
       <CustomSnackBar />
+      <ConfirmDialogControl />
     </Box>
   );
 };

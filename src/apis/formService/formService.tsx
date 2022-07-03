@@ -44,9 +44,9 @@ export class FormService extends BaseService {
     return data;
   };
 
-  getRecentForms = async (userId: string): Promise<any> => {
+  getRecentForms = async (): Promise<any> => {
     let data: any = {};
-    await AXIOS_INSTANCE.get(`${this.url}/recent/${userId}`, this.getRequestHeaders())
+    await AXIOS_INSTANCE.get(`${this.url}/recent`, this.getRequestHeaders())
       .then(response => {
         data = response.data;
       })
@@ -57,9 +57,9 @@ export class FormService extends BaseService {
     return data;
   };
 
-  getFormsByUserId = async (userId: string): Promise<any> => {
+  getFormsByUser = async (): Promise<any> => {
     let data: any = {};
-    await AXIOS_INSTANCE.get(`${this.url}/find-all/${userId}`, this.getRequestHeaders())
+    await AXIOS_INSTANCE.get(`${this.url}/find-all`, this.getRequestHeaders())
       .then(response => {
         data = response.data;
       })

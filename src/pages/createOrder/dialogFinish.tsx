@@ -1,38 +1,29 @@
-import {
-  Avatar,
-  Box,
-  Dialog,
-  DialogContent,
-  DialogTitle,
-  Divider,
-  Grid,
-  IconButton,
-  Link,
-  Tooltip,
-} from "@mui/material";
-import { CustomTextField } from "components/CustomTextField";
+import { Box, Dialog, DialogContent, DialogTitle, Divider, Grid, IconButton, Link, Tooltip } from "@mui/material";
+import { URL_PROFILE } from "apis/axiosClient";
+import { FormService } from "apis/formService/formService";
+import { OrderService } from "apis/orderService/orderService";
+import CreateFieldsForm from "components/CreateFieldsForm";
+import { FormAddress } from "components/CreateFieldsForm/FormFields/FormAddress";
+import { FormCart } from "components/CreateFieldsForm/FormFields/FormCart";
+import { FormPayment } from "components/CreateFieldsForm/FormFields/FormPayment";
+import { FormSelect } from "components/CreateFieldsForm/FormFields/FormSelect";
+import { FormShipping } from "components/CreateFieldsForm/FormFields/FormShipping";
+import { FormTextField } from "components/CreateFieldsForm/FormFields/FormTextField";
+import { CustomButton } from "components/CustomButton";
+import { CustomChip } from "components/CustomChip";
+import { CustomIcon } from "components/CustomIcon";
 import { CustomTitle } from "components/CustomTitle";
+import { orderStatusListEng, orderStatusListVi } from "constants/constants";
 import { useFormik } from "formik";
 import { FormDTO, FormResponseDTO, FormSectionDTO } from "models/form";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import * as Yup from "yup";
-import { CustomIcon } from "components/CustomIcon";
-import { COLORS } from "styles";
-import CreateFieldsForm, { CreateFieldsFormProps } from "components/CreateFieldsForm";
-import { CustomButton } from "components/CustomButton";
-import { OrderService } from "apis/orderService/orderService";
-import CommonUtils from "utils/commonUtils";
-import { openNotification } from "redux/actions/notification";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
-import { FormService } from "apis/formService/formService";
-import { orderStatusList } from "constants/constants";
-import { FormTextField } from "components/CreateFieldsForm/FormFields/FormTextField";
-import { FormSelect } from "components/CreateFieldsForm/FormFields/FormSelect";
-import { FormCart } from "components/CreateFieldsForm/FormFields/FormCart";
-import { FormAddress } from "components/CreateFieldsForm/FormFields/FormAddress";
-import { URL_PROFILE } from "apis/axiosClient";
+import { openNotification } from "redux/actions/notification";
+import { COLORS } from "styles";
+import CommonUtils from "utils/commonUtils";
+import * as Yup from "yup";
 
 export interface DialogFinishOrderProps {
   orderName: string;
@@ -45,6 +36,7 @@ const DialogFinishOrder = ({ responseId, openDialog, handleCloseDialog, orderNam
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { t } = useTranslation(["orders"]);
+  const currentLanguage = String(localStorage.getItem("i18nextLng"));
 
   function closeDialog() {
     handleCloseDialog();
@@ -81,17 +73,19 @@ const DialogFinishOrder = ({ responseId, openDialog, handleCloseDialog, orderNam
             xs: component.xs,
             type: component.type,
             label: component.title,
-            options: component.type === "STATUS" ? orderStatusList : [],
+            options: [],
             required: component.validation.some((val: any) => val.type === "REQUIRED"),
             Component:
               component.type === "TEXT" || component.type === "PHONE"
                 ? FormTextField
-                : component.type === "STATUS"
-                ? FormSelect
+                : component.type === "SHIPPING"
+                ? FormShipping
                 : component.type === "CART"
                 ? FormCart
                 : component.type === "ADDRESS"
                 ? FormAddress
+                : component.type === "PAYMENT"
+                ? FormPayment
                 : undefined,
           });
           index++;
@@ -142,8 +136,25 @@ const DialogFinishOrder = ({ responseId, openDialog, handleCloseDialog, orderNam
     <Dialog fullWidth maxWidth="lg" open={openDialog} onClose={closeDialog}>
       <DialogTitle>
         <Box sx={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
-          <Box sx={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
+          <Box sx={{ display: "flex", flexDirection: "row", alignItems: "center", gap: 1.5 }}>
             <CustomTitle text={[{ text: orderName, highlight: true }]} />
+            <CustomChip
+              text={
+                (currentLanguage === "en" ? orderStatusListEng : orderStatusListVi).find(
+                  item => item.value === formik.values.status,
+                )?.title
+              }
+              backgroundColor={
+                (currentLanguage === "en" ? orderStatusListEng : orderStatusListVi).find(
+                  item => item.value === formik.values.status,
+                )?.backgroundColor
+              }
+              textColor={
+                (currentLanguage === "en" ? orderStatusListEng : orderStatusListVi).find(
+                  item => item.value === formik.values.status,
+                )?.color
+              }
+            />
           </Box>
           <Box sx={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
             <IconButton onClick={closeDialog}>

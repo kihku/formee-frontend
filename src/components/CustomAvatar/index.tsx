@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { COLORS } from "styles";
 import { setCookie } from "utils/cookieUtils";
+import StringUtils from "utils/stringUtils";
 
 interface CustomAvatarProps {
   image?: string;
@@ -79,25 +80,35 @@ export const CustomAvatar = ({ image, name }: CustomAvatarProps) => {
           horizontal: "right",
         }}
       >
-        <Box
-          sx={{
-            maxWidth: "15vw",
-            paddingX: 2,
-            paddingY: 1,
-            color: COLORS.primary,
-            fontWeight: 500,
-            display: "flex",
-            justifyContent: "flex-end",
-          }}
-        >
-          {name}
-        </Box>
-        <Box sx={{ maxWidth: "15vw", paddingX: 2, paddingY: 0.5 }}>
-          <Divider />
-        </Box>
+        {!StringUtils.isNullOrEmty(name) && (
+          <Box
+            sx={{
+              maxWidth: "15vw",
+              paddingX: 2,
+              paddingY: 1,
+              color: COLORS.primary,
+              fontWeight: 500,
+              display: "flex",
+              justifyContent: "flex-end",
+            }}
+          >
+            {name}
+          </Box>
+        )}
 
-        <MenuItem onClick={e => {}} sx={{ maxWidth: "15vw", paddingX: 2, display: "flex", justifyContent: "flex-end" }}>
-          {"Chỉnh sửa hồ sơ"}
+        {!StringUtils.isNullOrEmty(name) && (
+          <Box sx={{ maxWidth: "15vw", paddingX: 2, paddingY: 0.5 }}>
+            <Divider />
+          </Box>
+        )}
+
+        <MenuItem
+          onClick={e => {
+            navigate("/settings");
+          }}
+          sx={{ maxWidth: "15vw", paddingX: 2, display: "flex", justifyContent: "flex-end" }}
+        >
+          {"Cài đặt"}
         </MenuItem>
 
         <MenuItem onClick={e => {}} sx={{ maxWidth: "15vw", paddingX: 2, display: "flex", justifyContent: "flex-end" }}>

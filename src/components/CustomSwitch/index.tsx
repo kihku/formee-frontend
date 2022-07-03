@@ -4,7 +4,7 @@ import Switch, { SwitchProps } from "@mui/material/Switch";
 import { Box, Tooltip } from "@mui/material";
 
 const StyledSwitch = styled((props: SwitchProps) => (
-  <Tooltip title={String(props["aria-label"])} placement="left">
+  <Tooltip title={String(props["aria-label"])} placement="bottom-end">
     <Box>
       <Switch focusVisibleClassName=".Mui-focusVisible" {...props} />
     </Box>

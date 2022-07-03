@@ -9,9 +9,16 @@ interface ProductTypeItemProps {
   handleOnClick: (item: ProductTypeDTO) => void;
   handleEditType: (item: ProductTypeDTO) => void;
   handleDeleteType: (item: ProductTypeDTO) => void;
+  handleAddProduct: (item: ProductTypeDTO) => void;
 }
 
-export const ProductTypeItem = ({ item, handleEditType, handleDeleteType, handleOnClick }: ProductTypeItemProps) => {
+export const ProductTypeItem = ({
+  item,
+  handleEditType,
+  handleDeleteType,
+  handleOnClick,
+  handleAddProduct,
+}: ProductTypeItemProps) => {
   const [contextMenu, setContextMenu] = useState<{
     mouseX: number;
     mouseY: number;
@@ -68,6 +75,18 @@ export const ProductTypeItem = ({ item, handleEditType, handleDeleteType, handle
         anchorReference="anchorPosition"
         anchorPosition={contextMenu !== null ? { top: contextMenu.mouseY, left: contextMenu.mouseX } : undefined}
       >
+        <MenuItem
+          onClick={e => {
+            e.stopPropagation();
+            handleClose();
+            handleAddProduct(item);
+          }}
+        >
+          <Box sx={{ display: "flex", flexDirection: "row", gap: 1.5, alignItems: "center" }}>
+            <CustomIcon name="edit" size={20} />
+            {"Tạo sản phẩm mới"}
+          </Box>
+        </MenuItem>
         <MenuItem
           onClick={e => {
             e.stopPropagation();

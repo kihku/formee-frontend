@@ -1,4 +1,5 @@
 import { CreateFieldsFormProps } from "components/CreateFieldsForm";
+import { defaultFormLayoutEng, defaultFormLayoutVi } from "constants/constants";
 import { ComponentType, ValidationType } from "constants/forms";
 import { CommentDTO } from "./comment";
 
@@ -15,6 +16,8 @@ export interface FormDTO {
   responsePermission?: string;
   createdBy?: string;
   isDefault?: boolean;
+  color: string;
+  imagePath: string;
 }
 
 export interface FormResponseDTO {
@@ -71,4 +74,20 @@ export const initFilterRequest: FormOrderSearchRequest = {
   orderStatus: [],
   pageNumber: 0,
   pageSize: 10,
+};
+
+export const initFormDTOEng: FormDTO = {
+  uuid: "",
+  name: "",
+  color: "",
+  imagePath: "",
+  layoutJson: JSON.stringify(defaultFormLayoutEng),
+};
+
+export const initFormDTOVi: FormDTO = {
+  uuid: "",
+  name: "",
+  color: "",
+  imagePath: "",
+  layoutJson: JSON.stringify(defaultFormLayoutVi),
 };

@@ -7,6 +7,7 @@ import { StyledInput } from "components/CustomTextField";
 import { getCookie } from "utils/cookieUtils";
 import { CustomerService } from "apis/customerService/customerService";
 import { CustomerDTO } from "models/customer";
+import { useTranslation } from "react-i18next";
 
 interface FormPhoneSearchProps {
   formik?: any;
@@ -15,6 +16,7 @@ interface FormPhoneSearchProps {
 }
 
 export const FormPhoneSearch = ({ formik, disabled }: FormPhoneSearchProps) => {
+  const { t } = useTranslation(["forms"]);
   const [customers, setCustomers] = useState<CustomerDTO[]>([]);
 
   const getCustomers = async () => {
@@ -68,7 +70,8 @@ export const FormPhoneSearch = ({ formik, disabled }: FormPhoneSearchProps) => {
               <li {...props}>
                 <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%" }}>
                   <Box sx={{ display: "flex", alignItems: "center" }}>
-                    {option.phone}{", "}
+                    {option.phone}
+                    {", "}
                     {option.name}
                   </Box>
                 </Box>
@@ -94,7 +97,7 @@ export const FormPhoneSearch = ({ formik, disabled }: FormPhoneSearchProps) => {
               paddingTop: 0.75,
             }}
           >
-            {"Tìm kiếm khách hàng với số điện thoại"}
+            {t("form_phone_helper")}
           </FormHelperText>
         </Box>
       )}

@@ -5,6 +5,7 @@ import { StyledInput } from "components/CustomTextField";
 import { CustomSelect } from "components/CustomSelect";
 import StringUtils from "utils/stringUtils";
 import { AddressDTO, AddressService } from "apis/addressService/addressService";
+import { useTranslation } from "react-i18next";
 
 interface FormAddressProps {
   index: number;
@@ -16,6 +17,7 @@ interface FormAddressProps {
 }
 
 export const FormAddress = ({ index, formik, required, disabled, isEditing }: FormAddressProps) => {
+  const { t } = useTranslation(["forms"]);
   const [value, setValue] = useState<string>("");
   const [fullValue, setFullValue] = useState<string>("");
 
@@ -123,7 +125,7 @@ export const FormAddress = ({ index, formik, required, disabled, isEditing }: Fo
               value={value}
               required={required}
               disabled={disabled}
-              placeholder={"Số nhà/Đường"}
+              placeholder={t("form_address_placeholder")}
               onChange={handleChange}
               inputProps={{
                 autoComplete: "new-password",

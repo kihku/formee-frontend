@@ -1,29 +1,29 @@
 import { Box, Grid, InputLabel } from "@mui/material";
+import { FormService } from "apis/formService/formService";
+import { OrderService } from "apis/orderService/orderService";
+import CreateFieldsForm from "components/CreateFieldsForm";
+import { FormAddress } from "components/CreateFieldsForm/FormFields/FormAddress";
+import { FormCart } from "components/CreateFieldsForm/FormFields/FormCart";
+import { FormPayment } from "components/CreateFieldsForm/FormFields/FormPayment";
+import { FormSection } from "components/CreateFieldsForm/FormFields/FormSection";
+import { FormShipping } from "components/CreateFieldsForm/FormFields/FormShipping";
+import { FormTextField } from "components/CreateFieldsForm/FormFields/FormTextField";
+import { CustomBackgroundCard } from "components/CustomBackgroundCard";
+import { CustomButton } from "components/CustomButton";
+import { StyledInput } from "components/CustomTextField";
 import { CustomTitle } from "components/CustomTitle";
+import { useFormik } from "formik";
+import { CommentDTO } from "models/comment";
+import { FormDTO, FormResponseDTO, FormSectionDTO } from "models/form";
+import { HistoryItem } from "pages/orders/components/historyItem";
+import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useDispatch } from "react-redux";
+import { useLocation, useNavigate } from "react-router-dom";
+import { openNotification } from "redux/actions/notification";
 import { COLORS } from "styles";
 import * as Yup from "yup";
-import { useFormik } from "formik";
-import { FormDTO, FormResponseDTO, FormSectionDTO } from "models/form";
-import { CustomBackgroundCard } from "components/CustomBackgroundCard";
-import { useTranslation } from "react-i18next";
-import CreateFieldsForm from "components/CreateFieldsForm";
-import { orderStatusList } from "constants/constants";
-import { FormTextField } from "components/CreateFieldsForm/FormFields/FormTextField";
-import { FormSelect } from "components/CreateFieldsForm/FormFields/FormSelect";
-import { FormCart } from "components/CreateFieldsForm/FormFields/FormCart";
-import { useLocation, useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
-import { CustomButton } from "components/CustomButton";
-import { FormService } from "apis/formService/formService";
-import { FormAddress } from "components/CreateFieldsForm/FormFields/FormAddress";
-import { OrderService } from "apis/orderService/orderService";
-import { StyledInput } from "components/CustomTextField";
-import { FormSection } from "components/CreateFieldsForm/FormFields/FormSection";
-import { HistoryItem } from "pages/orders/components/historyItem";
 import DialogRequestMessage from "./requestMessageDialog";
-import { CommentDTO } from "models/comment";
-import { useDispatch } from "react-redux";
-import { openNotification } from "redux/actions/notification";
 
 interface EditOrderPageProps {
   fromRequest: boolean;
@@ -79,17 +79,19 @@ function EditOrderPage({ fromRequest }: EditOrderPageProps) {
             xs: component.xs,
             type: component.type,
             label: component.title,
-            options: component.type === "STATUS" ? orderStatusList : [],
+            options: [],
             required: component.validation.some((val: any) => val.type === "REQUIRED"),
             Component:
               component.type === "TEXT" || component.type === "PHONE"
                 ? FormTextField
-                : component.type === "STATUS"
-                ? FormSelect
+                : component.type === "SHIPPING"
+                ? FormShipping
                 : component.type === "CART"
                 ? FormCart
                 : component.type === "ADDRESS"
                 ? FormAddress
+                : component.type === "PAYMENT"
+                ? FormPayment
                 : undefined,
           });
           index++;
@@ -188,7 +190,7 @@ function EditOrderPage({ fromRequest }: EditOrderPageProps) {
               </Grid>
               <CreateFieldsForm disabled={false} enableEditing={false} formik={formik} sections={fields} />
               <Grid item xs={12} sx={{ marginBottom: 3 }}>
-                <FormSection index={2} title={"C. Lịch sử"} />
+                <FormSection index={2} title={"Lịch sử"} color={COLORS.red} />
                 {formResponse.comments?.map(comment => {
                   return (
                     <HistoryItem

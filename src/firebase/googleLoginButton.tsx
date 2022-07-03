@@ -68,7 +68,7 @@ export const GoogleLoginButton = () => {
           });
       }}
     >
-      <CustomIcon name="google" size={25} />
+      <CustomIcon name="google" size={20} />
     </IconButton>
   );
 };
