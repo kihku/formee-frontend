@@ -5,9 +5,10 @@ import {
   DialogContent,
   DialogTitle,
   FormHelperText,
-  Grid, InputLabel,
+  Grid,
+  InputLabel,
   MenuItem,
-  Select
+  Select,
 } from "@mui/material";
 import { URL_PROFILE } from "apis/axiosClient";
 import { ProductService } from "apis/productService/productService";
@@ -16,6 +17,7 @@ import { StyledInput } from "components/CustomTextField";
 import { useFormik } from "formik";
 import { initProduct, ProductDTO, ProductTypeDTO } from "models/product";
 import { ChangeEvent, useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import Carousel from "react-material-ui-carousel";
 import * as Yup from "yup";
 
@@ -27,16 +29,16 @@ export interface DialogEditProductProps {
 }
 
 const DialogEditProduct = ({ itemEdit, openDialog, handleCloseDialog, productTypes }: DialogEditProductProps) => {
-  const [currentIndex, setCurrentIndex] = useState<number>(0);
+  const { t } = useTranslation(["commons", "products", "messages"]);
+
   const [imageList, setImageList] = useState<string[]>([]);
   const [fileList, setFileList] = useState<File[]>([]);
 
   const validationSchema = Yup.object().shape({
-    name: Yup.string().trim().required("Tên sản phẩm không được bỏ trống"),
-    productPrice: Yup.string().trim().required("Giá bán không được bỏ trống"),
-    costPrice: Yup.string().trim().required("Giá gốc không được bỏ trống"),
-    typeId: Yup.string().trim().required("Loại sản phẩm không được bỏ trống"),
-    inventory: Yup.string().trim().required("Số lượng trong kho không được bỏ trống"),
+    name: Yup.string().trim().required(t("messages:messages_empty_product_name")),
+    productPrice: Yup.string().trim().required(t("messages:messages_empty_product_price")),
+    costPrice: Yup.string().trim().required(t("messages:messages_empty_product_price")),
+    inventory: Yup.string().trim().required(t("messages:messages_empty_product_inventory")),
   });
 
   const formik = useFormik({
@@ -52,7 +54,7 @@ const DialogEditProduct = ({ itemEdit, openDialog, handleCloseDialog, productTyp
   }
 
   async function handleSubmitForm(values: ProductDTO) {
-    console.log("values", values);
+    // console.log("values", values);
 
     await new ProductService()
       .createProduct({
@@ -94,7 +96,7 @@ const DialogEditProduct = ({ itemEdit, openDialog, handleCloseDialog, productTyp
   return (
     <Dialog fullWidth maxWidth="md" open={openDialog} onClose={closeDialog}>
       <DialogTitle>
-        <Box component="span">{"Thông tin sản phẩm"}</Box>
+        <Box component="span">{t("products:products_edit")}</Box>
       </DialogTitle>
 
       <DialogContent dividers>
@@ -105,7 +107,8 @@ const DialogEditProduct = ({ itemEdit, openDialog, handleCloseDialog, productTyp
                 {/* name */}
                 <Grid item xs={12}>
                   <InputLabel shrink sx={{ fontSize: "18px", fontWeight: 500 }}>
-                    {"Tên sản phẩm *"}
+                    {/* {"Tên sản phẩm *"} */}
+                    {t("products:products_name")}
                   </InputLabel>
                 </Grid>
                 <Grid item xs={12} sx={{ marginBottom: 1 }}>
@@ -130,7 +133,8 @@ const DialogEditProduct = ({ itemEdit, openDialog, handleCloseDialog, productTyp
                 {/* description */}
                 <Grid item xs={12}>
                   <InputLabel shrink sx={{ fontSize: "18px", fontWeight: 500 }}>
-                    {"Mô tả"}
+                    {/* {"Mô tả"} */}
+                    {t("products:products_description")}
                   </InputLabel>
                 </Grid>
                 <Grid item xs={12} sx={{ marginBottom: 2 }}>
@@ -146,7 +150,8 @@ const DialogEditProduct = ({ itemEdit, openDialog, handleCloseDialog, productTyp
                 {/* type */}
                 <Grid item xs={12}>
                   <InputLabel shrink sx={{ fontSize: "18px", fontWeight: 500 }}>
-                    {"Loại sản phẩm *"}
+                    {/* {"Loại sản phẩm *"} */}
+                    {t("products:products_type")}
                   </InputLabel>
                 </Grid>
                 <Grid item xs={12} sx={{ marginBottom: 1 }}>
@@ -176,7 +181,8 @@ const DialogEditProduct = ({ itemEdit, openDialog, handleCloseDialog, productTyp
                 {/* cost price */}
                 <Grid item xs={12}>
                   <InputLabel shrink sx={{ fontSize: "18px", fontWeight: 500 }}>
-                    {"Giá gốc *"}
+                    {/* {"Giá gốc *"} */}
+                    {t("products:products_cost_price")}
                   </InputLabel>
                 </Grid>
                 <Grid item xs={12} sx={{ marginBottom: 1 }}>
@@ -202,7 +208,8 @@ const DialogEditProduct = ({ itemEdit, openDialog, handleCloseDialog, productTyp
                 {/* product price */}
                 <Grid item xs={12}>
                   <InputLabel shrink sx={{ fontSize: "18px", fontWeight: 500 }}>
-                    {"Giá bán *"}
+                    {/* {"Giá bán *"} */}
+                    {t("products:products_product_price")}
                   </InputLabel>
                 </Grid>
                 <Grid item xs={12} sx={{ marginBottom: 1 }}>
@@ -228,7 +235,8 @@ const DialogEditProduct = ({ itemEdit, openDialog, handleCloseDialog, productTyp
                 {/* inventory */}
                 <Grid item xs={12}>
                   <InputLabel shrink sx={{ fontSize: "18px", fontWeight: 500 }}>
-                    {"Số lượng trong kho *"}
+                    {/* {"Số lượng trong kho *"} */}
+                    {t("products:products_inventory")}
                   </InputLabel>
                 </Grid>
                 <Grid item xs={12} sx={{ marginBottom: 1 }}>
@@ -256,12 +264,7 @@ const DialogEditProduct = ({ itemEdit, openDialog, handleCloseDialog, productTyp
             <Grid item xs={6} sx={{ paddingX: 1 }}>
               <Grid container>
                 <Grid item xs={12}>
-                  <Carousel
-                    onChange={index => {
-                      setCurrentIndex(Number(index));
-                    }}
-                    autoPlay={false}
-                  >
+                  <Carousel autoPlay={false}>
                     {imageList &&
                       imageList.length > 0 &&
                       imageList.map((item, i) => (
@@ -283,7 +286,8 @@ const DialogEditProduct = ({ itemEdit, openDialog, handleCloseDialog, productTyp
                 </Grid>
                 <Grid item xs={12}>
                   <InputLabel shrink sx={{ fontSize: "18px", fontWeight: 500 }}>
-                    {"Hình ảnh"}
+                    {/* {"Hình ảnh"} */}
+                    {t("products:products_image")}
                   </InputLabel>
                 </Grid>
                 <Grid item xs={12}>
@@ -304,7 +308,8 @@ const DialogEditProduct = ({ itemEdit, openDialog, handleCloseDialog, productTyp
                         disableElevation
                         style={{ height: "32px" }}
                       >
-                        Chọn tệp tin
+                        {/* Chọn tệp tin */}
+                        {t("products:products_image_upload")}
                       </Button>
                     </label>
                   </Box>
@@ -314,15 +319,16 @@ const DialogEditProduct = ({ itemEdit, openDialog, handleCloseDialog, productTyp
             <Grid item xs={12} sx={{ display: "flex", justifyContent: "flex-end", marginTop: 2 }}>
               <Box sx={{ display: "flex", gap: 1.5, paddingX: "10px", marginBottom: 1 }}>
                 <CustomButton
-                  text="Lưu"
-                  type="default"
+                  text={t("commons:button_save")}
+                  type="rounded"
+                  startIcon="save"
                   handleOnClick={() => {
                     formik.handleSubmit();
                   }}
                 />
                 <CustomButton
-                  text="Đóng"
-                  type="outlined"
+                  text={t("commons:button_close")}
+                  type="rounded-outlined"
                   handleOnClick={() => {
                     closeDialog();
                   }}

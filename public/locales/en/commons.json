@@ -10,5 +10,11 @@
     "header_language_vi": "Vietnamese",
     "helper_search": "Search",
     "helper_filters": "Filters",
-    "table_rows_per_page": "Rows per page"
+    "helper_filters_clear": "Clear filters",
+    "table_rows_per_page": "Rows per page",
+    "button_confirm": "Confirm",
+    "button_close": "Close",
+    "button_apply": "Apply",
+    "button_save": "Save",
+    "button_cancel": "Cancel"
 }

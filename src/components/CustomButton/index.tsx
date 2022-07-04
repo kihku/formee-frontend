@@ -10,6 +10,7 @@ interface CustomButtonProps {
   text: string;
   link?: string;
   color?: string;
+  disabled?: boolean;
   startIcon?: IconType;
   endIcon?: IconType;
   type: ButtonType;
@@ -26,6 +27,7 @@ export const CustomButton = ({
   endIcon,
   type,
   style,
+  disabled,
   handleOnClick,
   handleOnClickMenu,
 }: CustomButtonProps) => {
@@ -55,6 +57,7 @@ export const CustomButton = ({
   return (
     <Button
       disableElevation
+      disabled={disabled}
       variant={isType("outlined") ? "outlined" : "contained"}
       size="medium"
       startIcon={

@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/alt-text */
 import { Box, Grid, IconButton, InputLabel, Menu, MenuItem, Tooltip } from "@mui/material";
 import { URL_PROFILE } from "apis/axiosClient";
 import { FormService } from "apis/formService/formService";
@@ -33,30 +34,40 @@ import * as Yup from "yup";
 function OrdersPage() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { t } = useTranslation(["commons", "buttons"]);
+  const { t } = useTranslation(["commons", "orders"]);
   const currentLanguage = String(localStorage.getItem("i18nextLng"));
 
-  const [form, setForm] = useState<FormDTO>({} as FormDTO);
   const [formList, setFormList] = useState<FormDTO[]>([]);
   const [responses, setResponses] = useState<FormResponseDTO[]>([]);
   const [item, setItem] = useState<FormResponseDTO>({} as FormResponseDTO);
   const [openDetailDialog, setOpenDetailDialog] = useState<boolean>(false);
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [anchorElStatus, setAnchorElStatus] = useState<null | HTMLElement>(null);
+  const [anchorElExport, setAnchorElExport] = useState<null | HTMLElement>(null);
   const [pageParams, setPageParams] = useState<Pageable>({
     total: 0,
     pageNumber: 0,
     pageSize: 10,
   });
 
-  const openMenuStatus = Boolean(anchorEl);
+  const openMenuStatus = Boolean(anchorElStatus);
 
-  const handleOpenMenu = (event: React.MouseEvent<any>, response: FormResponseDTO) => {
-    setAnchorEl(event.currentTarget);
+  const openMenuExport = Boolean(anchorElExport);
+
+  const handleOpenMenuStatus = (event: React.MouseEvent<any>, response: FormResponseDTO) => {
+    setAnchorElStatus(event.currentTarget);
     setItem(response);
   };
 
-  const handleCloseMenu = () => {
-    setAnchorEl(null);
+  const handleOpenMenuExport = (event: React.MouseEvent<any>) => {
+    setAnchorElExport(event.currentTarget);
+  };
+
+  const handleCloseMenuStatus = () => {
+    setAnchorElStatus(null);
+  };
+
+  const handleCloseMenuExport = () => {
+    setAnchorElExport(null);
   };
 
   const validationSchema = Yup.object().shape({});
@@ -68,7 +79,7 @@ function OrdersPage() {
     validateOnChange: false,
   });
 
-  const fields: CreateFieldsFilterProps<any, CustomOption>[] = [
+  const fieldsVi: CreateFieldsFilterProps<any, CustomOption>[] = [
     {
       label: "Form",
       name: "form",
@@ -150,7 +161,89 @@ function OrdersPage() {
     },
   ];
 
-  const tableContent: Column<FormResponseDTO>[] = [
+  const fieldsEng: CreateFieldsFilterProps<any, CustomOption>[] = [
+    {
+      label: "Form",
+      name: "form",
+      type: "select",
+      Component: () => {
+        return (
+          <CustomSelect
+            value={formik.values.formId}
+            options={formList.map(form => {
+              return { title: form.name, value: form.uuid };
+            })}
+            handleOnChange={e => {
+              formik.setFieldValue("formId", e.target.value);
+            }}
+          />
+        );
+      },
+    },
+    {
+      label: "Order status",
+      name: "orderStatus",
+      type: "checkbox",
+      Component: () => {
+        return (
+          <CustomCheckbox
+            size={20}
+            options={(currentLanguage === "en" ? orderStatusListEng : orderStatusListVi).filter(
+              opt => opt.value !== "",
+            )}
+            chosenValues={formik.values.orderStatus}
+            handleOnChange={e => {
+              if (formik.values.orderStatus.every(item => item !== e.target.value)) {
+                formik.setFieldValue("orderStatus", [...formik.values.orderStatus, e.target.value]);
+              } else {
+                formik.setFieldValue(
+                  "orderStatus",
+                  formik.values.orderStatus.filter(item => item !== e.target.value),
+                );
+              }
+            }}
+          />
+        );
+      },
+    },
+    {
+      label: "Created date",
+      name: "createdDate",
+      type: "picker",
+      Component: () => {
+        return (
+          <Box>
+            <Box>
+              <InputLabel shrink sx={{ fontSize: "18px", fontWeight: 500 }}>
+                {"From date"}
+              </InputLabel>
+              <StyledInput
+                fullWidth
+                type="date"
+                name="startDate"
+                value={formik.values.startDate}
+                onChange={e => formik.setFieldValue("startDate", e.target.value)}
+              />
+            </Box>
+            <Box sx={{ marginY: 2 }}>
+              <InputLabel shrink sx={{ fontSize: "18px", fontWeight: 500 }}>
+                {"To date"}
+              </InputLabel>
+              <StyledInput
+                fullWidth
+                type="date"
+                name="endDate"
+                value={formik.values.endDate}
+                onChange={e => formik.setFieldValue("endDate", e.target.value)}
+              />
+            </Box>
+          </Box>
+        );
+      },
+    },
+  ];
+
+  const tableContentVi: Column<FormResponseDTO>[] = [
     {
       Header: "Tên đơn hàng",
       accessor: "orderName",
@@ -210,7 +303,7 @@ function OrdersPage() {
             justifyContent="left"
             onClick={e => {
               e.stopPropagation();
-              row.original.status !== "CANCELLED" && handleOpenMenu(e, row.original);
+              row.original.status !== "CANCELLED" && handleOpenMenuStatus(e, row.original);
             }}
           >
             <CustomChip
@@ -304,7 +397,161 @@ function OrdersPage() {
     },
   ];
 
-  const columns = useMemo(() => tableContent, [form]);
+  const tableContentEng: Column<FormResponseDTO>[] = [
+    {
+      Header: "Order name",
+      accessor: "orderName",
+      maxWidth: 10,
+      Cell: ({ row }: CellProps<FormResponseDTO, {}>) => {
+        return (
+          <Box display="flex" justifyContent="left">
+            {row.original.orderName}
+          </Box>
+        );
+      },
+    },
+    {
+      Header: "Phone number",
+      accessor: undefined,
+      maxWidth: 10,
+      Cell: ({ row }: CellProps<FormResponseDTO, {}>) => {
+        return (
+          <Box display="flex" justifyContent="left">
+            {row.original.response[0]}
+          </Box>
+        );
+      },
+    },
+    {
+      Header: "Customer name",
+      accessor: undefined,
+      maxWidth: 10,
+      Cell: ({ row }: CellProps<FormResponseDTO, {}>) => {
+        return (
+          <Box display="flex" justifyContent="left">
+            {row.original.response[1]}
+          </Box>
+        );
+      },
+    },
+    {
+      Header: "Created date",
+      accessor: "createdDate",
+      maxWidth: 10,
+      Cell: ({ row }: CellProps<FormResponseDTO, {}>) => {
+        return (
+          <Box display="flex" justifyContent="left">
+            {DateUtils.toDDMMYYYY(row.original.createdDate)}
+          </Box>
+        );
+      },
+    },
+    {
+      Header: "Status",
+      accessor: undefined,
+      maxWidth: 10,
+      Cell: ({ row }: CellProps<FormResponseDTO, {}>) => {
+        return (
+          <Box
+            display="flex"
+            justifyContent="left"
+            onClick={e => {
+              e.stopPropagation();
+              row.original.status !== "CANCELLED" && handleOpenMenuStatus(e, row.original);
+            }}
+          >
+            <CustomChip
+              isSelect={row.original.status !== "CANCELLED"}
+              clickable={row.original.status !== "CANCELLED"}
+              text={
+                (currentLanguage === "en" ? orderStatusListEng : orderStatusListVi).find(
+                  item => item.value === row.original.status,
+                )?.title
+              }
+              backgroundColor={
+                (currentLanguage === "en" ? orderStatusListEng : orderStatusListVi).find(
+                  item => item.value === row.original.status,
+                )?.backgroundColor
+              }
+              textColor={
+                (currentLanguage === "en" ? orderStatusListEng : orderStatusListVi).find(
+                  item => item.value === row.original.status,
+                )?.color
+              }
+            />
+          </Box>
+        );
+      },
+    },
+    {
+      Header: "Actions",
+      accessor: undefined,
+      maxWidth: 5,
+      Cell: ({ row }: CellProps<FormResponseDTO, {}>) => {
+        return (
+          <Box display="flex" justifyContent="left" sx={{}}>
+            <Tooltip title={"Edit order"}>
+              <IconButton
+                disabled={row.original.status === "CANCELLED"}
+                onClick={e => {
+                  e.stopPropagation();
+                  row.original.status !== "CANCELLED" &&
+                    navigate("/order/edit", {
+                      state: {
+                        orderId: row.original.uuid,
+                      },
+                    });
+                }}
+              >
+                <CustomIcon name={row.original.status !== "CANCELLED" ? "edit" : "disableEdit"} />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title={"Duplicate order"}>
+              <IconButton
+                onClick={e => {
+                  e.stopPropagation();
+                  handleDuplicate(row.original.uuid);
+                }}
+              >
+                <CustomIcon name="duplicate" />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title={"Copy link"}>
+              <IconButton
+                onClick={e => {
+                  e.stopPropagation();
+                  navigator.clipboard.writeText(
+                    `${URL_PROFILE.WEB}/tracking/${CommonUtils.encodeUUID(row.original.uuid)}`,
+                  );
+                  dispatch(
+                    openNotification({
+                      open: true,
+                      content: "Link to order has been copied to clipboard",
+                      severity: "success",
+                    }),
+                  );
+                }}
+              >
+                <CustomIcon name="copyLink" />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title={"Cancel order"}>
+              <IconButton
+                onClick={e => {
+                  e.stopPropagation();
+                  handleCancelOrder(row.original);
+                }}
+              >
+                <CustomIcon name="close" />
+              </IconButton>
+            </Tooltip>
+          </Box>
+        );
+      },
+    },
+  ];
+
+  const columns = useMemo(() => (currentLanguage === "en" ? tableContentEng : tableContentVi), []);
 
   const table = useTable(
     {
@@ -432,8 +679,8 @@ function OrdersPage() {
                   alignItems: "center",
                 }}
               >
-                <Box> {t("helper_filters")}</Box>
-                <Tooltip title="Xoá bộ lọc">
+                <Box>{t("helper_filters")}</Box>
+                <Tooltip title={t("helper_filters_clear")}>
                   <IconButton
                     onClick={() => {
                       formik.resetForm();
@@ -455,7 +702,7 @@ function OrdersPage() {
                 onChange={e => formik.setFieldValue("keywords", e.target.value)}
               />
             </Grid>
-            <CreateFieldsFilter formik={formik} fields={fields} />
+            <CreateFieldsFilter formik={formik} fields={currentLanguage === "en" ? fieldsEng : fieldsVi} />
             <Grid
               item
               xs={12}
@@ -469,7 +716,7 @@ function OrdersPage() {
               }}
             >
               <CustomButton
-                text="button_apply"
+                text="commons:button_apply"
                 type="rounded-outlined"
                 startIcon="checkCircle"
                 handleOnClick={() => formik.handleSubmit()}
@@ -490,12 +737,37 @@ function OrdersPage() {
               <CustomTitle text={[{ text: t("header_orders"), highlight: true }]} />
               <Box sx={{ display: "flex", gap: 1.5, alignItems: "center" }}>
                 <CustomButton
-                  text="Xuất danh sách"
+                  text={t("orders:order_export")}
                   type="rounded-outlined"
                   startIcon="import"
                   color={COLORS.lightText}
-                  handleOnClick={handleExport}
+                  handleOnClickMenu={handleOpenMenuExport}
                 />
+                <Menu
+                  anchorEl={anchorElExport}
+                  open={openMenuExport}
+                  onClose={handleCloseMenuExport}
+                  onClick={handleCloseMenuExport}
+                  anchorOrigin={{
+                    vertical: "bottom",
+                    horizontal: "right",
+                  }}
+                  transformOrigin={{
+                    vertical: "top",
+                    horizontal: "right",
+                  }}
+                >
+                  <MenuItem
+                    onClick={() => {
+                      handleExport();
+                    }}
+                  >
+                    <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+                      <img src={"/images/excel.png"} width={"20vh"} height={"20vh"} />
+                      {t("orders:order_export_excel")}
+                    </Box>
+                  </MenuItem>
+                </Menu>
               </Box>
             </Box>
           </Grid>
@@ -526,10 +798,10 @@ function OrdersPage() {
 
               <Menu
                 id="status-menu"
-                anchorEl={anchorEl}
+                anchorEl={anchorElStatus}
                 open={openMenuStatus}
-                onClose={handleCloseMenu}
-                onClick={handleCloseMenu}
+                onClose={handleCloseMenuStatus}
+                onClick={handleCloseMenuStatus}
                 anchorOrigin={{
                   vertical: "bottom",
                   horizontal: "left",

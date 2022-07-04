@@ -6,9 +6,10 @@ import DateUtils from "utils/dateUtils";
 interface HistoryItemProps {
   item: CommentDTO;
   direction: "right" | "left";
+  language: string;
 }
 
-export const HistoryItem = ({ item, direction }: HistoryItemProps) => {
+export const HistoryItem = ({ item, direction, language }: HistoryItemProps) => {
   return (
     <Grid
       container
@@ -20,7 +21,7 @@ export const HistoryItem = ({ item, direction }: HistoryItemProps) => {
       }}
     >
       <Grid item xs={2} sx={{ color: COLORS.lightText }}>
-        {DateUtils.getTimeDifference(new Date(item.createdDate), new Date())}
+        {DateUtils.getTimeDifference(new Date(item.createdDate), new Date(), language)}
       </Grid>
       <Grid item xs={8} sx={{ display: "flex", alignItems: "center" }}>
         <Box sx={{ color: direction === "left" ? COLORS.primary : COLORS.red, marginRight: 2 }}>

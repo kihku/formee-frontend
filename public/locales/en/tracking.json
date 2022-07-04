@@ -1,0 +1,11 @@
+{
+    "tracking_title": "Order tracking",
+    "tracking_history": "History",
+    "tracking_request": "Request edit",
+    "tracking_edit": "Edit",
+    "tracking_confirm": "Confirm",
+    "tracking_request_title": "Request to edit order",
+    "tracking_request_content": "Leave a message for the seller on what you want to request.",
+    "tracking_edit_title": "Confirm order edit",
+    "tracking_edit_content": "Leave a message for the seller (optional)."
+}

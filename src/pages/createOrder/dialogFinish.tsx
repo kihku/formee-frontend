@@ -182,7 +182,7 @@ const DialogFinishOrder = ({ responseId, openDialog, handleCloseDialog, orderNam
                 gap: 1.5,
               }}
             >
-              {"Theo dõi đơn hàng tại:"}
+              {t("order_track_link")}
               <Box sx={{ textDecoration: "underline", color: COLORS.primary, cursor: "pointer" }}>
                 <Link
                   href={`/tracking/${CommonUtils.encodeUUID(responseId)}`}
@@ -191,7 +191,7 @@ const DialogFinishOrder = ({ responseId, openDialog, handleCloseDialog, orderNam
                 >
                   {`${URL_PROFILE.WEB}/tracking/${CommonUtils.encodeUUID(responseId)}`}
                 </Link>
-                <Tooltip title="Sao chép liên kết">
+                <Tooltip title={t("order_copy_link")}>
                   <IconButton
                     onClick={() => {
                       navigator.clipboard.writeText(
@@ -200,7 +200,7 @@ const DialogFinishOrder = ({ responseId, openDialog, handleCloseDialog, orderNam
                       dispatch(
                         openNotification({
                           open: true,
-                          content: "Đường dẫn liên kết đã được sao chép",
+                          content: t("order_copy_link_success"),
                           severity: "success",
                         }),
                       );
@@ -215,9 +215,15 @@ const DialogFinishOrder = ({ responseId, openDialog, handleCloseDialog, orderNam
           <Grid item xs={12} sx={{ display: "flex", justifyContent: "center" }}>
             <Box sx={{ display: "flex", gap: 1.5, paddingTop: 2, marginBottom: 1 }}>
               <CustomButton
-                text="Chỉnh sửa đơn hàng"
+                text={t("order_edit")}
                 type="rounded-outlined"
                 startIcon="edit"
+                color={
+                  formResponse.status === "COMPLETED" || formResponse.status === "CANCELLED"
+                    ? COLORS.lightText
+                    : COLORS.primary
+                }
+                disabled={formResponse.status === "COMPLETED" || formResponse.status === "CANCELLED"}
                 handleOnClick={() => {
                   navigate("/order/edit", {
                     state: {
@@ -227,7 +233,7 @@ const DialogFinishOrder = ({ responseId, openDialog, handleCloseDialog, orderNam
                 }}
               />
               <CustomButton
-                text="Quản lý đơn hàng"
+                text={t("order_manage")}
                 type="rounded-outlined"
                 startIcon="manage"
                 handleOnClick={() => {
@@ -235,7 +241,7 @@ const DialogFinishOrder = ({ responseId, openDialog, handleCloseDialog, orderNam
                 }}
               />
               <CustomButton
-                text="Trở về Trang chủ"
+                text={t("order_to_home")}
                 type="rounded-outlined"
                 startIcon="home"
                 handleOnClick={() => {

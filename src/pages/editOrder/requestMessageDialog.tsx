@@ -4,24 +4,28 @@ import { CustomButton } from "components/CustomButton";
 import { CustomTextField } from "components/CustomTextField";
 import { useFormik } from "formik";
 import { CommentDTO } from "models/comment";
+import { useTranslation } from "react-i18next";
 import * as Yup from "yup";
 
 export interface DialogRequestMessageProps {
   orderId: string;
   openDialog: boolean;
-  handleCloseDialog: (result: CommentDTO) => void;
+  handleSubmitDialog: (result: CommentDTO) => void;
+  handleCloseDialog: () => void;
 }
 
 const DialogRequestMessage = (props: DialogRequestMessageProps) => {
+  const { t } = useTranslation(["orders", "commons"]);
 
   const validationSchema = Yup.object().shape({});
 
   const closeDialog = () => {
     formik.resetForm();
+    props.handleCloseDialog();
   };
 
   const handleSubmitForm = async (values: CommentDTO) => {
-    props.handleCloseDialog(values);
+    props.handleSubmitDialog(values);
     closeDialog();
   };
 
@@ -45,28 +49,28 @@ const DialogRequestMessage = (props: DialogRequestMessageProps) => {
   return (
     <Dialog fullWidth maxWidth="sm" open={props.openDialog} onClose={closeDialog}>
       <DialogTitle>
-        <Box component="span">{"Xác nhận chỉnh sửa đơn hàng"}</Box>
+        <Box component="span">{t("order_edit_confirm")}</Box>
       </DialogTitle>
 
       <DialogContent dividers>
         <Box>
           <Grid container>
             <Grid item xs={12} sx={{ marginBottom: 2, paddingX: "10px", lineHeight: 1.5 }}>
-              {"Để lại lời nhắn cho người mua (không bắt buộc)"}
+              {t("order_edit_message")}
             </Grid>
             <CreateFields formik={formik} fields={fields} />
             <Grid item xs={12} sx={{ display: "flex", justifyContent: "flex-end" }}>
               <Box sx={{ display: "flex", gap: 1.5, paddingX: "10px", marginBottom: 1 }}>
                 <CustomButton
-                  text="Xác nhận"
-                  type="default"
+                  text={t("commons:button_confirm")}
+                  type="rounded"
                   handleOnClick={() => {
                     formik.handleSubmit();
                   }}
                 />
                 <CustomButton
-                  text="Đóng"
-                  type="outlined"
+                  text={t("commons:button_close")}
+                  type="rounded-outlined"
                   handleOnClick={() => {
                     closeDialog();
                   }}

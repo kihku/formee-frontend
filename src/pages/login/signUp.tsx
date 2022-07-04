@@ -41,15 +41,15 @@ function SignUpPage() {
   const validationSchema = Yup.object().shape({
     email: Yup.string()
       .trim()
-      .required("Vui lòng nhập email")
-      .test("invalid-email", "Email không hợp lệ", email => {
+      .required(t("messages:messages_empty_email"))
+      .test("invalid-email", t("messages:messages_invalid_email"), email => {
         if (email !== undefined) {
           let str = email.toString();
           return /^[a-zA-Z0-9.]+@(?:[a-zA-Z0-9]+\.)+[A-Za-z]+$/.test(str);
         }
         return true;
       }),
-    password: Yup.string().trim().required("Vui lòng nhập mật khẩu"),
+    password: Yup.string().trim().required(t("messages:messages_empty_password")),
   });
 
   const formik = useFormik({

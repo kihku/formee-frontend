@@ -27,7 +27,7 @@ import DialogFinishOrder from "./dialogFinish";
 function CreateOrderPage() {
   const location = useLocation();
   const dispatch = useDispatch();
-  const { t } = useTranslation(["forms", "orders"]);
+  const { t } = useTranslation(["forms", "orders", "messages"]);
   const currentLanguage = String(localStorage.getItem("i18nextLng"));
 
   const [form, setForm] = useState<FormDTO>({} as FormDTO);
@@ -38,26 +38,25 @@ function CreateOrderPage() {
 
   const validationSchema = Yup.object().shape({
     response: Yup.array()
-      .test("test-phone", "Số điện thoại không được bỏ trống", value => {
+      .test("test-phone", t("messages:messages_empty_order_phone"), value => {
         if (value) {
           return !StringUtils.isNullOrEmty(value[0]);
         }
         return false;
       })
-      .test("invalid-phone", "Số điện thoại không hợp lệ", value => {
+      .test("invalid-phone", t("messages:messages_invalid_phone"), value => {
         if (value) {
           return /^(0?)(3[2-9]|5[6|8|9]|7[0|6-9]|8[0-6|8|9]|9[0-4|6-9])[0-9]{7}$/.test(value[0]);
         }
         return true;
       })
-      .test("test-name", "Tên người mua không được bỏ trống", value => {
+      .test("test-name", t("messages:messages_empty_order_customer"), value => {
         if (value) {
           return !StringUtils.isNullOrEmty(value[1]);
         }
         return false;
       })
-
-      .test("no-products", "Chưa có sản phẩm nào được chọn", value => {
+      .test("no-products", t("messages:messages_empty_order_cart"), value => {
         if (value) {
           return value[4].length > 0;
         }

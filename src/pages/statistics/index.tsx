@@ -1,14 +1,19 @@
-import { Box, Grid, IconButton, Typography } from "@mui/material";
+import { Box, Grid, Typography } from "@mui/material";
 import { StatisticsService } from "apis/statisticsService/statisticsService";
 import { CustomBackgroundCard } from "components/CustomBackgroundCard";
 import { CustomIcon } from "components/CustomIcon";
+import { monthListEng, monthListVi } from "constants/constants";
 import ReactEcharts from "echarts-for-react";
 import { StatisticsDTO } from "models/statistics";
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { COLORS } from "styles";
 
 function StatisticsPage() {
+  const { t } = useTranslation(["statistics"]);
+  const currentLanguage = String(localStorage.getItem("i18nextLng"));
+
   const navigate = useNavigate();
 
   const [stats, setStats] = useState<StatisticsDTO[]>([]);
@@ -33,10 +38,10 @@ function StatisticsPage() {
           },
         },
         showTitle: true,
-        right: "5%"
+        right: "5%",
       },
       title: {
-        text: "Thống kê thu nhập theo tháng",
+        text: t("stats_chart_revenue"),
         textStyle: {
           fontFamily: "Inter",
           fontSize: "20px",
@@ -56,20 +61,7 @@ function StatisticsPage() {
       xAxis: [
         {
           type: "category",
-          data: [
-            "Tháng 1",
-            "Tháng 2",
-            "Tháng 3",
-            "Tháng 4",
-            "Tháng 5",
-            "Tháng 6",
-            "Tháng 7",
-            "Tháng 8",
-            "Tháng 9",
-            "Tháng 10",
-            "Tháng 11",
-            "Tháng 12",
-          ],
+          data: currentLanguage === "en" ? monthListEng : monthListVi,
           axisTick: {
             alignWithLabel: true,
           },
@@ -95,7 +87,7 @@ function StatisticsPage() {
       ],
       series: [
         {
-          name: "Thu nhập",
+          name: t("stats_chart_revenue_subtitle"),
           type: "bar",
           data:
             stats.length > 0
@@ -118,10 +110,10 @@ function StatisticsPage() {
           },
         },
         showTitle: true,
-        right: "5%"
+        right: "5%",
       },
       title: {
-        text: "Thống kê khách hàng theo tháng",
+        text: t("stats_chart_customer"),
         textStyle: {
           fontFamily: "Inter",
           fontSize: "20px",
@@ -141,20 +133,7 @@ function StatisticsPage() {
       xAxis: [
         {
           type: "category",
-          data: [
-            "Tháng 1",
-            "Tháng 2",
-            "Tháng 3",
-            "Tháng 4",
-            "Tháng 5",
-            "Tháng 6",
-            "Tháng 7",
-            "Tháng 8",
-            "Tháng 9",
-            "Tháng 10",
-            "Tháng 11",
-            "Tháng 12",
-          ],
+          data: currentLanguage === "en" ? monthListEng : monthListVi,
           axisTick: {
             alignWithLabel: true,
           },
@@ -180,7 +159,7 @@ function StatisticsPage() {
       ],
       series: [
         {
-          name: "Số khách hàng",
+          name: t("stats_chart_customer_subtitle"),
           type: "line",
           smooth: true,
           lineStyle: {
@@ -207,11 +186,11 @@ function StatisticsPage() {
           },
         },
         showTitle: true,
-        right: "5%"
+        right: "5%",
       },
       grid: { containLabel: true },
       title: {
-        text: "Thống kê loại sản phẩm",
+        text: t("stats_chart_category"),
         textStyle: {
           fontFamily: "Inter",
           fontSize: "20px",
@@ -235,7 +214,7 @@ function StatisticsPage() {
       color: [COLORS.blue, COLORS.red, COLORS.orange, COLORS.yellow, COLORS.green, COLORS.primary, COLORS.gray],
       series: [
         {
-          name: "Số lượng đã bán",
+          name: t("stats_chart_category_subtitle"),
           type: "pie",
           radius: ["40%", "70%"],
           avoidLabelOverlap: false,
@@ -272,11 +251,11 @@ function StatisticsPage() {
           },
         },
         showTitle: true,
-        right: "5%"
+        right: "5%",
       },
       grid: { containLabel: true },
       title: {
-        text: "Thống kê sản phẩm bán chạy",
+        text: t("stats_chart_top_proucts"),
         textStyle: {
           fontFamily: "Inter",
           fontSize: "20px",
@@ -321,7 +300,7 @@ function StatisticsPage() {
       ],
       series: [
         {
-          name: "Số lượng đã bán",
+          name: t("stats_chart_top_proucts_subtitle"),
           type: "bar",
           emphasis: {
             focus: "series",
@@ -345,7 +324,10 @@ function StatisticsPage() {
       <Grid item xs={4} sx={{ paddingX: 2 }}>
         <CustomBackgroundCard sizeX={"auto"} sizeY={"auto"} padding={-1}>
           <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 3 }}>
-            <Box sx={{ fontWeight: 500, fontSize: "20px" }}>{"Thống kê đơn hàng"}</Box>
+            <Box sx={{ fontWeight: 500, fontSize: "20px" }}>
+              {/* {"Thống kê đơn hàng"} */}
+              {t("stats_orders_title")}
+            </Box>
             <Box
               onClick={() => {
                 navigate("/orders");
@@ -360,7 +342,8 @@ function StatisticsPage() {
                   ":hover": { textDecoration: "underline" },
                 }}
               >
-                {"Quản lý đơn hàng"}
+                {/* {"Quản lý đơn hàng"} */}
+                {t("stats_orders_manage")}
               </Typography>
               <CustomIcon name={"rightArrow"} />
             </Box>
@@ -372,7 +355,10 @@ function StatisticsPage() {
               >
                 {stats.find(stat => stat.type === "ORDER")?.data["total"]}
               </Box>
-              <Box sx={{ textAlign: "center" }}>{"Tổng số"}</Box>
+              <Box sx={{ textAlign: "center" }}>
+                {/* {"Tổng số"} */}
+                {t("stats_orders_total")}
+              </Box>
             </Box>
             <Box>
               <Box
@@ -380,7 +366,10 @@ function StatisticsPage() {
               >
                 {stats.find(stat => stat.type === "ORDER")?.data["completed"]}
               </Box>
-              <Box sx={{ textAlign: "center" }}>{"Hoàn thành"}</Box>
+              <Box sx={{ textAlign: "center" }}>
+                {/* {"Hoàn thành"} */}
+                {t("stats_orders_completed")}
+              </Box>
             </Box>
             <Box>
               <Box
@@ -388,7 +377,10 @@ function StatisticsPage() {
               >
                 {stats.find(stat => stat.type === "ORDER")?.data["pending"]}
               </Box>
-              <Box sx={{ textAlign: "center" }}>{"Chờ xác nhận"}</Box>
+              <Box sx={{ textAlign: "center" }}>
+                {/* {"Chờ xác nhận"} */}
+                {t("stats_orders_pending")}
+              </Box>
             </Box>
           </Box>
         </CustomBackgroundCard>
@@ -396,7 +388,10 @@ function StatisticsPage() {
       <Grid item xs={4} sx={{ paddingX: 2 }}>
         <CustomBackgroundCard sizeX={"auto"} sizeY={"auto"} padding={-1}>
           <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 3 }}>
-            <Box sx={{ fontWeight: 500, fontSize: "20px" }}>{"Thống kê sản phẩm"}</Box>
+            <Box sx={{ fontWeight: 500, fontSize: "20px" }}>
+              {/* {"Thống kê sản phẩm"} */}
+              {t("stats_products_title")}
+            </Box>
             <Box
               onClick={() => {
                 navigate("/products");
@@ -411,7 +406,8 @@ function StatisticsPage() {
                   ":hover": { textDecoration: "underline" },
                 }}
               >
-                {"Quản lý sản phẩm"}
+                {/* {"Quản lý sản phẩm"} */}
+                {t("stats_products_manage")}
               </Typography>
               <CustomIcon name={"rightArrow"} />
             </Box>
@@ -423,7 +419,10 @@ function StatisticsPage() {
               >
                 {stats.find(stat => stat.type === "PRODUCT")?.data["total"]}
               </Box>
-              <Box sx={{ textAlign: "center" }}>{"Tổng số"}</Box>
+              <Box sx={{ textAlign: "center" }}>
+                {/* {"Tổng số"} */}
+                {t("stats_products_total")}
+              </Box>
             </Box>
             <Box>
               <Box
@@ -431,7 +430,10 @@ function StatisticsPage() {
               >
                 {stats.find(stat => stat.type === "PRODUCT")?.data["outOfStock"]}
               </Box>
-              <Box sx={{ textAlign: "center" }}>{"Hết hàng"}</Box>
+              <Box sx={{ textAlign: "center" }}>
+                {/* {"Hết hàng"} */}
+                {t("stats_products_out_of_stock")}
+              </Box>
             </Box>
             <Box>
               <Box
@@ -439,7 +441,10 @@ function StatisticsPage() {
               >
                 {stats.find(stat => stat.type === "PRODUCT")?.data["totalTypes"]}
               </Box>
-              <Box sx={{ textAlign: "center" }}>{"Phân loại"}</Box>
+              <Box sx={{ textAlign: "center" }}>
+                {/* {"Phân loại"} */}
+                {t("stats_products_type")}
+              </Box>
             </Box>
           </Box>
         </CustomBackgroundCard>
@@ -447,7 +452,10 @@ function StatisticsPage() {
       <Grid item xs={4} sx={{ paddingX: 2 }}>
         <CustomBackgroundCard sizeX={"auto"} sizeY={"auto"} padding={-1}>
           <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 3 }}>
-            <Box sx={{ fontWeight: 500, fontSize: "20px" }}>{"Thống kê khách hàng"}</Box>
+            <Box sx={{ fontWeight: 500, fontSize: "20px" }}>
+              {/* {"Thống kê khách hàng"} */}
+              {t("stats_customers_title")}
+            </Box>
             {/* <Box
               onClick={() => {
                 navigate("/customers");
@@ -474,7 +482,10 @@ function StatisticsPage() {
               >
                 {stats.find(stat => stat.type === "CUSTOMER")?.data["total"]}
               </Box>
-              <Box sx={{ textAlign: "center" }}>{"Tổng số"}</Box>
+              <Box sx={{ textAlign: "center" }}>
+                {/* {"Tổng số"} */}
+                {t("stats_customers_total")}
+              </Box>
             </Box>
             <Box>
               <Box
@@ -482,7 +493,10 @@ function StatisticsPage() {
               >
                 {stats.find(stat => stat.type === "CUSTOMER")?.data["new"]}
               </Box>
-              <Box sx={{ textAlign: "center" }}>{"Khách hàng mới"}</Box>
+              <Box sx={{ textAlign: "center" }}>
+                {/* {"Khách hàng mới"} */}
+                {t("stats_customers_new")}
+              </Box>
             </Box>
             <Box>
               <Box
@@ -490,7 +504,10 @@ function StatisticsPage() {
               >
                 {stats.find(stat => stat.type === "CUSTOMER")?.data["returning"]}
               </Box>
-              <Box sx={{ textAlign: "center" }}>{"Khách hàng quay lại"}</Box>
+              <Box sx={{ textAlign: "center" }}>
+                {/* {"Khách hàng quay lại"} */}
+                {t("stats_customers_returing")}
+              </Box>
             </Box>
           </Box>
         </CustomBackgroundCard>

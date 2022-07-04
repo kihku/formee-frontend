@@ -32,7 +32,7 @@ export interface DialogAddFormProps {
 }
 
 const DialogAddForm = ({ openDialog, handleCloseDialog }: DialogAddFormProps) => {
-  const { t } = useTranslation(["home"]);
+  const { t } = useTranslation(["home", "messages"]);
   const currentLanguage = String(localStorage.getItem("i18nextLng"));
 
   const navigate = useNavigate();
@@ -42,7 +42,9 @@ const DialogAddForm = ({ openDialog, handleCloseDialog }: DialogAddFormProps) =>
   const [chosenColor, setChosenColor] = useState<string>("purple");
   const [chosenComponents, setChosenComponents] = useState<string[]>([]);
 
-  const validationSchema = Yup.object().shape({ name: Yup.string().trim().required("Tên form không được bỏ trống") });
+  const validationSchema = Yup.object().shape({
+    name: Yup.string().trim().required(t("messages:messages_empty_form_name")),
+  });
 
   const formik = useFormik({
     initialValues: currentLanguage === "en" ? initFormDTOEng : initFormDTOVi,

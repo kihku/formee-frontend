@@ -1,11 +1,11 @@
-import { Box, Grid } from "@mui/material";
+/* eslint-disable jsx-a11y/alt-text */
+import { Box, Grid, InputBase, MenuItem, Select } from "@mui/material";
 import { PublicService } from "apis/publicService/publicService";
 import CreateFieldsForm from "components/CreateFieldsForm";
 import { FormAddress } from "components/CreateFieldsForm/FormFields/FormAddress";
 import { FormCart } from "components/CreateFieldsForm/FormFields/FormCart";
 import { FormPayment } from "components/CreateFieldsForm/FormFields/FormPayment";
 import { FormSection } from "components/CreateFieldsForm/FormFields/FormSection";
-import { FormSelect } from "components/CreateFieldsForm/FormFields/FormSelect";
 import { FormShipping } from "components/CreateFieldsForm/FormFields/FormShipping";
 import { FormTextField } from "components/CreateFieldsForm/FormFields/FormTextField";
 import { CustomBackgroundCard } from "components/CustomBackgroundCard";
@@ -14,6 +14,7 @@ import { CustomChip } from "components/CustomChip";
 import { CustomTitle } from "components/CustomTitle";
 import { orderStatusListEng, orderStatusListVi } from "constants/constants";
 import { useFormik } from "formik";
+import i18n from "i18n";
 import { CommentDTO } from "models/comment";
 import { FormDTO, FormResponseDTO, FormSectionDTO } from "models/form";
 import { HistoryItem } from "pages/orders/components/historyItem";
@@ -29,7 +30,7 @@ import DialogConfirmEditOrder from "./dialogs/confirmEditDialog";
 import DialogRequestEditOrder from "./dialogs/requestEditDialog";
 
 function OrderTrackingPage() {
-  const { t } = useTranslation(["forms", "buttons", "orders"]);
+  const { t } = useTranslation(["commons", "tracking"]);
   const currentLanguage = String(localStorage.getItem("i18nextLng"));
 
   const navigate = useNavigate();
@@ -55,6 +56,10 @@ function OrderTrackingPage() {
         getOrderResponse(orderId);
       }
     });
+  };
+
+  const changeLanguage = (language: "en" | "vi") => {
+    i18n.changeLanguage(language);
   };
 
   const formik = useFormik({
@@ -164,7 +169,7 @@ function OrderTrackingPage() {
     <Box>
       <Grid container>
         <Grid item xs={12} sx={{ padding: 5 }}>
-          <Grid item xs={12} sx={{ fontWeight: 800, fontSize: "25px", marginBottom: 4 }}>
+          <Grid item xs={12} sx={{ fontWeight: 800, fontSize: "25px", marginBottom: 2 }}>
             <Box
               sx={{
                 display: "flex",
@@ -176,7 +181,7 @@ function OrderTrackingPage() {
               <Box sx={{ display: "flex", gap: 1.5 }}>
                 <CustomTitle
                   text={[
-                    { text: "Theo dõi đơn hàng", highlight: false },
+                    { text: t("tracking:tracking_title"), highlight: false },
                     { text: "/", highlight: false },
                     { text: String(formResponse.orderName), highlight: true },
                   ]}
@@ -201,6 +206,66 @@ function OrderTrackingPage() {
               </Box>
             </Box>
           </Grid>
+          <Grid
+            item
+            xs={12}
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              width: "100%",
+              alignItems: "center",
+              marginBottom: 2,
+            }}
+          >
+            <Box>
+              <Select sx={{ marginLeft: 2 }} input={<InputBase value={String(localStorage.getItem("i18nextLng"))} />}>
+                <MenuItem
+                  value={"vi"}
+                  onClick={() => {
+                    changeLanguage("vi");
+                    window.location.reload();
+                  }}
+                >
+                  <Box
+                    sx={{
+                      whiteSpace: "nowrap",
+                      textOverflow: "ellipsis",
+                      overflow: "hidden",
+                      fontSize: 14,
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 1.5,
+                    }}
+                  >
+                    <img src={"/images/language-vi.png"} width={"20vh"} height={"20vh"} />
+                    {t("commons:header_language_vi")}
+                  </Box>
+                </MenuItem>
+                <MenuItem
+                  value={"en"}
+                  onClick={() => {
+                    changeLanguage("en");
+                    window.location.reload();
+                  }}
+                >
+                  <Box
+                    sx={{
+                      whiteSpace: "nowrap",
+                      textOverflow: "ellipsis",
+                      overflow: "hidden",
+                      fontSize: 14,
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 1.5,
+                    }}
+                  >
+                    <img src={"/images/language-en.png"} width={"20vh"} height={"20vh"} />
+                    {t("commons:header_language_en")}
+                  </Box>
+                </MenuItem>
+              </Select>
+            </Box>
+          </Grid>
           <Grid container>
             <Grid item xs={12} sx={{ display: "flex", justifyContent: "center" }}>
               <CustomBackgroundCard sizeX="80vw" sizeY="auto">
@@ -212,11 +277,12 @@ function OrderTrackingPage() {
                   sections={fields}
                 />
                 <Grid item xs={12} sx={{ marginBottom: 3 }}>
-                  <FormSection index={2} title={"Lịch sử"} color={COLORS.red} />
+                  <FormSection index={2} title={t("tracking:tracking_history")} color={COLORS.red} />
                   {formResponse.comments?.map(comment => {
                     return (
                       <HistoryItem
                         item={comment}
+                        language={currentLanguage}
                         direction={comment.createdBy === String(form.createdBy) ? "left" : "right"}
                       />
                     );
@@ -228,12 +294,16 @@ function OrderTrackingPage() {
                       <CustomButton
                         text={
                           enableEditing
-                            ? "Lưu thay đổi"
-                            : `${form.responsePermission === "OwnerOnly" ? "Yêu cầu chỉnh" : "Chỉnh"} sửa`
+                            ? t("commons:button_save")
+                            : `${
+                                form.responsePermission === "OwnerOnly"
+                                  ? t("tracking:tracking_request")
+                                  : t("tracking:tracking_edit")
+                              }`
                         }
-                        type="rounded-outlined"
+                        type={enableEditing ? "rounded" : "rounded-outlined"}
                         startIcon={enableEditing ? "checkCircle" : "edit"}
-                        color={COLORS.primary}
+                        color={enableEditing ? COLORS.white : COLORS.primary}
                         handleOnClick={() => {
                           // check permission
                           if (form.responsePermission === "AllowAll") {
@@ -249,7 +319,7 @@ function OrderTrackingPage() {
                     }
                     {enableEditing && (
                       <CustomButton
-                        text="Huỷ"
+                        text={t("commons:button_cancel")}
                         type="rounded-outlined"
                         startIcon="cancelCircle"
                         color={COLORS.primary}
@@ -260,7 +330,7 @@ function OrderTrackingPage() {
                     )}
                     {!enableEditing && (
                       <CustomButton
-                        text="Xác nhận"
+                        text={t("commons:button_confirm")}
                         type="rounded"
                         startIcon="checkCircle"
                         color={COLORS.white}

@@ -33,7 +33,9 @@ function EditOrderPage({ fromRequest }: EditOrderPageProps) {
   const navigate = useNavigate();
   const location = useLocation();
   const dispatch = useDispatch();
-  const { t } = useTranslation(["forms", "buttons", "orders"]);
+
+  const { t } = useTranslation(["orders"]);
+  const currentLanguage = String(localStorage.getItem("i18nextLng"));
 
   const [form, setForm] = useState<FormDTO>({} as FormDTO);
   const [formResponse, setFormResponse] = useState<FormResponseDTO>({} as FormResponseDTO);
@@ -158,7 +160,7 @@ function EditOrderPage({ fromRequest }: EditOrderPageProps) {
                 text={[
                   { text: String(form.name), highlight: false },
                   { text: "/", highlight: true },
-                  { text: "Chỉnh sửa đơn hàng " + formResponse.orderName, highlight: true },
+                  { text: t("order_edit"), highlight: true },
                 ]}
               />
             </Box>
@@ -168,7 +170,7 @@ function EditOrderPage({ fromRequest }: EditOrderPageProps) {
               <Grid item xs={12}>
                 <Grid container>
                   <Grid item xs={2}>
-                    <InputLabel sx={{ whiteSpace: "normal", textOverflow: "unset" }}>{"Tên đơn hàng"}</InputLabel>
+                    <InputLabel sx={{ whiteSpace: "normal", textOverflow: "unset" }}>{t("order_form_name")}</InputLabel>
                   </Grid>
                   <Grid item xs={5} sx={{ marginBottom: 2, paddingX: "10px" }}>
                     <StyledInput
@@ -190,11 +192,12 @@ function EditOrderPage({ fromRequest }: EditOrderPageProps) {
               </Grid>
               <CreateFieldsForm disabled={false} enableEditing={false} formik={formik} sections={fields} />
               <Grid item xs={12} sx={{ marginBottom: 3 }}>
-                <FormSection index={2} title={"Lịch sử"} color={COLORS.red} />
+                <FormSection index={2} title={t("order_history")} color={COLORS.red} />
                 {formResponse.comments?.map(comment => {
                   return (
                     <HistoryItem
                       item={comment}
+                      language={currentLanguage}
                       direction={comment.createdBy === String(form.createdBy) ? "left" : "right"}
                     />
                   );
@@ -202,7 +205,7 @@ function EditOrderPage({ fromRequest }: EditOrderPageProps) {
               </Grid>
               <Grid item xs={12} sx={{ display: "flex", justifyContent: "flex-end", gap: 2, marginTop: 2 }}>
                 <CustomButton
-                  text="Lưu đơn hàng"
+                  text={t("order_save")}
                   type="rounded-outlined"
                   startIcon="checkCircle"
                   color={COLORS.primary}
@@ -217,10 +220,12 @@ function EditOrderPage({ fromRequest }: EditOrderPageProps) {
             <DialogRequestMessage
               orderId={formResponse.uuid}
               openDialog={openMessageDialog}
-              handleCloseDialog={(result: CommentDTO) => {
+              handleSubmitDialog={(result: CommentDTO) => {
                 formik.setFieldValue("message", result.message);
                 formik.setFieldValue("requested", true);
                 formik.handleSubmit();
+              }}
+              handleCloseDialog={() => {
                 setOpenMessageDialog(false);
               }}
             />

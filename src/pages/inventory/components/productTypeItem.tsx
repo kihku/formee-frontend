@@ -2,6 +2,7 @@ import { Box, Menu, MenuItem } from "@mui/material";
 import { CustomIcon } from "components/CustomIcon";
 import { ProductTypeDTO } from "models/product";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { COLORS } from "styles";
 
 interface ProductTypeItemProps {
@@ -19,6 +20,8 @@ export const ProductTypeItem = ({
   handleOnClick,
   handleAddProduct,
 }: ProductTypeItemProps) => {
+  const { t } = useTranslation(["products"]);
+
   const [contextMenu, setContextMenu] = useState<{
     mouseX: number;
     mouseY: number;
@@ -44,7 +47,6 @@ export const ProductTypeItem = ({
     <Box
       sx={{
         display: "flex",
-        // justifyContent: "space-between",
         width: "100%",
         alignItems: "center",
         gap: 2,
@@ -83,8 +85,8 @@ export const ProductTypeItem = ({
           }}
         >
           <Box sx={{ display: "flex", flexDirection: "row", gap: 1.5, alignItems: "center" }}>
-            <CustomIcon name="edit" size={20} />
-            {"Tạo sản phẩm mới"}
+            <CustomIcon name="lightAdd" size={20} />
+            {t("products_create")}
           </Box>
         </MenuItem>
         <MenuItem
@@ -96,7 +98,7 @@ export const ProductTypeItem = ({
         >
           <Box sx={{ display: "flex", flexDirection: "row", gap: 1.5, alignItems: "center" }}>
             <CustomIcon name="edit" size={20} />
-            {"Chỉnh sửa"}
+            {t("products_type_edit")}
           </Box>
         </MenuItem>
         <MenuItem
@@ -108,7 +110,7 @@ export const ProductTypeItem = ({
         >
           <Box sx={{ display: "flex", flexDirection: "row", gap: 1.5, alignItems: "center" }}>
             <CustomIcon name="delete" size={20} />
-            {"Xoá"}
+            {t("products_type_delete")}
           </Box>
         </MenuItem>
       </Menu>

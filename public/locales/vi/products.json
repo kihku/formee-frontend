@@ -1,0 +1,20 @@
+{
+    "products_title": "Sản phẩm",
+    "products_create": "Tạo sản phẩm",
+    "products_edit": "Chỉnh sửa sản phẩm",
+    "products_delete": "Xoá sản phẩm",
+    "products_type": "Loại sản phẩm",
+    "products_type_title": "Thêm loại sản phẩm",
+    "products_type_title_edit": "Chỉnh sửa loại sản phẩm",
+    "products_type_name": "Tên loại sản phẩm *",
+    "products_type_color": "Màu sắc",
+    "products_type_edit": "Chỉnh sửa",
+    "products_type_delete": "Xoá",
+    "products_name": "Tên sản phẩm *",
+    "products_description": "Mô tả",
+    "products_cost_price": "Giá gốc *",
+    "products_product_price": "Giá bán *",
+    "products_inventory": "Số lượng trong kho *",
+    "products_image": "Hình ảnh",
+    "products_image_upload": "Chọn tệp tin"
+}

@@ -18,11 +18,11 @@ interface AccountSettingsProps {
 }
 
 function AccountSettings(props: AccountSettingsProps) {
-  const { t } = useTranslation(["settings", "buttons"]);
+  const { t } = useTranslation(["settings", "commons"]);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const [openDialog, setOpenDialog] = useState<boolean>(false);
+  // const [openDialog, setOpenDialog] = useState<boolean>(false);
 
   const validationSchema = Yup.object().shape({});
 
@@ -49,13 +49,13 @@ function AccountSettings(props: AccountSettingsProps) {
     <Fade in={props.tab === "account"}>
       <Box>
         <Box sx={{ fontWeight: 700, color: COLORS.primary, fontSize: "24px", marginBottom: 4 }}>
-          {t("settings_account_title")}
+          {t("settings:settings_account_title")}
         </Box>
         <Box sx={{ marginBottom: 1 }}>
           <Grid container sx={{ marginTop: 4 }}>
             {/* full name */}
             <Grid item xs={3} sx={{ marginBottom: 3 }}>
-              <Box>{"Tên tài khoản"}</Box>
+              <Box>{t("settings:settings_account_info_display_name")}</Box>
             </Grid>
             <Grid item xs={6} sx={{ marginBottom: 3 }}>
               <StyledInput
@@ -70,7 +70,7 @@ function AccountSettings(props: AccountSettingsProps) {
 
             {/* phone */}
             <Grid item xs={3} sx={{ marginBottom: 3 }}>
-              <Box>{"Số điện thoại"}</Box>
+              <Box>{t("settings:settings_account_info_phone")}</Box>
             </Grid>
             <Grid item xs={6} sx={{ marginBottom: 3 }}>
               <StyledInput
@@ -101,7 +101,7 @@ function AccountSettings(props: AccountSettingsProps) {
             <Grid item xs={3}></Grid>
             <Grid item xs={9} sx={{ paddingX: "10px" }}>
               <CustomButton
-                text={t("button_save")}
+                text={t("commons:button_save")}
                 type="rounded-outlined"
                 startIcon="save"
                 handleOnClick={() => {
@@ -112,14 +112,14 @@ function AccountSettings(props: AccountSettingsProps) {
           </Grid>
         </Box>
 
-        {openDialog && (
+        {/* {openDialog && (
           <DialogChangePassword
             openDialog={openDialog}
             handleCloseDialog={() => {
               setOpenDialog(false);
             }}
           />
-        )}
+        )} */}
       </Box>
     </Fade>
   );

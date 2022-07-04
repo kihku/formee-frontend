@@ -1,10 +1,24 @@
-import { Box, CssBaseline, FormHelperText, Grid, InputLabel, Paper, ThemeProvider, Typography } from "@mui/material";
+/* eslint-disable jsx-a11y/alt-text */
+import {
+  Box,
+  CssBaseline,
+  FormHelperText,
+  Grid,
+  InputBase,
+  InputLabel,
+  MenuItem,
+  Paper,
+  Select,
+  ThemeProvider,
+  Typography,
+} from "@mui/material";
 import { UserService } from "apis/userService/userService";
 import { CustomButton } from "components/CustomButton";
 import { StyledInput } from "components/CustomTextField";
 import { initializeApp } from "firebase/app";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { useFormik } from "formik";
+import i18n from "i18n";
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch } from "react-redux";
@@ -33,23 +47,27 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
 function LoginPage() {
-  const { t } = useTranslation(["login"]);
+  const { t } = useTranslation(["login", "messages", "commons"]);
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
+  const changeLanguage = (language: "en" | "vi") => {
+    i18n.changeLanguage(language);
+  };
+
   const validationSchema = Yup.object().shape({
     email: Yup.string()
       .trim()
-      .required("Vui lòng nhập email")
-      .test("invalid-email", "Email không hợp lệ", email => {
+      .required(t("messages:messages_empty_email"))
+      .test("invalid-email", t("messages:messages_invalid_email"), email => {
         if (email !== undefined) {
           let str = email.toString();
           return /^[a-zA-Z0-9.]+@(?:[a-zA-Z0-9]+\.)+[A-Za-z]+$/.test(str);
         }
         return true;
       }),
-    password: Yup.string().trim().required("Vui lòng nhập mật khẩu"),
+    password: Yup.string().trim().required(t("messages:messages_empty_password")),
   });
 
   const formik = useFormik({
@@ -101,7 +119,6 @@ function LoginPage() {
 
   return (
     <Paper
-      title="Login Page"
       sx={{
         display: "flex",
         justifyContent: "center",
@@ -158,27 +175,82 @@ function LoginPage() {
           >
             <Box
               sx={{
-                gap: 2,
                 display: "flex",
-                flexDirection: "row",
-                justifyContent: "right",
+                justifyContent: "space-between",
                 alignItems: "center",
               }}
             >
-              <ThemeProvider theme={lightTheme}>
-                <Typography sx={{ color: COLORS.lightText }}>{t("login_new_acc")}</Typography>
-
-                <CustomButton
-                  text={t("login_sign_up")}
-                  type="rounded-outlined"
-                  endIcon="rightArrow"
-                  color={COLORS.lightText}
-                  handleOnClick={() => {
-                    navigate("/register");
+              <Select input={<InputBase value={String(localStorage.getItem("i18nextLng"))} />}>
+                <MenuItem
+                  value={"vi"}
+                  onClick={() => {
+                    changeLanguage("vi");
+                    window.location.reload();
                   }}
-                />
-              </ThemeProvider>
+                >
+                  <Box
+                    sx={{
+                      whiteSpace: "nowrap",
+                      textOverflow: "ellipsis",
+                      overflow: "hidden",
+                      fontSize: 14,
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 1.5,
+                    }}
+                  >
+                    <img src={"/images/language-vi.png"} width={"20vh"} height={"20vh"} />
+                    {t("commons:header_language_vi")}
+                  </Box>
+                </MenuItem>
+                <MenuItem
+                  value={"en"}
+                  onClick={() => {
+                    changeLanguage("en");
+                    window.location.reload();
+                  }}
+                >
+                  <Box
+                    sx={{
+                      whiteSpace: "nowrap",
+                      textOverflow: "ellipsis",
+                      overflow: "hidden",
+                      fontSize: 14,
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 1.5,
+                    }}
+                  >
+                    <img src={"/images/language-en.png"} width={"20vh"} height={"20vh"} />
+                    {t("commons:header_language_en")}
+                  </Box>
+                </MenuItem>
+              </Select>
+              <Box
+                sx={{
+                  gap: 2,
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "right",
+                  alignItems: "center",
+                }}
+              >
+                <ThemeProvider theme={lightTheme}>
+                  <Typography sx={{ color: COLORS.lightText }}>{t("login_new_acc")}</Typography>
+
+                  <CustomButton
+                    text={t("login_sign_up")}
+                    type="rounded-outlined"
+                    endIcon="rightArrow"
+                    color={COLORS.lightText}
+                    handleOnClick={() => {
+                      navigate("/register");
+                    }}
+                  />
+                </ThemeProvider>
+              </Box>
             </Box>
+
             <Box sx={{ paddingTop: "4%", paddingBottom: "4%", zoom: "120%" }}>
               <Typography fontWeight={700} fontSize={35}>
                 {t("login_title")}

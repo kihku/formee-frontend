@@ -28,7 +28,9 @@ import DialogAddProductType from "./dialogs/addTypeDialog";
 import DialogEditProduct from "./dialogs/editProductDialog";
 
 function ProductsPage() {
-  const { t } = useTranslation(["commons", "buttons"]);
+  const { t } = useTranslation(["commons", "products"]);
+  const currentLanguage = String(localStorage.getItem("i18nextLng"));
+
   const dispatch = useDispatch();
   const location = useLocation();
 
@@ -55,7 +57,162 @@ function ProductsPage() {
     validateOnChange: false,
   });
 
-  const tableContent: Column<ProductDTO>[] = [
+  const tableContentEng: Column<ProductDTO>[] = [
+    {
+      Header: "Image",
+      accessor: undefined,
+      maxWidth: 10,
+      Cell: ({ row }: CellProps<ProductDTO, {}>) => {
+        return (
+          <Box display="flex" justifyContent="left">
+            {!StringUtils.isNullOrEmty(row.original.imageName) && (
+              <img
+                src={`${URL_PROFILE.PRO}/images/${row.original.imageName}`}
+                width="80"
+                height="auto"
+                style={{
+                  backgroundColor: COLORS.grayBackground,
+                  display: "flex",
+                  alignItems: "center",
+                  placeContent: "center",
+                }}
+              />
+            )}
+          </Box>
+        );
+      },
+    },
+    {
+      Header: "Type",
+      accessor: "typeId",
+      maxWidth: 10,
+      Cell: ({ row }: CellProps<ProductDTO, {}>) => {
+        return (
+          <Box display="flex" justifyContent="left">
+            {!StringUtils.isNullOrEmty(row.original.typeId) && (
+              <CustomChip
+                text={productTypes.find(item => item.uuid === row.original.typeId)?.name}
+                backgroundColor={productTypes.find(item => item.uuid === row.original.typeId)?.backgroundColor}
+                textColor={productTypes.find(item => item.uuid === row.original.typeId)?.color}
+              />
+            )}
+          </Box>
+        );
+      },
+    },
+    {
+      Header: "Product name",
+      accessor: "name",
+      maxWidth: 10,
+      Cell: ({ row }: CellProps<ProductDTO, {}>) => {
+        return (
+          <Box
+            display="flex"
+            justifyContent="left"
+            sx={{
+              color: row.original.inventory === 0 ? COLORS.redError : COLORS.text,
+              fontWeight: row.original.inventory === 0 ? 600 : 400,
+            }}
+          >
+            {row.original.name}
+          </Box>
+        );
+      },
+    },
+    {
+      Header: "Cost price",
+      accessor: "costPrice",
+      maxWidth: 10,
+      Cell: ({ row }: CellProps<ProductDTO, {}>) => {
+        return (
+          <Box
+            display="flex"
+            justifyContent="left"
+            sx={{
+              color: row.original.inventory === 0 ? COLORS.redError : COLORS.text,
+              fontWeight: row.original.inventory === 0 ? 600 : 400,
+            }}
+          >
+            {row.original.costPrice}
+            {" đ"}
+          </Box>
+        );
+      },
+    },
+    {
+      Header: "Product price",
+      accessor: "productPrice",
+      maxWidth: 10,
+      Cell: ({ row }: CellProps<ProductDTO, {}>) => {
+        return (
+          <Box
+            display="flex"
+            justifyContent="left"
+            sx={{
+              color: row.original.inventory === 0 ? COLORS.redError : COLORS.text,
+              fontWeight: row.original.inventory === 0 ? 600 : 400,
+            }}
+          >
+            {row.original.productPrice}
+            {" đ"}
+          </Box>
+        );
+      },
+    },
+    {
+      Header: "Inventory",
+      accessor: "inventory",
+      maxWidth: 5,
+      Cell: ({ row }: CellProps<ProductDTO, {}>) => {
+        return (
+          <Box
+            display="flex"
+            justifyContent="left"
+            sx={{
+              color: row.original.inventory === 0 ? COLORS.redError : COLORS.text,
+              fontWeight: row.original.inventory === 0 ? 600 : 400,
+            }}
+          >
+            {row.original.inventory}
+          </Box>
+        );
+      },
+    },
+    {
+      Header: "Actions",
+      accessor: undefined,
+      maxWidth: 5,
+      Cell: ({ row }: CellProps<ProductDTO, {}>) => {
+        return (
+          <Box display="flex" justifyContent="left" sx={{}} onClick={() => {}}>
+            <Tooltip title={t("products:products_edit")}>
+              <IconButton
+                onClick={e => {
+                  e.stopPropagation();
+                  setItem(row.original);
+                  setOpenEditDialog(true);
+                }}
+              >
+                <CustomIcon name="edit" />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title={t("products:products_delete")}>
+              <IconButton
+                onClick={e => {
+                  e.stopPropagation();
+                  deleteProduct(row.original);
+                }}
+              >
+                <CustomIcon name="delete" />
+              </IconButton>
+            </Tooltip>
+          </Box>
+        );
+      },
+    },
+  ];
+
+  const tableContentVi: Column<ProductDTO>[] = [
     {
       Header: "Hình ảnh",
       accessor: undefined,
@@ -183,30 +340,34 @@ function ProductsPage() {
       Cell: ({ row }: CellProps<ProductDTO, {}>) => {
         return (
           <Box display="flex" justifyContent="left" sx={{}} onClick={() => {}}>
-            <IconButton
-              onClick={e => {
-                e.stopPropagation();
-                setItem(row.original);
-                setOpenEditDialog(true);
-              }}
-            >
-              <CustomIcon name="edit" />
-            </IconButton>
-            <IconButton
-              onClick={e => {
-                e.stopPropagation();
-                deleteProduct(row.original);
-              }}
-            >
-              <CustomIcon name="delete" />
-            </IconButton>
+            <Tooltip title={t("products:products_edit")}>
+              <IconButton
+                onClick={e => {
+                  e.stopPropagation();
+                  setItem(row.original);
+                  setOpenEditDialog(true);
+                }}
+              >
+                <CustomIcon name="edit" />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title={t("products:products_delete")}>
+              <IconButton
+                onClick={e => {
+                  e.stopPropagation();
+                  deleteProduct(row.original);
+                }}
+              >
+                <CustomIcon name="delete" />
+              </IconButton>
+            </Tooltip>
           </Box>
         );
       },
     },
   ];
 
-  const columns = useMemo(() => tableContent, [productTypes]);
+  const columns = useMemo(() => (currentLanguage === "en" ? tableContentEng : tableContentVi), [productTypes]);
 
   const table = useTable(
     {
@@ -326,7 +487,7 @@ function ProductsPage() {
               }}
             >
               <Box> {t("helper_filters")}</Box>
-              <Tooltip title="Xoá bộ lọc">
+              <Tooltip title={t("helper_filters_clear")}>
                 <IconButton
                   onClick={() => {
                     formik.resetForm();
@@ -348,7 +509,6 @@ function ProductsPage() {
               onChange={e => formik.setFieldValue("keywords", e.target.value)}
             />
           </Grid>
-          {/* <CreateFieldsFilter formik={formik} fields={fields} /> */}
           <Grid
             item
             xs={12}
@@ -361,14 +521,8 @@ function ProductsPage() {
               justifyContent: "flex-end",
             }}
           >
-            {/* <CustomButton
-              text="button_clear"
-              type="rounded-outlined"
-              startIcon="cancelCircle"
-              color={COLORS.lightText}
-            /> */}
             <CustomButton
-              text="button_apply"
+              text="commons:button_apply"
               type="rounded-outlined"
               startIcon="checkCircle"
               handleOnClick={() => {
@@ -389,8 +543,10 @@ function ProductsPage() {
                 // marginBottom: 1,
               }}
             >
-              <Box sx={{ fontWeight: 600, fontSize: "15px", color: COLORS.primary }}>{"LOẠI SẢN PHẨM"}</Box>
-              <Tooltip title="Thêm loại mới">
+              <Box sx={{ fontWeight: 600, fontSize: "15px", color: COLORS.primary, textTransform: "uppercase" }}>
+                {t("products:products_type")}
+              </Box>
+              <Tooltip title={t("products:products_type_title")}>
                 <IconButton
                   onClick={() => {
                     setOpenAddTypeDialog(true);
@@ -437,10 +593,10 @@ function ProductsPage() {
                 alignItems: "center",
               }}
             >
-              <CustomTitle text={[{ text: "Quản lý sản phẩm", highlight: true }]} />
+              <CustomTitle text={[{ text: t("products:products_title"), highlight: true }]} />
               <Box sx={{ display: "flex", gap: 1.5 }}>
                 <CustomButton
-                  text="Tạo sản phẩm"
+                  text={t("products:products_create")}
                   type="rounded-outlined"
                   startIcon="lightAdd"
                   color={COLORS.lightText}

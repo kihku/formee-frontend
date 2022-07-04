@@ -2,6 +2,19 @@
     "order": "Đơn hàng",
     "order_edit": "Chỉnh sửa đơn hàng",
     "order_new": "Tạo đơn hàng mới",
+    "order_save": "Lưu đơn hàng",
+    "order_history": "Lịch sử",
     "order_permission": "Quyền chỉnh sửa đơn hàng",
-    "order_form_name": "Tên đơn hàng"
+    "order_form_name": "Tên đơn hàng",
+    "order_export": "Xuất danh sách",
+    "order_export_excel": "Xuất file Excel",
+    "order_manage": "Quản lý đơn hàng",
+    "order_to_home": "Trở về Trang chủ",
+    "order_track_link": "Theo dõi đơn hàng tại:",
+    "order_copy_link": "Sao chép liên kết",
+    "order_copy_link_success": "Đường dẫn liên kết đã được sao chép",
+    "order_edit_confirm": "Xác nhận chỉnh sửa đơn hàng",
+    "order_edit_message": "Để lại lời nhắn cho người mua (không bắt buộc)",
+    "button_confirm": "Xác nhận",
+    "button_close": "Đóng"
 }

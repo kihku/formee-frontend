@@ -4,6 +4,7 @@ import { StyledInput } from "components/CustomTextField";
 import { productTypeColors } from "constants/constants";
 import { useFormik } from "formik";
 import { initProductType, ProductTypeDTO } from "models/product";
+import { useTranslation } from "react-i18next";
 import StringUtils from "utils/stringUtils";
 import * as Yup from "yup";
 
@@ -20,8 +21,10 @@ const DialogAddProductType = ({
   handleCloseDialog,
   handleSubmitDialog,
 }: DialogAddProductTypeProps) => {
+  const { t } = useTranslation(["commons", "products", "messages"]);
+
   const validationSchema = Yup.object().shape({
-    name: Yup.string().trim().required("Tên loại sản phẩm không được bỏ trống"),
+    name: Yup.string().trim().required(t("messages:messages_empty_product_type")),
   });
 
   const formik = useFormik({
@@ -43,9 +46,11 @@ const DialogAddProductType = ({
   return (
     <Dialog fullWidth maxWidth="sm" open={openDialog} onClose={closeDialog}>
       <DialogTitle>
-        <Box component="span">{`${
-          StringUtils.isNullOrEmty(itemEdit.uuid) ? "Thêm mới" : "Chỉnh sửa"
-        } loại sản phẩm`}</Box>
+        <Box component="span">
+          {StringUtils.isNullOrEmty(itemEdit.uuid)
+            ? t("products:products_type_title")
+            : t("products:products_type_title_edit")}
+        </Box>
       </DialogTitle>
 
       <DialogContent dividers>
@@ -56,7 +61,8 @@ const DialogAddProductType = ({
                 {/* name */}
                 <Grid item xs={12}>
                   <InputLabel shrink sx={{ fontSize: "18px", fontWeight: 500 }}>
-                    {"Tên loại sản phẩm *"}
+                    {/* {"Tên loại sản phẩm *"} */}
+                    {t("products:products_type_name")}
                   </InputLabel>
                 </Grid>
                 <Grid item xs={12} sx={{ marginBottom: 1 }}>
@@ -81,7 +87,8 @@ const DialogAddProductType = ({
                 {/* color */}
                 <Grid item xs={2}>
                   <InputLabel shrink sx={{ fontSize: "18px", fontWeight: 500 }}>
-                    {"Màu sắc"}
+                    {/* {"Màu sắc"} */}
+                    {t("products:products_type_color")}
                   </InputLabel>
                 </Grid>
                 <Grid item xs={10} sx={{ display: "flex", flexDirction: "row", gap: 2 }}>
@@ -111,7 +118,7 @@ const DialogAddProductType = ({
             <Grid item xs={12} sx={{ display: "flex", justifyContent: "flex-end", marginTop: 3 }}>
               <Box sx={{ display: "flex", gap: 1.5, paddingX: "10px", marginBottom: 1 }}>
                 <CustomButton
-                  text="Lưu"
+                  text={t("commons:button_save")}
                   type="rounded"
                   startIcon="save"
                   handleOnClick={() => {
@@ -119,7 +126,7 @@ const DialogAddProductType = ({
                   }}
                 />
                 <CustomButton
-                  text="Đóng"
+                  text={t("commons:button_close")}
                   type="rounded-outlined"
                   handleOnClick={() => {
                     closeDialog();

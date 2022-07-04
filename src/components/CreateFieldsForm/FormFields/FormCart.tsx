@@ -9,7 +9,6 @@ import CustomTable from "components/CustomTable";
 import CustomCartFooter from "components/CustomTable/cartFooter";
 import { StyledInput } from "components/CustomTextField";
 import { ProductDTO } from "models/product";
-import DialogViewProduct from "pages/inventory/dialogs/viewProductDialog";
 import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch } from "react-redux";
@@ -28,7 +27,7 @@ interface FormCartProps {
 }
 
 export const FormCart = ({ index, formik, disabled, disabledForm }: FormCartProps) => {
-  const { t } = useTranslation(["forms"]);
+  const { t } = useTranslation(["forms", "messages"]);
   const currentLanguage = String(localStorage.getItem("i18nextLng"));
 
   const dispatch = useDispatch();
@@ -37,7 +36,7 @@ export const FormCart = ({ index, formik, disabled, disabledForm }: FormCartProp
   const [value, setValue] = useState<ProductDTO[]>([]);
   const [products, setProducts] = useState<ProductDTO[]>([]);
   const [item, setItem] = useState<ProductDTO>({} as ProductDTO);
-  const [openProductDialog, setOpenProductDialog] = useState<boolean>(false);
+  // const [openProductDialog, setOpenProductDialog] = useState<boolean>(false);
 
   const renderValue = () => {
     if (formik) {
@@ -139,7 +138,7 @@ export const FormCart = ({ index, formik, disabled, disabledForm }: FormCartProp
                         dispatch(
                           openNotification({
                             open: true,
-                            content: "Số lượng sản phẩm vượt quá số lượng trong kho",
+                            content: t("messages:messages_inventory_exceed"),
                             severity: "error",
                           }),
                         );
@@ -269,7 +268,7 @@ export const FormCart = ({ index, formik, disabled, disabledForm }: FormCartProp
                         dispatch(
                           openNotification({
                             open: true,
-                            content: "Quantity exceeds the current state of inventory",
+                            content: t("messages:messages_inventory_exceed"),
                             severity: "error",
                           }),
                         );
@@ -606,7 +605,7 @@ export const FormCart = ({ index, formik, disabled, disabledForm }: FormCartProp
               onClickRow={(row: any) => {
                 if (disabledForm) {
                   setItem(row.original);
-                  setOpenProductDialog(true);
+                  // setOpenProductDialog(true);
                 }
               }}
             />
@@ -614,7 +613,7 @@ export const FormCart = ({ index, formik, disabled, disabledForm }: FormCartProp
           </Box>
         )}
       </FormControl>
-      {openProductDialog && (
+      {/* {openProductDialog && (
         <DialogViewProduct
           itemEdit={item}
           openDialog={openProductDialog}
@@ -622,7 +621,7 @@ export const FormCart = ({ index, formik, disabled, disabledForm }: FormCartProp
             setOpenProductDialog(false);
           }}
         />
-      )}
+      )} */}
     </Box>
   );
 };

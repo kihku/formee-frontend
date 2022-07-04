@@ -1,0 +1,20 @@
+{
+    "products_title": "Products",
+    "products_create": "Create product",
+    "products_edit": "Edit product",
+    "products_delete": "Delete product",
+    "products_type": "Product type",
+    "products_type_title": "Create product type",
+    "products_type_title_edit": "Edit product type",
+    "products_type_name": "Product type name *",
+    "products_type_color": "Color",
+    "products_type_edit": "Edit",
+    "products_type_delete": "Delete",
+    "products_name": "Product name *",
+    "products_description": "Description",
+    "products_cost_price": "Cost price *",
+    "products_product_price": "Product price *",
+    "products_inventory": "Inventory *",
+    "products_image": "Images",
+    "products_image_upload": "Choose file"
+}

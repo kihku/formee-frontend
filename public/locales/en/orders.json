@@ -2,6 +2,17 @@
     "order": "Order",
     "order_edit": "Edit order",
     "order_new": "Create new order",
+    "order_save": "Save order",
+    "order_history": "History",
     "order_permission": "Edit permission",
-    "order_form_name": "Order name"
+    "order_form_name": "Order name",
+    "order_export": "Export to file",
+    "order_export_excel": "Export to Excel",
+    "order_manage": "Manage orders",
+    "order_to_home": "Back to Home",
+    "order_track_link": "Track order at:",
+    "order_copy_link": "Copy link",
+    "order_copy_link_success": "Link to order has been copied to clipboard",
+    "order_edit_confirm": "Confirm order edit",
+    "order_edit_message": "Leave a message for the customer (optional)"
 }

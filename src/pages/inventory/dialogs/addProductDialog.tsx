@@ -16,6 +16,7 @@ import { StyledInput } from "components/CustomTextField";
 import { useFormik } from "formik";
 import { initProduct, ProductDTO, ProductTypeDTO } from "models/product";
 import { ChangeEvent, useState } from "react";
+import { useTranslation } from "react-i18next";
 import Carousel from "react-material-ui-carousel";
 import StringUtils from "utils/stringUtils";
 import * as Yup from "yup";
@@ -28,16 +29,16 @@ export interface DialogAddProductProps {
 }
 
 const DialogAddProduct = ({ openDialog, handleCloseDialog, productTypes, selectedTypeId }: DialogAddProductProps) => {
-  const [currentIndex, setCurrentIndex] = useState<number>(0);
+  const { t } = useTranslation(["commons", "products", "messages"]);
+
   const [imageList, setImageList] = useState<string[]>([]);
   const [fileList, setFileList] = useState<File[]>([]);
 
   const validationSchema = Yup.object().shape({
-    name: Yup.string().trim().required("Tên sản phẩm không được bỏ trống"),
-    productPrice: Yup.string().trim().required("Giá bán không được bỏ trống"),
-    costPrice: Yup.string().trim().required("Giá gốc không được bỏ trống"),
-    // typeId: Yup.string().trim().required("Loại sản phẩm không được bỏ trống"),
-    inventory: Yup.string().trim().required("Số lượng trong kho không được bỏ trống"),
+    name: Yup.string().trim().required(t("messages:messages_empty_product_name")),
+    productPrice: Yup.string().trim().required(t("messages:messages_empty_product_price")),
+    costPrice: Yup.string().trim().required(t("messages:messages_empty_product_price")),
+    inventory: Yup.string().trim().required(t("messages:messages_empty_product_inventory")),
   });
 
   const formik = useFormik({
@@ -86,7 +87,7 @@ const DialogAddProduct = ({ openDialog, handleCloseDialog, productTypes, selecte
   return (
     <Dialog fullWidth maxWidth="md" open={openDialog} onClose={closeDialog}>
       <DialogTitle>
-        <Box component="span">{"Tạo sản phẩm mới"}</Box>
+        <Box component="span">{t("products:products_create")}</Box>
       </DialogTitle>
 
       <DialogContent dividers>
@@ -98,7 +99,8 @@ const DialogAddProduct = ({ openDialog, handleCloseDialog, productTypes, selecte
                 {/* name */}
                 <Grid item xs={12}>
                   <InputLabel shrink sx={{ fontSize: "18px", fontWeight: 500 }}>
-                    {"Tên sản phẩm *"}
+                    {/* {"Tên sản phẩm *"} */}
+                    {t("products:products_name")}
                   </InputLabel>
                 </Grid>
                 <Grid item xs={12} sx={{ marginBottom: 1 }}>
@@ -123,7 +125,8 @@ const DialogAddProduct = ({ openDialog, handleCloseDialog, productTypes, selecte
                 {/* description */}
                 <Grid item xs={12}>
                   <InputLabel shrink sx={{ fontSize: "18px", fontWeight: 500 }}>
-                    {"Mô tả"}
+                    {/* {"Mô tả"} */}
+                    {t("products:products_description")}
                   </InputLabel>
                 </Grid>
                 <Grid item xs={12} sx={{ marginBottom: 2 }}>
@@ -139,7 +142,8 @@ const DialogAddProduct = ({ openDialog, handleCloseDialog, productTypes, selecte
                 {/* type */}
                 <Grid item xs={12}>
                   <InputLabel shrink sx={{ fontSize: "18px", fontWeight: 500 }}>
-                    {"Loại sản phẩm"}
+                    {/* {"Loại sản phẩm"} */}
+                    {t("products:products_type")}
                   </InputLabel>
                 </Grid>
                 <Grid item xs={12} sx={{ marginBottom: 1 }}>
@@ -156,20 +160,12 @@ const DialogAddProduct = ({ openDialog, handleCloseDialog, productTypes, selecte
                     })}
                   </Select>
                 </Grid>
-                {/* <Grid item xs={12} sx={{ marginBottom: 1 }}>
-                  <FormHelperText
-                    sx={{
-                      color: "red",
-                    }}
-                  >
-                    {formik.errors["typeId"] && formik.errors["typeId"]}
-                  </FormHelperText>
-                </Grid> */}
 
                 {/* cost price */}
                 <Grid item xs={12}>
                   <InputLabel shrink sx={{ fontSize: "18px", fontWeight: 500 }}>
-                    {"Giá gốc *"}
+                    {/* {"Giá gốc *"} */}
+                    {t("products:products_cost_price")}
                   </InputLabel>
                 </Grid>
                 <Grid item xs={12} sx={{ marginBottom: 1 }}>
@@ -195,7 +191,8 @@ const DialogAddProduct = ({ openDialog, handleCloseDialog, productTypes, selecte
                 {/* product price */}
                 <Grid item xs={12}>
                   <InputLabel shrink sx={{ fontSize: "18px", fontWeight: 500 }}>
-                    {"Giá bán *"}
+                    {/* {"Giá bán *"} */}
+                    {t("products:products_product_price")}
                   </InputLabel>
                 </Grid>
                 <Grid item xs={12} sx={{ marginBottom: 1 }}>
@@ -221,7 +218,8 @@ const DialogAddProduct = ({ openDialog, handleCloseDialog, productTypes, selecte
                 {/* inventory */}
                 <Grid item xs={12}>
                   <InputLabel shrink sx={{ fontSize: "18px", fontWeight: 500 }}>
-                    {"Số lượng trong kho *"}
+                    {/* {"Số lượng trong kho *"} */}
+                    {t("products:products_inventory")}
                   </InputLabel>
                 </Grid>
                 <Grid item xs={12} sx={{ marginBottom: 1 }}>
@@ -249,12 +247,7 @@ const DialogAddProduct = ({ openDialog, handleCloseDialog, productTypes, selecte
             <Grid item xs={6} sx={{ paddingX: 1 }}>
               <Grid container>
                 <Grid item xs={12}>
-                  <Carousel
-                    onChange={index => {
-                      setCurrentIndex(Number(index));
-                    }}
-                    autoPlay={false}
-                  >
+                  <Carousel autoPlay={false}>
                     {imageList &&
                       imageList.length > 0 &&
                       imageList.map((item, i) => (
@@ -276,7 +269,8 @@ const DialogAddProduct = ({ openDialog, handleCloseDialog, productTypes, selecte
                 </Grid>
                 <Grid item xs={12}>
                   <InputLabel shrink sx={{ fontSize: "18px", fontWeight: 500 }}>
-                    {"Hình ảnh"}
+                    {/* {"Hình ảnh"} */}
+                    {t("products:products_image")}
                   </InputLabel>
                 </Grid>
                 <Grid item xs={12}>
@@ -297,7 +291,8 @@ const DialogAddProduct = ({ openDialog, handleCloseDialog, productTypes, selecte
                         disableElevation
                         style={{ height: "32px" }}
                       >
-                        Chọn tệp tin
+                        {/* Chọn tệp tin */}
+                        {t("products:products_image_upload")}
                       </Button>
                     </label>
                   </Box>
@@ -307,7 +302,7 @@ const DialogAddProduct = ({ openDialog, handleCloseDialog, productTypes, selecte
             <Grid item xs={12} sx={{ display: "flex", justifyContent: "flex-end", marginTop: 2 }}>
               <Box sx={{ display: "flex", gap: 1.5, paddingX: "10px", marginBottom: 1 }}>
                 <CustomButton
-                  text="Lưu"
+                  text={t("commons:button_save")}
                   type="rounded"
                   startIcon="save"
                   handleOnClick={() => {
@@ -315,7 +310,7 @@ const DialogAddProduct = ({ openDialog, handleCloseDialog, productTypes, selecte
                   }}
                 />
                 <CustomButton
-                  text="Đóng"
+                  text={t("commons:button_close")}
                   type="rounded-outlined"
                   handleOnClick={() => {
                     closeDialog();

@@ -1,7 +1,6 @@
-import { Box, Dialog, DialogContent, DialogTitle, Divider, Grid, InputLabel } from "@mui/material";
+import { Box, Dialog, DialogContent, DialogTitle, Grid, InputLabel } from "@mui/material";
 import { URL_PROFILE } from "apis/axiosClient";
 import { CustomButton } from "components/CustomButton";
-import { StyledInput } from "components/CustomTextField";
 import { useFormik } from "formik";
 import { initProduct, ProductDTO } from "models/product";
 import { useEffect, useState } from "react";

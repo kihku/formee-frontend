@@ -19,12 +19,12 @@ function SettingsPage() {
       icon: "person",
       component: <AccountSettings tab={chosenTab} />,
     },
-    {
-      title: t("settings_noti_title"),
-      value: "notification",
-      icon: "notification",
-      component: <NotificationSettings tab={chosenTab} />,
-    },
+    // {
+    //   title: t("settings_noti_title"),
+    //   value: "notification",
+    //   icon: "notification",
+    //   component: <NotificationSettings tab={chosenTab} />,
+    // },
   ];
 
   return (

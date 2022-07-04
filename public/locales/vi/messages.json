@@ -1,0 +1,17 @@
+{
+    "messages_empty_form_name": "Tên form không được bỏ trống",
+    "messages_empty_product_name": "Tên sản phẩm không được bỏ trống",
+    "messages_empty_product_cost_price": "Giá gốc không được bỏ trống",
+    "messages_empty_product_price": "Giá bán không được bỏ trống",
+    "messages_empty_product_inventory": "Số lượng trong kho không được bỏ trống",
+    "messages_empty_product_type": "Tên loại sản phẩm không được bỏ trống",
+    "messages_empty_tracking_edit_message": "Lời nhắn không được bỏ trống",
+    "messages_empty_order_phone": "Số điện thoại không được bỏ trống",
+    "messages_empty_order_customer": "Tên người mua không được bỏ trống",
+    "messages_empty_order_cart": "Chưa có sản phẩm nào được chọn",
+    "messages_empty_password": "Mật khẩu không được bỏ trống",
+    "messages_empty_email": "Email không được bỏ trống",
+    "messages_invalid_phone": "Số điện thoại không hợp lệ",
+    "messages_invalid_email": "Đỉa chỉ email không hợp lệ",
+    "messages_inventory_exceed": "Số lượng sản phẩm vượt quá số lượng trong kho"
+}

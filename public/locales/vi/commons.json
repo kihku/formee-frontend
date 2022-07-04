@@ -10,5 +10,11 @@
     "header_language_vi": "Tiếng Việt",
     "helper_search": "Tìm kiếm",
     "helper_filters": "Bộ lọc",
-    "table_rows_per_page": "Số dòng"
+    "helper_filters_clear": "Xoá bộ lọc",
+    "table_rows_per_page": "Số dòng",
+    "button_confirm": "Xác nhận",
+    "button_close": "Đóng",
+    "button_apply": "Áp dụng",
+    "button_save": "Lưu",
+    "button_cancel": "Huỷ"
 }

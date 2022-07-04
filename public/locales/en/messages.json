@@ -1,0 +1,17 @@
+{
+    "messages_empty_form_name": "Form name must not be empty",
+    "messages_empty_product_name": "Product name must not be empty",
+    "messages_empty_product_cost_price": "Cost price must not be empty",
+    "messages_empty_product_price": "Product price must not be empty",
+    "messages_empty_product_inventory": "Inventory must not be empty",
+    "messages_empty_product_type": "Product type name must not be empty",
+    "messages_empty_tracking_edit_message": "Message must not be empty",
+    "messages_empty_order_phone": "Phone number must not be empty",
+    "messages_empty_order_customer": "Customer name must not be empty",
+    "messages_empty_order_cart": "No products have been selected",
+    "messages_empty_password": "Password must not be empty",
+    "messages_empty_email": "Email must not be empty",
+    "messages_invalid_phone": "Invalid phone number",
+    "messages_invalid_email": "Invalid email address",
+    "messages_inventory_exceed": "Quantity exceeds the current state of inventory"
+}
