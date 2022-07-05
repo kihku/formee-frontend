@@ -48,6 +48,7 @@ const auth = getAuth(app);
 
 function LoginPage() {
   const { t } = useTranslation(["login", "messages", "commons"]);
+  const currentLanguage = String(localStorage.getItem("i18nextLng"));
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -114,7 +115,7 @@ function LoginPage() {
   };
 
   useEffect(() => {
-    CommonUtils.setPageTitle("Đăng nhập");
+    CommonUtils.setPageTitle(currentLanguage === "en" ? "Sign in" : "Đăng nhập");
   }, []);
 
   return (

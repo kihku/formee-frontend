@@ -1,5 +1,6 @@
-import { TableBody, TableRow, LinearProgress, Box, Checkbox, IconButton, Typography } from "@mui/material";
+import { Box, Checkbox, LinearProgress, TableBody, TableRow } from "@mui/material";
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { Column, Row, TableBodyPropGetter, TableBodyProps } from "react-table";
 import { COLORS } from "styles";
 import { StyledTableCell } from ".";
@@ -35,6 +36,8 @@ const CustomTableBody = <D extends object>({
   onAddCart,
   onClickRow,
 }: CustomTableBodyProps<D>) => {
+  const { t } = useTranslation(["commons"]);
+
   return (
     <TableBody {...getTableBodyProps()}>
       {!loading &&
@@ -103,7 +106,7 @@ const CustomTableBody = <D extends object>({
       {rows.length === 0 && (
         <TableRow>
           <StyledTableCell scope="row" colSpan={columns.length + 2} sx={{ textAlign: "center" }}>
-            Không có dữ liệu.
+            {t("table_empty")}
           </StyledTableCell>
         </TableRow>
       )}

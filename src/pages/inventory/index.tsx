@@ -20,6 +20,7 @@ import { CellProps, Column, useRowSelect, useTable } from "react-table";
 import { closeConfirmation, openConfirmation } from "redux/actions/confirmDialog";
 import { openNotification } from "redux/actions/notification";
 import { COLORS } from "styles";
+import CommonUtils from "utils/commonUtils";
 import StringUtils from "utils/stringUtils";
 import * as Yup from "yup";
 import { ProductTypeItem } from "./components/productTypeItem";
@@ -465,6 +466,7 @@ function ProductsPage() {
   }, [pageParams.pageNumber, pageParams.pageSize]);
 
   useEffect(() => {
+    CommonUtils.setPageTitle(t("commons:title_products"));
     getProductTypes();
     if (location.state) {
       let state: any = location.state;

@@ -30,7 +30,7 @@ export const CustomTitle = (props: CustomTitleProps) => {
               },
               fontSize: {
                 xs: "18px",
-                md: "20px",
+                md: "25px",
               },
               fontWeight: item.highlight ? 700 : 400,
               color: COLORS.text,

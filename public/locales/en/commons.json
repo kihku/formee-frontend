@@ -16,5 +16,16 @@
     "button_close": "Close",
     "button_apply": "Apply",
     "button_save": "Save",
-    "button_cancel": "Cancel"
+    "button_cancel": "Cancel",
+    "table_empty": "Nothing here yet.",
+    "title_sign_in" : "Sign in",
+    "title_sign_up" : "Sign up",
+    "title_home" : "Home",
+    "title_orders" : "Orders",
+    "title_products" : "Products",
+    "title_statistics" : "Report",
+    "title_settings" : "Settings",
+    "title_order_edit" : "Edit order",
+    "title_order_create" : "Create new order",
+    "title_order_tracking": "Tracking"
 }

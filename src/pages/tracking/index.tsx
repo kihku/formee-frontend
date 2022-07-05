@@ -148,6 +148,7 @@ function OrderTrackingPage() {
   };
 
   useEffect(() => {
+    CommonUtils.setPageTitle(currentLanguage === "en" ? "Order tracking" : "Theo dõi đơn hàng");
     if (window.location.href) {
       let encodedId: string = String(window.location.href.split("/").at(-1));
       let decodedId: string = CommonUtils.decodeUUID(encodedId);

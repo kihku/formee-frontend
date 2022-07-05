@@ -12,6 +12,7 @@ export const COLORS = {
   blue: "#60d7e4",
   blueBackground: "#d0f3f7",
   green: "#96d0a4",
+  greenDark: "#57c972",
   greenBackground: "#e0f1e4",
   red: "#e1879f",
   redBackground: "#f6dbe3",

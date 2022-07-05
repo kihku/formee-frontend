@@ -9,6 +9,7 @@ import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { COLORS } from "styles";
+import CommonUtils from "utils/commonUtils";
 
 function StatisticsPage() {
   const { t } = useTranslation(["statistics"]);
@@ -25,6 +26,7 @@ function StatisticsPage() {
   };
 
   useEffect(() => {
+    CommonUtils.setPageTitle(t("commons:title_statistics"));
     getAllStatistics();
   }, []);
 

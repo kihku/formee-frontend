@@ -16,5 +16,16 @@
     "button_close": "Đóng",
     "button_apply": "Áp dụng",
     "button_save": "Lưu",
-    "button_cancel": "Huỷ"
+    "button_cancel": "Huỷ",
+    "table_empty": "Không có dữ liệu.",
+    "title_sign_in" : "Đăng nhập",
+    "title_sign_up" : "Đăng ký",
+    "title_home" : "Trang chủ",
+    "title_orders" : "Đơn hàng",
+    "title_products" : "Sản phẩm",
+    "title_statistics" : "Thống kê",
+    "title_settings" : "Cài đặt",
+    "title_order_edit" : "Chỉnh sửa đơn hàng",
+    "title_order_create" : "Tạo đơn hàng mới",
+    "title_order_tracking": "Theo dõi đơn hàng"
 }

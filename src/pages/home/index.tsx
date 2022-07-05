@@ -22,7 +22,7 @@ import DateUtils from "utils/dateUtils";
 import DialogAddForm from "./dialogNewForm";
 
 function HomePage() {
-  const { t } = useTranslation(["home", "table"]);
+  const { t } = useTranslation(["home", "table", "commons"]);
   const currentLanguage = String(localStorage.getItem("i18nextLng"));
 
   const navigate = useNavigate();
@@ -59,7 +59,26 @@ function HomePage() {
       maxWidth: 10,
       Cell: ({ row }: CellProps<FormResponseDTO, {}>) => {
         return (
-          <Box display="flex" justifyContent="left">
+          <Box
+            display="flex"
+            justifyContent="left"
+            sx={{
+              color:
+                row.original.status === "CANCELLED"
+                  ? COLORS.redError
+                  : row.original.status === "COMPLETED"
+                  ? COLORS.greenDark
+                  : row.original.status === "CONFIRMED"
+                  ? COLORS.primary
+                  : COLORS.text,
+              fontWeight:
+                row.original.status === "CANCELLED" ||
+                row.original.status === "COMPLETED" ||
+                row.original.status === "CONFIRMED"
+                  ? 600
+                  : 400,
+            }}
+          >
             {row.original.orderName}
           </Box>
         );
@@ -71,7 +90,26 @@ function HomePage() {
       maxWidth: 10,
       Cell: ({ row }: CellProps<FormResponseDTO, {}>) => {
         return (
-          <Box display="flex" justifyContent="left">
+          <Box
+            display="flex"
+            justifyContent="left"
+            sx={{
+              color:
+                row.original.status === "CANCELLED"
+                  ? COLORS.redError
+                  : row.original.status === "COMPLETED"
+                  ? COLORS.greenDark
+                  : row.original.status === "CONFIRMED"
+                  ? COLORS.primary
+                  : COLORS.text,
+              fontWeight:
+                row.original.status === "CANCELLED" ||
+                row.original.status === "COMPLETED" ||
+                row.original.status === "CONFIRMED"
+                  ? 600
+                  : 400,
+            }}
+          >
             {JSON.parse(row.original.response).at(1)}
           </Box>
         );
@@ -181,7 +219,26 @@ function HomePage() {
       maxWidth: 10,
       Cell: ({ row }: CellProps<FormResponseDTO, {}>) => {
         return (
-          <Box display="flex" justifyContent="left">
+          <Box
+            display="flex"
+            justifyContent="left"
+            sx={{
+              color:
+                row.original.status === "CANCELLED"
+                  ? COLORS.redError
+                  : row.original.status === "COMPLETED"
+                  ? COLORS.greenDark
+                  : row.original.status === "CONFIRMED"
+                  ? COLORS.primary
+                  : COLORS.text,
+              fontWeight:
+                row.original.status === "CANCELLED" ||
+                row.original.status === "COMPLETED" ||
+                row.original.status === "CONFIRMED"
+                  ? 600
+                  : 400,
+            }}
+          >
             {row.original.orderName}
           </Box>
         );
@@ -193,7 +250,26 @@ function HomePage() {
       maxWidth: 10,
       Cell: ({ row }: CellProps<FormResponseDTO, {}>) => {
         return (
-          <Box display="flex" justifyContent="left">
+          <Box
+            display="flex"
+            justifyContent="left"
+            sx={{
+              color:
+                row.original.status === "CANCELLED"
+                  ? COLORS.redError
+                  : row.original.status === "COMPLETED"
+                  ? COLORS.greenDark
+                  : row.original.status === "CONFIRMED"
+                  ? COLORS.primary
+                  : COLORS.text,
+              fontWeight:
+                row.original.status === "CANCELLED" ||
+                row.original.status === "COMPLETED" ||
+                row.original.status === "CONFIRMED"
+                  ? 600
+                  : 400,
+            }}
+          >
             {JSON.parse(row.original.response).at(1)}
           </Box>
         );
@@ -327,7 +403,8 @@ function HomePage() {
   useEffect(() => {
     getRecentOrders();
     getRecentForms();
-    console.log(currentLanguage);
+    // console.log(currentLanguage);
+    CommonUtils.setPageTitle(t("commons:title_home"));
   }, []);
 
   return (
@@ -365,15 +442,17 @@ function HomePage() {
                 paddingTop: "2%",
               }}
             >
-              {recentForms.map((form, key) => {
-                return (
-                  <Zoom key={key} in style={{ transformOrigin: "50% 50% 0" }} {...{ timeout: 500 }}>
-                    <Grid item xs={4} sx={{ paddingX: 2, paddingY: 1 }}>
-                      <CustomFormCard item={form} />
-                    </Grid>
-                  </Zoom>
-                );
-              })}
+              {recentForms &&
+                recentForms.length > 0 &&
+                recentForms.map((form, key) => {
+                  return (
+                    <Zoom key={key} in style={{ transformOrigin: "50% 50% 0" }} {...{ timeout: 500 }}>
+                      <Grid item xs={4} sx={{ paddingX: 2, paddingY: 1 }}>
+                        <CustomFormCard item={form} />
+                      </Grid>
+                    </Zoom>
+                  );
+                })}
               <Grid item xs={4} sx={{ paddingX: 2, paddingY: 1 }}>
                 <Box
                   sx={{

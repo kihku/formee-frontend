@@ -20,6 +20,7 @@ import { useDispatch } from "react-redux";
 import { useLocation } from "react-router-dom";
 import { openNotification } from "redux/actions/notification";
 import { COLORS } from "styles";
+import CommonUtils from "utils/commonUtils";
 import StringUtils from "utils/stringUtils";
 import * as Yup from "yup";
 import DialogFinishOrder from "./dialogFinish";
@@ -27,7 +28,7 @@ import DialogFinishOrder from "./dialogFinish";
 function CreateOrderPage() {
   const location = useLocation();
   const dispatch = useDispatch();
-  const { t } = useTranslation(["forms", "orders", "messages"]);
+  const { t } = useTranslation(["forms", "orders", "messages", "commons"]);
   const currentLanguage = String(localStorage.getItem("i18nextLng"));
 
   const [form, setForm] = useState<FormDTO>({} as FormDTO);
@@ -153,6 +154,7 @@ function CreateOrderPage() {
   };
 
   useEffect(() => {
+    CommonUtils.setPageTitle(currentLanguage === "en" ? "Create new order" : "Tạo đơn hàng mới");
     if (location.state) {
       let state: any = location.state;
       getForm(String(state.formId));

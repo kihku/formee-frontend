@@ -106,7 +106,7 @@ export const FormShipping = ({ index, formik, disabled, disabledForm }: FormShip
             })}
           </NativeSelect>
         </Grid>
-        <Grid item xs={11} md={5} lg={3} sx={{ paddingLeft: { xs: 0, md: 2 } }}>
+        <Grid item xs={11} md={5} lg={3} sx={{ paddingLeft: { xs: 0, md: 2, lg: 0 } }}>
           <StyledInput
             fullWidth
             value={shippingId}

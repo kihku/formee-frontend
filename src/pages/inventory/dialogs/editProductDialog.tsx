@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/alt-text */
 import {
   Box,
   Button,
@@ -19,6 +20,7 @@ import { initProduct, ProductDTO, ProductTypeDTO } from "models/product";
 import { ChangeEvent, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import Carousel from "react-material-ui-carousel";
+import StringUtils from "utils/stringUtils";
 import * as Yup from "yup";
 
 export interface DialogEditProductProps {
@@ -33,6 +35,7 @@ const DialogEditProduct = ({ itemEdit, openDialog, handleCloseDialog, productTyp
 
   const [imageList, setImageList] = useState<string[]>([]);
   const [fileList, setFileList] = useState<File[]>([]);
+  const [hasNewImages, setHasNewImages] = useState<boolean>(false);
 
   const validationSchema = Yup.object().shape({
     name: Yup.string().trim().required(t("messages:messages_empty_product_name")),
@@ -42,7 +45,7 @@ const DialogEditProduct = ({ itemEdit, openDialog, handleCloseDialog, productTyp
   });
 
   const formik = useFormik({
-    initialValues: itemEdit.uuid ? itemEdit : initProduct,
+    initialValues: itemEdit,
     onSubmit: handleSubmitForm,
     validationSchema: validationSchema,
     validateOnChange: false,
@@ -62,7 +65,7 @@ const DialogEditProduct = ({ itemEdit, openDialog, handleCloseDialog, productTyp
         sales: 0,
       })
       .then(response => {
-        console.log(response);
+        // console.log(response);
         new ProductService()
           .uploadImageToServer(fileList, response.result.uuid)
           .then(response => console.log(response));
@@ -73,6 +76,7 @@ const DialogEditProduct = ({ itemEdit, openDialog, handleCloseDialog, productTyp
   async function handleImport(e: ChangeEvent<HTMLInputElement>) {
     if (e.target.files && e.target.files.length > 0) {
       try {
+        setHasNewImages(true);
         let files: File[] = Array.from(e.target.files);
         setFileList(files);
         setImageList(
@@ -90,8 +94,6 @@ const DialogEditProduct = ({ itemEdit, openDialog, handleCloseDialog, productTyp
     formik.setValues(itemEdit);
     setImageList(JSON.parse(itemEdit.imageList));
   }, [itemEdit]);
-
-  // console.log("formik", formik.values);
 
   return (
     <Dialog fullWidth maxWidth="md" open={openDialog} onClose={closeDialog}>
@@ -263,25 +265,29 @@ const DialogEditProduct = ({ itemEdit, openDialog, handleCloseDialog, productTyp
 
             <Grid item xs={6} sx={{ paddingX: 1 }}>
               <Grid container>
-                <Grid item xs={12}>
+                <Grid item xs={12} sx={{ marginBottom: 1 }}>
                   <Carousel autoPlay={false}>
                     {imageList &&
                       imageList.length > 0 &&
-                      imageList.map((item, i) => (
-                        <div key={i}>
-                          <img
-                            style={{
-                              zIndex: 99,
-                              width: "100%",
-                              display: "flex",
-                              justifyContent: "center",
-                              alignItems: "center",
-                            }}
-                            src={`${URL_PROFILE.PRO}/images/${item}`}
-                            alt="product"
-                          />
-                        </div>
-                      ))}
+                      imageList.map((item, i) => {
+                        if (!StringUtils.isNullOrEmty(item)) {
+                          return (
+                            <div key={i}>
+                              <img
+                                style={{
+                                  zIndex: 99,
+                                  width: "100%",
+                                  height: "auto",
+                                  display: "flex",
+                                  justifyContent: "center",
+                                  alignItems: "center",
+                                }}
+                                src={hasNewImages ? item : `${URL_PROFILE.PRO}/images/${item}`}
+                              />
+                            </div>
+                          );
+                        }
+                      })}
                   </Carousel>
                 </Grid>
                 <Grid item xs={12}>

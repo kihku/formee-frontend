@@ -33,7 +33,8 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
 function SignUpPage() {
-  const { t } = useTranslation(["login"]);
+  const { t } = useTranslation(["login", "commons"]);
+  const currentLanguage = String(localStorage.getItem("i18nextLng"));
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -96,7 +97,7 @@ function SignUpPage() {
   };
 
   useEffect(() => {
-    CommonUtils.setPageTitle("Đăng nhập");
+    CommonUtils.setPageTitle(currentLanguage === "en" ? "Sign up" : "Đăng ký");
   }, []);
 
   return (

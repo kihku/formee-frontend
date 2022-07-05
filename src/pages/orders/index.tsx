@@ -250,7 +250,26 @@ function OrdersPage() {
       maxWidth: 10,
       Cell: ({ row }: CellProps<FormResponseDTO, {}>) => {
         return (
-          <Box display="flex" justifyContent="left">
+          <Box
+            display="flex"
+            justifyContent="left"
+            sx={{
+              color:
+                row.original.status === "CANCELLED"
+                  ? COLORS.redError
+                  : row.original.status === "COMPLETED"
+                  ? COLORS.greenDark
+                  : row.original.status === "CONFIRMED"
+                  ? COLORS.primary
+                  : COLORS.text,
+              fontWeight:
+                row.original.status === "CANCELLED" ||
+                row.original.status === "COMPLETED" ||
+                row.original.status === "CONFIRMED"
+                  ? 600
+                  : 400,
+            }}
+          >
             {row.original.orderName}
           </Box>
         );
@@ -404,7 +423,26 @@ function OrdersPage() {
       maxWidth: 10,
       Cell: ({ row }: CellProps<FormResponseDTO, {}>) => {
         return (
-          <Box display="flex" justifyContent="left">
+          <Box
+            display="flex"
+            justifyContent="left"
+            sx={{
+              color:
+                row.original.status === "CANCELLED"
+                  ? COLORS.redError
+                  : row.original.status === "COMPLETED"
+                  ? COLORS.greenDark
+                  : row.original.status === "CONFIRMED"
+                  ? COLORS.primary
+                  : COLORS.text,
+              fontWeight:
+                row.original.status === "CANCELLED" ||
+                row.original.status === "COMPLETED" ||
+                row.original.status === "CONFIRMED"
+                  ? 600
+                  : 400,
+            }}
+          >
             {row.original.orderName}
           </Box>
         );
@@ -661,6 +699,7 @@ function OrdersPage() {
   }, [pageParams.pageNumber, pageParams.pageSize]);
 
   useEffect(() => {
+    CommonUtils.setPageTitle(t("commons:title_orders"));
     getFormList();
     formik.handleSubmit();
   }, []);

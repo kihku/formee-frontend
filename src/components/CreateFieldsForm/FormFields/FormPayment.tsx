@@ -90,7 +90,7 @@ export const FormPayment = ({ index, formik, disabled, disabledForm }: FormPayme
           </NativeSelect>
         </Grid>
         {type === "PRE_PAID" && (
-          <Grid item xs={3} sx={{ display: "flex", alignItems: "center", gap: 0 }}>
+          <Grid item xs={12} md={6} lg={3} sx={{ display: "flex", alignItems: "center", gap: 0 }}>
             <Checkbox
               checked={paid}
               disabled={disabled || disabledForm}
@@ -104,7 +104,7 @@ export const FormPayment = ({ index, formik, disabled, disabledForm }: FormPayme
           </Grid>
         )}
         {type === "COD" && (
-          <Grid item xs={3} sx={{ display: "flex", alignItems: "center", gap: 0 }}>
+          <Grid item xs={12} md={6} lg={3} sx={{ display: "flex", alignItems: "center", gap: 0 }}>
             <StyledInput
               fullWidth
               type="number"
@@ -125,7 +125,7 @@ export const FormPayment = ({ index, formik, disabled, disabledForm }: FormPayme
           </Grid>
         )}
         {type === "COD" && (
-          <Grid item xs={5} sx={{ display: "flex", alignItems: "center", gap: 0 }}>
+          <Grid item xs={12} md={5} sx={{ display: "flex", alignItems: "center", gap: 0 }}>
             <Typography sx={{ color: COLORS.primaryLight, fontWeight: 500 }}>
               {t("form_shipping_cod_total")}
               {total + Number(codFee)}

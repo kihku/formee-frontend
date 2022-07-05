@@ -2,14 +2,15 @@ import { Box, Grid } from "@mui/material";
 import { CustomBackgroundCard } from "components/CustomBackgroundCard";
 import { CustomIcon, IconType } from "components/CustomIcon";
 import { CustomOption } from "models/baseModels";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { COLORS } from "styles";
+import CommonUtils from "utils/commonUtils";
 import AccountSettings from "./tabs/account";
 import NotificationSettings from "./tabs/notification";
 
 function SettingsPage() {
-  const { t } = useTranslation(["settings"]);
+  const { t } = useTranslation(["settings", "commons"]);
   const [chosenTab, setChosenTab] = useState("account");
 
   const settingOptions: CustomOption[] = [
@@ -26,6 +27,10 @@ function SettingsPage() {
     //   component: <NotificationSettings tab={chosenTab} />,
     // },
   ];
+
+  useEffect(() => {
+    CommonUtils.setPageTitle(t("commons:title_settings"));
+  }, []);
 
   return (
     <Box>
