@@ -48,8 +48,8 @@ const CustomCartFooter: React.FC<CustomCartFooterProps> = ({
   return (
     <Grid item xs={12} sx={{ display: "flex", flexDirection: "column", textAlign: "end", gap: 2, paddingTop: 3 }}>
       <Grid container>
-        <Grid item xs={9}></Grid>
-        <Grid item xs={3} sx={{ marginY: 1 }}>
+        <Grid item xs={0} md={7}></Grid>
+        <Grid item xs={12} md={5} sx={{ marginY: 1 }}>
           <Box sx={{ display: "flex", justifyContent: "space-between", fontWeight: 500 }}>
             <Box>{t("form_cart_sub_total")}</Box>
             <Box>
@@ -59,8 +59,8 @@ const CustomCartFooter: React.FC<CustomCartFooterProps> = ({
           </Box>
         </Grid>
 
-        <Grid item xs={9}></Grid>
-        <Grid item xs={3} sx={{ marginY: 1 }}>
+        <Grid item xs={0} md={7}></Grid>
+        <Grid item xs={12} md={5} sx={{ marginY: 1 }}>
           <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", fontWeight: 500 }}>
             <Box>{t("form_cart_discount")}</Box>
             {disabled || disabledForm ? (
@@ -92,8 +92,8 @@ const CustomCartFooter: React.FC<CustomCartFooterProps> = ({
           </Box>
         </Grid>
 
-        <Grid item xs={9}></Grid>
-        <Grid item xs={3} sx={{ marginY: 1 }}>
+        <Grid item xs={0} md={7}></Grid>
+        <Grid item xs={12} md={5} sx={{ marginY: 1 }}>
           <Box
             sx={{
               display: "flex",

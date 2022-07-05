@@ -88,9 +88,9 @@ export const FormShipping = ({ index, formik, disabled, disabledForm }: FormShip
   }, [service, shippingId]);
 
   return (
-    <FormControl variant="standard" sx={{ width: "100%" }}>
-      <Grid container sx={{ display: "flex", flexDirection: "row", alignItems: "center", gap: 2 }}>
-        <Grid item xs={3}>
+    <FormControl variant="standard" sx={{ width: "100%", marginBottom: { xs: 2, lg: 0 } }}>
+      <Grid container sx={{ display: "flex", flexDirection: "row", alignItems: "center", gap: { xs: 0, lg: 2 } }}>
+        <Grid item xs={12} md={6} lg={3} sx={{ marginBottom: { xs: 2, md: 0 } }}>
           <NativeSelect
             fullWidth
             value={service}
@@ -106,7 +106,7 @@ export const FormShipping = ({ index, formik, disabled, disabledForm }: FormShip
             })}
           </NativeSelect>
         </Grid>
-        <Grid item xs={3}>
+        <Grid item xs={11} md={5} lg={3} sx={{ paddingLeft: { xs: 0, md: 2 } }}>
           <StyledInput
             fullWidth
             value={shippingId}
@@ -124,6 +124,7 @@ export const FormShipping = ({ index, formik, disabled, disabledForm }: FormShip
         <Grid item xs={1}>
           <Tooltip title={t("form_shipping_search")} placement="right">
             <IconButton
+              sx={{ marginLeft: { xs: 1, lg: 0 } }}
               onClick={() => {
                 !StringUtils.isNullOrEmty(shippingId) && window.open(shippingLink, "_blank");
               }}

@@ -71,9 +71,9 @@ export const FormPayment = ({ index, formik, disabled, disabledForm }: FormPayme
   }, [formik.values]);
 
   return (
-    <FormControl variant="standard" sx={{ width: "100%" }}>
+    <FormControl variant="standard" sx={{ width: "100%", marginBottom: 2 }}>
       <Grid container sx={{ display: "flex", flexDirection: "row", alignItems: "center", gap: 2 }}>
-        <Grid item xs={3}>
+        <Grid item xs={12} md={6} lg={3}>
           <NativeSelect
             fullWidth
             value={type}

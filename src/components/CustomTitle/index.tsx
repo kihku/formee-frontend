@@ -9,12 +9,29 @@ interface CustomTitleProps {
 
 export const CustomTitle = (props: CustomTitleProps) => {
   return (
-    <Box sx={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: {
+          xs: "column",
+          md: "row",
+        },
+        alignItems: "center",
+      }}
+    >
       {props.text.map((item, key) => {
         return (
           <Box
             key={key}
             sx={{
+              display: {
+                xs: item.text === "/" ? "none" : "flex",
+                md: "flex",
+              },
+              fontSize: {
+                xs: "18px",
+                md: "20px",
+              },
               fontWeight: item.highlight ? 700 : 400,
               color: COLORS.text,
               paddingRight: 0.75,

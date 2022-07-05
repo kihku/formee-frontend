@@ -116,12 +116,33 @@ export const FormAddress = ({ index, formik, required, disabled, isEditing }: Fo
   }, [phuongXa, quanHuyen, tinhThanh, value]);
 
   return (
-    <FormControl variant="standard" sx={{ width: "100%" }}>
+    <FormControl
+      variant="standard"
+      sx={{
+        width: "100%",
+        marginBottom: {
+          xs: 1,
+          lg: 0,
+        },
+      }}
+    >
       <Grid container>
         {!disabled && (
-          <Grid item xs={3} sx={{ marginBottom: 2, paddingRight: 2 }}>
+          <Grid
+            item
+            xs={12}
+            lg={3}
+            sx={{
+              marginBottom: {
+                xs: 1.5,
+                lg: 2,
+              },
+              paddingRight: { xs: 0, lg: 2 },
+            }}
+          >
             <StyledInput
               fullWidth
+              multiline
               value={value}
               required={required}
               disabled={disabled}
@@ -138,7 +159,22 @@ export const FormAddress = ({ index, formik, required, disabled, isEditing }: Fo
         )}
 
         {!disabled && (
-          <Grid item xs={9} sx={{ display: "flex", gap: 2 }}>
+          <Grid
+            item
+            xs={12}
+            lg={9}
+            sx={{
+              display: "flex",
+              gap: {
+                xs: 1,
+                lg: 2,
+              },
+              flexDirection: {
+                xs: "column",
+                lg: "row",
+              },
+            }}
+          >
             <CustomSelect
               disabled={disabled}
               options={tinhThanhList.map(item => {

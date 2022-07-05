@@ -17,18 +17,27 @@ export const HistoryItem = ({ item, direction, language }: HistoryItemProps) => 
         marginBottom: 4,
         display: "flex",
         alignItems: "center",
-        gap: 2,
+        gap: { xs: 1.5, md: 0 },
       }}
     >
-      <Grid item xs={2} sx={{ color: COLORS.lightText }}>
+      <Grid item xs={12} md={2} sx={{ color: COLORS.lightText }}>
         {DateUtils.getTimeDifference(new Date(item.createdDate), new Date(), language)}
       </Grid>
-      <Grid item xs={8} sx={{ display: "flex", alignItems: "center" }}>
-        <Box sx={{ color: direction === "left" ? COLORS.primary : COLORS.red, marginRight: 2 }}>
+      <Grid item xs={12} md={3}>
+        <Box
+          sx={{
+            color: direction === "left" ? COLORS.primary : COLORS.red,
+            whiteSpace: "nowrap",
+            textOverflow: "ellipsis",
+            overflow: "hidden",
+          }}
+        >
           {item.createdBy === "anonymousUser" ? "Ẩn danh" : item.createdBy}
           {": "}
         </Box>
-        <Box>{item.message}</Box>
+      </Grid>
+      <Grid item xs={12} md={4} sx={{ whiteSpace: "nowrap", textOverflow: "ellipsis", overflow: "hidden" }}>
+        {item.message}
       </Grid>
     </Grid>
   );

@@ -30,7 +30,7 @@ export const CreateFieldsForm = <T extends object, K extends object>({
   handleNewField,
   handleNewSection,
   disabled,
-  disabledForm
+  disabledForm,
 }: FieldsArray<T, K>) => {
   return (
     <>
@@ -43,12 +43,22 @@ export const CreateFieldsForm = <T extends object, K extends object>({
               </Grid>
               <Grid item xs={12}>
                 {section.components.map(({ Component, label, index, helperText, xs, show, ...rest }, idx) => {
-                  return (show === undefined || show === true) ? (
+                  return show === undefined || show === true ? (
                     <Grid container key={idx}>
                       {!StringUtils.isNullOrEmty(label) && (
-                        <Grid item xs={2}>
+                        <Grid
+                          item
+                          xs={12}
+                          md={2}
+                          sx={{
+                            marginBottom: {
+                              xs: 1,
+                              md: 0,
+                            },
+                          }}
+                        >
                           <InputLabel sx={{ whiteSpace: "normal", textOverflow: "unset" }}>{label}</InputLabel>
-                          <FormHelperText
+                          {/* <FormHelperText
                             sx={{
                               color: COLORS.primary,
                               cursor: "auto",
@@ -56,13 +66,14 @@ export const CreateFieldsForm = <T extends object, K extends object>({
                             }}
                           >
                             {helperText}
-                          </FormHelperText>
+                          </FormHelperText> */}
                         </Grid>
                       )}
                       {!enableEditing && (
                         <Grid
                           item
-                          xs={
+                          xs={12}
+                          md={
                             !StringUtils.isNullOrEmty(label)
                               ? rest.disabled && ["TEXT", "PHONE"].includes(rest.type)
                                 ? 5
@@ -70,7 +81,13 @@ export const CreateFieldsForm = <T extends object, K extends object>({
                               : 12
                           }
                           key={key}
-                          sx={{ marginBottom: 2, paddingX: "10px" }}
+                          sx={{
+                            marginBottom: {
+                              xs: 0.5,
+                              md: 2,
+                            },
+                            paddingRight: "10px",
+                          }}
                         >
                           {Component && (
                             <Component

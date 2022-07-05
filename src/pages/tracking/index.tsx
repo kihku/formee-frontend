@@ -151,7 +151,7 @@ function OrderTrackingPage() {
     if (window.location.href) {
       let encodedId: string = String(window.location.href.split("/").at(-1));
       let decodedId: string = CommonUtils.decodeUUID(encodedId);
-      console.log(encodedId, decodedId);
+      // console.log(encodedId, decodedId);
       setOrderId(decodedId);
       getOrderResponse(decodedId);
     }
@@ -178,7 +178,16 @@ function OrderTrackingPage() {
                 alignItems: "center",
               }}
             >
-              <Box sx={{ display: "flex", gap: 1.5 }}>
+              <Box
+                sx={{
+                  display: "flex",
+                  gap: 1.5,
+                  flexDirection: {
+                    xs: "column",
+                    md: "row",
+                  },
+                }}
+              >
                 <CustomTitle
                   text={[
                     { text: t("tracking:tracking_title"), highlight: false },
