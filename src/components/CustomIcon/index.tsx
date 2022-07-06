@@ -53,9 +53,9 @@ import EditOffRoundedIcon from "@mui/icons-material/EditOffRounded";
 import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
 import FilterAltOffRoundedIcon from "@mui/icons-material/FilterAltOffRounded";
 import ColorizeRoundedIcon from "@mui/icons-material/ColorizeRounded";
-import SwitchAccessShortcutAddRoundedIcon from "@mui/icons-material/SwitchAccessShortcutAddRounded";
-import TravelExploreRoundedIcon from '@mui/icons-material/TravelExploreRounded';
-import ContentPasteSearchRoundedIcon from '@mui/icons-material/ContentPasteSearchRounded';
+import TravelExploreRoundedIcon from "@mui/icons-material/TravelExploreRounded";
+import QrCode2RoundedIcon from "@mui/icons-material/QrCode2Rounded";
+import ImageRoundedIcon from "@mui/icons-material/ImageRounded";
 import { COLORS } from "styles";
 
 export type IconType =
@@ -115,7 +115,9 @@ export type IconType =
   | "home"
   | "clearFilter"
   | "colorPicker"
-  | "shipping";
+  | "shipping"
+  | "qrCode"
+  | "image";
 
 interface IconProps {
   name: IconType;
@@ -259,5 +261,9 @@ export const CustomIcon = ({ name, size, color }: IconProps) => {
       return <ColorizeRoundedIcon sx={iconStyle} />;
     case "shipping":
       return <TravelExploreRoundedIcon sx={iconStyle} />;
+    case "qrCode":
+      return <QrCode2RoundedIcon sx={iconStyle} />;
+    case "image":
+      return <ImageRoundedIcon sx={iconStyle} />;
   }
 };

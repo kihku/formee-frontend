@@ -1,5 +1,6 @@
 /* eslint-disable jsx-a11y/alt-text */
-import { Box, Grid, InputBase, MenuItem, Select } from "@mui/material";
+import { Box, Grid, IconButton, InputBase, Menu, MenuItem, Select } from "@mui/material";
+import { URL_PROFILE } from "apis/axiosClient";
 import { PublicService } from "apis/publicService/publicService";
 import CreateFieldsForm from "components/CreateFieldsForm";
 import { FormAddress } from "components/CreateFieldsForm/FormFields/FormAddress";
@@ -11,6 +12,7 @@ import { FormTextField } from "components/CreateFieldsForm/FormFields/FormTextFi
 import { CustomBackgroundCard } from "components/CustomBackgroundCard";
 import { CustomButton } from "components/CustomButton";
 import { CustomChip } from "components/CustomChip";
+import { CustomIcon } from "components/CustomIcon";
 import { CustomTitle } from "components/CustomTitle";
 import { orderStatusListEng, orderStatusListVi } from "constants/constants";
 import { useFormik } from "formik";
@@ -18,6 +20,7 @@ import i18n from "i18n";
 import { CommentDTO } from "models/comment";
 import { FormDTO, FormResponseDTO, FormSectionDTO } from "models/form";
 import { HistoryItem } from "pages/orders/components/historyItem";
+import { QRCodeCanvas } from "qrcode.react";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch } from "react-redux";
@@ -45,6 +48,17 @@ function OrderTrackingPage() {
   const [openConfirmDialog, setOpenConfirmDialog] = useState<boolean>(false);
   const [confirmed, setConfirmed] = useState<boolean>(false);
   const [enableEditing, setEnableEditing] = useState<boolean>(false);
+  const [anchorElQR, setAnchorElQR] = useState<null | HTMLElement>(null);
+
+  const openMenuQR = Boolean(anchorElQR);
+
+  const handleOpenMenuQR = (event: React.MouseEvent<any>) => {
+    setAnchorElQR(event.currentTarget);
+  };
+
+  const handleCloseMenuQR = () => {
+    setAnchorElQR(null);
+  };
 
   const validationSchema = Yup.object().shape({});
 
@@ -275,6 +289,33 @@ function OrderTrackingPage() {
                 </MenuItem>
               </Select>
             </Box>
+
+            <IconButton
+              onClick={e => {
+                handleOpenMenuQR(e);
+              }}
+            >
+              <CustomIcon name="qrCode" />
+            </IconButton>
+            <Menu
+              anchorEl={anchorElQR}
+              open={openMenuQR}
+              onClose={handleCloseMenuQR}
+              onClick={handleCloseMenuQR}
+              anchorOrigin={{
+                vertical: "bottom",
+                horizontal: "right",
+              }}
+              transformOrigin={{
+                vertical: "top",
+                horizontal: "right",
+              }}
+            >
+              <Box sx={{ paddingY: 1, paddingX: 2 }}>
+                <QRCodeCanvas fgColor={COLORS.text} value={`${URL_PROFILE.WEB}${window.location.pathname}`} />
+              </Box>
+            </Menu>
+            {/* <QRCodeCanvas fgColor={COLORS.text} value={`${URL_PROFILE.WEB}${window.location.pathname}`} /> */}
           </Grid>
           <Grid container>
             <Grid item xs={12} sx={{ display: "flex", justifyContent: "center" }}>

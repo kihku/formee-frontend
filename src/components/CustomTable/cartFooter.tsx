@@ -25,11 +25,12 @@ const CustomCartFooter: React.FC<CustomCartFooterProps> = ({
 
   const updateTotal = () => {
     let newTotal: number = 0;
-    let discountPercentage: number = (100 - discount) / 100;
-    formik.values["response"].at(index).forEach((product: any) => {
-      newTotal += product.productPrice * product.quantity;
-    });
-    setTotal(newTotal * discountPercentage);
+    let discountPercentage: number = (100 - (discount ? discount : 0)) / 100;
+    formik.values["response"].at(index) &&
+      formik.values["response"].at(index).forEach((product: any) => {
+        newTotal += product.productPrice * product.quantity;
+      });
+    setTotal(newTotal * discountPercentage + (formik.values["shippingFee"] ? Number(formik.values["shippingFee"]) : 0));
     setSubTotal(newTotal);
   };
 
@@ -46,7 +47,7 @@ const CustomCartFooter: React.FC<CustomCartFooterProps> = ({
   }, []);
 
   return (
-    <Grid item xs={12} sx={{ display: "flex", flexDirection: "column", textAlign: "end", gap: 2, paddingTop: 3 }}>
+    <Grid item xs={12} sx={{ display: "flex", flexDirection: "column", textAlign: "end", gap: 2, marginBottom: 2 }}>
       <Grid container>
         <Grid item xs={0} md={7}></Grid>
         <Grid item xs={12} md={5} sx={{ marginY: 1 }}>
@@ -58,6 +59,19 @@ const CustomCartFooter: React.FC<CustomCartFooterProps> = ({
             </Box>
           </Box>
         </Grid>
+
+        {formik.values["shippingFee"] && <Grid item xs={0} md={7}></Grid>}
+        {formik.values["shippingFee"] && (
+          <Grid item xs={12} md={5} sx={{ marginY: 2 }}>
+            <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", fontWeight: 500 }}>
+              <Box>{t("form_cart_shipping")}</Box>
+              <Box>
+                {formik.values["shippingFee"] ? formik.values["shippingFee"] : "0"}
+                {" đ"}
+              </Box>
+            </Box>
+          </Grid>
+        )}
 
         <Grid item xs={0} md={7}></Grid>
         <Grid item xs={12} md={5} sx={{ marginY: 1 }}>

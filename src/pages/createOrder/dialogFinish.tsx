@@ -16,6 +16,7 @@ import { CustomTitle } from "components/CustomTitle";
 import { orderStatusListEng, orderStatusListVi } from "constants/constants";
 import { useFormik } from "formik";
 import { FormDTO, FormResponseDTO, FormSectionDTO } from "models/form";
+import { QRCodeCanvas, QRCodeSVG } from "qrcode.react";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch } from "react-redux";
@@ -172,6 +173,11 @@ const DialogFinishOrder = ({ responseId, openDialog, handleCloseDialog, orderNam
           <Grid item xs={12} sx={{ paddingX: 1.5, paddingTop: 2.5 }}>
             <Divider sx={{ width: "100%", borderBottomWidth: "2px" }} />
           </Grid>
+
+          {/* <Grid item xs={12}>
+            <QRCodeSVG value={`${URL_PROFILE.WEB}/tracking/${CommonUtils.encodeUUID(responseId)}`} />
+          </Grid> */}
+
           <Grid item xs={12} sx={{ display: "flex", flexDirection: "column", gap: 2, marginTop: 3 }}>
             <Box
               sx={{
@@ -182,7 +188,11 @@ const DialogFinishOrder = ({ responseId, openDialog, handleCloseDialog, orderNam
                 gap: 1.5,
               }}
             >
-              {t("order_track_link")}
+              <Box>{t("order_track_link")}</Box>
+              <QRCodeCanvas
+                fgColor={COLORS.text}
+                value={`${URL_PROFILE.WEB}/tracking/${CommonUtils.encodeUUID(responseId)}`}
+              />
               <Box sx={{ textDecoration: "underline", color: COLORS.primary, cursor: "pointer" }}>
                 <Link
                   href={`/tracking/${CommonUtils.encodeUUID(responseId)}`}
@@ -219,11 +229,11 @@ const DialogFinishOrder = ({ responseId, openDialog, handleCloseDialog, orderNam
                 type="rounded-outlined"
                 startIcon="edit"
                 color={
-                  formResponse.status === "COMPLETED" || formResponse.status === "CANCELLED"
+                  !["PENDING", "CONFIRMED", "REQUESTED"].includes(String(formResponse.status))
                     ? COLORS.lightText
                     : COLORS.primary
                 }
-                disabled={formResponse.status === "COMPLETED" || formResponse.status === "CANCELLED"}
+                disabled={!["PENDING", "CONFIRMED", "REQUESTED"].includes(String(formResponse.status))}
                 handleOnClick={() => {
                   navigate("/order/edit", {
                     state: {

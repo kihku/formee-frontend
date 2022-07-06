@@ -31,6 +31,7 @@ export interface FormResponseDTO {
   comments?: CommentDTO[];
   discount?: string;
   status?: string;
+  shippingFee?: number;
 }
 
 export interface FormLayoutDTO {

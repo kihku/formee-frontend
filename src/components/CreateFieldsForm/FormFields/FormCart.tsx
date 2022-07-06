@@ -609,7 +609,7 @@ export const FormCart = ({ index, formik, disabled, disabledForm }: FormCartProp
                 }
               }}
             />
-            <CustomCartFooter formik={formik} index={index} disabled={disabled} disabledForm={disabledForm} />
+            {/* <CustomCartFooter formik={formik} index={index} disabled={disabled} disabledForm={disabledForm} /> */}
           </Box>
         )}
       </FormControl>

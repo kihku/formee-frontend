@@ -3,7 +3,7 @@ import { UserService } from "apis/userService/userService";
 import { CustomButton } from "components/CustomButton";
 import { StyledInput } from "components/CustomTextField";
 import { initializeApp } from "firebase/app";
-import { createUserWithEmailAndPassword, getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword, getAuth } from "firebase/auth";
 import { useFormik } from "formik";
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";

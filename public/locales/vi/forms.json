@@ -6,9 +6,11 @@
     "form_cart_sub_total": "Tổng đơn hàng",
     "form_cart_discount": "Giảm giá",
     "form_cart_total": "Tổng tiền",
+    "form_cart_shipping": "Phí giao hàng",
     "form_shipping_id": "Mã vận đơn",
     "form_shipping_search": "Tra cứu vận đơn",
     "form_shipping_cod": "Phí COD",
     "form_shipping_cod_total": "Tổng đơn hàng (bao gồm phí ship COD): ",
-    "form_payment_paid": "Đã thanh toán"
+    "form_payment_paid": "Thêm xác minh thanh toán",
+    "form_shipping_fee": "Phí giao hàng"
 }

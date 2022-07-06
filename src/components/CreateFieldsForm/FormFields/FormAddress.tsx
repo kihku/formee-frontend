@@ -173,6 +173,10 @@ export const FormAddress = ({ index, formik, required, disabled, isEditing }: Fo
                 xs: "column",
                 lg: "row",
               },
+              marginTop: {
+                xs: 0,
+                lg: 0.5,
+              },
             }}
           >
             <CustomSelect

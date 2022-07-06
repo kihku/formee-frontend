@@ -5,7 +5,6 @@ const SettingsPage = lazy(() => import("pages/settings"));
 const GeneralErrorPage = lazy(() => import("pages/generalError"));
 const HomePage = lazy(() => import("pages/home"));
 const OrdersPage = lazy(() => import("pages/orders"));
-const CreateFormPage = lazy(() => import("pages/createForm"));
 const CreateOrderPage = lazy(() => import("pages/createOrder"));
 const EditOrderPage = lazy(() => import("pages/editOrder"));
 const InventoryPage = lazy(() => import("pages/inventory"));
@@ -24,7 +23,6 @@ export const PUBLIC_ROUTES: RouteProps[] = [
   { title: "404 Not Found", component: <GeneralErrorPage />, path: "/error" },
   { title: "Home", component: <HomePage />, path: "/home" },
   { title: "Orders", component: <OrdersPage />, path: "/orders" },
-  { title: "Create new form", component: <CreateFormPage />, path: "/form/create" },
   { title: "Create new order", component: <CreateOrderPage />, path: "/order/create" },
   { title: "Edit order", component: <EditOrderPage fromRequest={false} />, path: "/order/edit" },
   { title: "Edit order request", component: <EditOrderPage fromRequest={true} />, path: "/order/request" },

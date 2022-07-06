@@ -7,7 +7,7 @@ export const componentOptionsVi: CustomOption[] = [
 ];
 
 export const componentOptionsEng: CustomOption[] = [
-  { title: "Shipping information", value: "SHIPPING" },
+  { title: "Delivery information", value: "SHIPPING" },
   { title: "Payment information", value: "PAYMENT" },
 ];
 
@@ -73,8 +73,19 @@ export const productTypeColors: CustomOption[] = [
   { title: COLORS.lightText, value: COLORS.grayBackground },
 ];
 
-export const shippingServices: CustomOption[] = [
-  { title: "", value: "" },
+export const shippingServicesEng: CustomOption[] = [
+  { title: "Choose shipping service", value: "" },
+  { title: "Giao hàng nhanh", value: "GHN" },
+  { title: "Giao hàng tiết kiệm", value: "GHTK" },
+  { title: "Ninja Van", value: "NJV" },
+  { title: "J&T Express", value: "JT" },
+  { title: "BEST Express", value: "BEST" },
+  { title: "VNPost", value: "VNPOST" },
+  { title: "Viettel Post", value: "VIETTEL" },
+];
+
+export const shippingServicesVi: CustomOption[] = [
+  { title: "Chọn đơn vị vận chuyển", value: "" },
   { title: "Giao hàng nhanh", value: "GHN" },
   { title: "Giao hàng tiết kiệm", value: "GHTK" },
   { title: "Ninja Van", value: "NJV" },
@@ -85,13 +96,13 @@ export const shippingServices: CustomOption[] = [
 ];
 
 export const paymentMethodsVi: CustomOption[] = [
-  { title: "", value: "" },
+  { title: "Chọn phương thức thanh toán", value: "" },
   { title: "Thanh toán trả trước", value: "PRE_PAID" },
   { title: "Thanh toán khi nhận hàng", value: "COD" },
 ];
 
 export const paymentMethodsEng: CustomOption[] = [
-  { title: "", value: "" },
+  { title: "Choose payment method", value: "" },
   { title: "Pre-paid", value: "PRE_PAID" },
   { title: "Cash On Delivery", value: "COD" },
 ];

@@ -1,8 +1,10 @@
-import { FormHelperText, Grid, IconButton, InputLabel } from "@mui/material";
+import { Box, FormHelperText, Grid, IconButton, InputLabel } from "@mui/material";
 import { CustomButton } from "components/CustomButton";
 import { CustomIcon } from "components/CustomIcon";
+import CustomCartFooter from "components/CustomTable/cartFooter";
 import { FormFieldGeneral, FormikType } from "models/baseModels";
 import { FormSectionDTO } from "models/form";
+import { useTranslation } from "react-i18next";
 import { COLORS } from "styles";
 import StringUtils from "utils/stringUtils";
 import { FormSection } from "./FormFields/FormSection";
@@ -32,6 +34,8 @@ export const CreateFieldsForm = <T extends object, K extends object>({
   disabled,
   disabledForm,
 }: FieldsArray<T, K>) => {
+  const { t } = useTranslation(["forms"]);
+
   return (
     <>
       {sections &&
@@ -86,7 +90,7 @@ export const CreateFieldsForm = <T extends object, K extends object>({
                               xs: 0.5,
                               md: 2,
                             },
-                            paddingRight: "10px",
+                            // paddingRight: "10px",
                           }}
                         >
                           {Component && (
@@ -102,12 +106,7 @@ export const CreateFieldsForm = <T extends object, K extends object>({
                         </Grid>
                       )}
                       {enableEditing && (
-                        <Grid
-                          item
-                          xs={StringUtils.isNullOrEmty(label) ? xs : 12}
-                          key={key}
-                          sx={{ marginBottom: 2, paddingX: "10px" }}
-                        >
+                        <Grid item xs={StringUtils.isNullOrEmty(label) ? xs : 12} key={key} sx={{ marginBottom: 2 }}>
                           {Component && (
                             <Component
                               {...rest}
@@ -141,6 +140,9 @@ export const CreateFieldsForm = <T extends object, K extends object>({
           );
         })}
 
+      <Grid container>
+        <CustomCartFooter formik={formik} index={4} disabled={disabled} disabledForm={disabledForm} />
+      </Grid>
       {/* {enableEditing && (
         <Grid item xs={12} sx={{ display: "flex", flexDirection: "row", gap: 2 }}>
           <CustomButton

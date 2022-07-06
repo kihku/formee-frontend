@@ -6,9 +6,11 @@
     "form_cart_sub_total": "Subtotal",
     "form_cart_discount": "Discount",
     "form_cart_total": "Total",
+    "form_cart_shipping": "Shipping fee",
     "form_shipping_id": "Tracking ID",
     "form_shipping_search": "Go to tracking page",
     "form_shipping_cod": "COD Fee",
     "form_shipping_cod_total": "Total (including COD fee): ",
-    "form_payment_paid": "Paid"
+    "form_payment_paid": "Add proof of payment",
+    "form_shipping_fee": "Shipping fee"
 }

@@ -1,9 +1,9 @@
-import { Checkbox, Grid, NativeSelect, Typography } from "@mui/material";
+import { Button, Checkbox, Grid, IconButton, NativeSelect, Tooltip, Typography } from "@mui/material";
 import FormControl from "@mui/material/FormControl";
 import { CustomIcon } from "components/CustomIcon";
 import { StyledInput } from "components/CustomTextField";
 import { paymentMethodsEng, paymentMethodsVi } from "constants/constants";
-import { useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { COLORS } from "styles";
 import StringUtils from "utils/stringUtils";
@@ -21,8 +21,8 @@ export const FormPayment = ({ index, formik, disabled, disabledForm }: FormPayme
   const currentLanguage = String(localStorage.getItem("i18nextLng"));
 
   const [type, setType] = useState<string>("");
-  const [codFee, setCodFee] = useState<number>(0);
-  const [total, setTotal] = useState<number>(0);
+  // const [codFee, setCodFee] = useState<string>("");
+  // const [total, setTotal] = useState<number>(0);
   const [paid, setPaid] = useState<boolean>(false);
 
   const renderValue = () => {
@@ -31,16 +31,32 @@ export const FormPayment = ({ index, formik, disabled, disabledForm }: FormPayme
       if (!StringUtils.isNullOrEmty(values[0])) {
         let paymentType = values[0].value;
         setType(paymentType);
-        paymentType === "PRE_PAID" ? setPaid(values[1]) : setCodFee(Number(values[1]));
+        paymentType === "PRE_PAID" && setPaid(values[1]);
       }
     }
   };
 
   const handleChangeType = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setType(e.target.value);
-    setCodFee(0);
+    // setCodFee("");
     setPaid(false);
   };
+
+  async function handleImport(e: ChangeEvent<HTMLInputElement>) {
+    if (e.target.files && e.target.files.length > 0) {
+      try {
+        // let files: File[] = Array.from(e.target.files);
+        // setFileList(files);
+        // setImageList(
+        //   files.map((file: any) => {
+        //     return URL.createObjectURL(file);
+        //   }),
+        // );
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  }
 
   useEffect(() => {
     renderValue();
@@ -54,21 +70,21 @@ export const FormPayment = ({ index, formik, disabled, disabledForm }: FormPayme
         ...(formik.values["response"] ? formik.values["response"].slice(0, index) : []),
         [
           (currentLanguage === "en" ? paymentMethodsEng : paymentMethodsVi).find(item => item.value === type),
-          type === "PRE_PAID" ? paid : codFee,
+          type === "PRE_PAID" && paid,
         ],
         ...(formik.values["response"] ? formik.values["response"].slice(index + 1) : []),
       ]);
-  }, [type, codFee, paid]);
+  }, [type, paid]);
 
-  useEffect(() => {
-    let newTotal: number = 0;
-    let discountPercentage: number = (100 - Number(formik ? formik.values["discount"] : 0)) / 100;
-    formik &&
-      formik.values["response"].at(4).forEach((product: any) => {
-        newTotal += product.productPrice * product.quantity;
-      });
-    setTotal(newTotal * discountPercentage);
-  }, [formik.values]);
+  // useEffect(() => {
+  //   let newTotal: number = 0;
+  //   let discountPercentage: number = (100 - Number(formik ? formik.values["discount"] : 0)) / 100;
+  //   formik &&
+  //     formik.values["response"].at(4).forEach((product: any) => {
+  //       newTotal += product.productPrice * product.quantity;
+  //     });
+  //   setTotal(newTotal * discountPercentage);
+  // }, [formik.values]);
 
   return (
     <FormControl variant="standard" sx={{ width: "100%", marginBottom: 2 }}>
@@ -89,9 +105,32 @@ export const FormPayment = ({ index, formik, disabled, disabledForm }: FormPayme
             })}
           </NativeSelect>
         </Grid>
-        {type === "PRE_PAID" && (
+        {/* {type === "PRE_PAID" && (
           <Grid item xs={12} md={6} lg={3} sx={{ display: "flex", alignItems: "center", gap: 0 }}>
-            <Checkbox
+            <input
+              accept="image/*"
+              hidden={true}
+              id="contained-button-file"
+              multiple={false}
+              type="file"
+              onChange={handleImport}
+            />
+            <label htmlFor="contained-button-file">
+              <Button
+                variant="text"
+                size="small"
+                component="span"
+                disableElevation
+                sx={{ height: "45px", paddingX: 1, gap: 1 }}
+              >
+                <CustomIcon name="image" color={COLORS.primaryLight} />
+                {t("forms:form_payment_paid")}
+              </Button>
+            </label>
+          </Grid>
+        )} */}
+
+        {/* <Checkbox
               checked={paid}
               disabled={disabled || disabledForm}
               icon={<CustomIcon name={"squareCheckBox"} size={24} color={COLORS.lightText} />}
@@ -99,11 +138,10 @@ export const FormPayment = ({ index, formik, disabled, disabledForm }: FormPayme
               onChange={e => {
                 setPaid(e.target.checked);
               }}
-            />
-            <Typography>{t("form_payment_paid")}</Typography>
-          </Grid>
-        )}
-        {type === "COD" && (
+            /> */}
+        {/* <Typography>{t("form_payment_paid")}</Typography> */}
+
+        {/* {type === "COD" && (
           <Grid item xs={12} md={6} lg={3} sx={{ display: "flex", alignItems: "center", gap: 0 }}>
             <StyledInput
               fullWidth
@@ -112,7 +150,7 @@ export const FormPayment = ({ index, formik, disabled, disabledForm }: FormPayme
               disabled={disabled || disabledForm || StringUtils.isNullOrEmty(type)}
               placeholder={t("form_shipping_cod")}
               onChange={e => {
-                setCodFee(Number(e.target.value));
+                setCodFee(e.target.value);
               }}
               inputProps={{
                 autoComplete: "new-password",
@@ -123,8 +161,8 @@ export const FormPayment = ({ index, formik, disabled, disabledForm }: FormPayme
               }}
             />
           </Grid>
-        )}
-        {type === "COD" && (
+        )} */}
+        {/* {type === "COD" && (
           <Grid item xs={12} md={5} sx={{ display: "flex", alignItems: "center", gap: 0 }}>
             <Typography sx={{ color: COLORS.primaryLight, fontWeight: 500 }}>
               {t("form_shipping_cod_total")}
@@ -132,7 +170,7 @@ export const FormPayment = ({ index, formik, disabled, disabledForm }: FormPayme
               {" đ"}
             </Typography>
           </Grid>
-        )}
+        )} */}
       </Grid>
     </FormControl>
   );

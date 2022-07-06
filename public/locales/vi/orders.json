@@ -16,5 +16,7 @@
     "order_edit_confirm": "Xác nhận chỉnh sửa đơn hàng",
     "order_edit_message": "Để lại lời nhắn cho người mua (không bắt buộc)",
     "button_confirm": "Xác nhận",
-    "button_close": "Đóng"
+    "button_close": "Đóng",
+    "order_delivery_shipping": "Vận chuyển",
+    "order_delivery_self_pickup": "Tự đến lấy"
 }

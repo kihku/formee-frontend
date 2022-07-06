@@ -225,7 +225,7 @@ function CreateOrderPage() {
                       {t("orders:order_form_name")}
                     </InputLabel>
                   </Grid>
-                  <Grid item xs={5} sx={{ marginBottom: 2, paddingX: "10px" }}>
+                  <Grid item xs={5} sx={{ marginBottom: 2, paddingRight: "10px" }}>
                     <CustomTextField formik={formik} name="orderName" />
                   </Grid>
                 </Grid>
