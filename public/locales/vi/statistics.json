@@ -13,12 +13,15 @@
     "stats_customers_total": "Tổng số",
     "stats_customers_new": "Khách hàng mới",
     "stats_customers_returing": "Khách hàng quay lại",
-    "stats_chart_revenue": "Thống kê thu nhập theo tháng",
+    "stats_chart_revenue": "Thống kê doanh thu và thu nhập",
     "stats_chart_revenue_subtitle": "Thu nhập",
-    "stats_chart_category": "Thống kê loại sản phẩm bán ra",
-    "stats_chart_category_subtitle": "Số lượng đã bán",
+    "stats_chart_category": "Thống kê loại sản phẩm",
+    "stats_chart_category_subtitle_sales": "Số lượng đã bán",
+    "stats_chart_category_subtitle_income": "Doanh thu",
+    "stats_chart_category_subtitle_revenue": "Thu nhập",
     "stats_chart_customer": "Thống kê khách hàng theo tháng",
     "stats_chart_customer_subtitle": "Số khách hàng",
     "stats_chart_top_proucts": "Thống kê sản phẩm bán chạy",
-    "stats_chart_top_proucts_subtitle": "Số lượng đã bán"
+    "stats_chart_top_proucts_subtitle": "Số lượng đã bán",
+    "stats_title": "Thống kê"
 }

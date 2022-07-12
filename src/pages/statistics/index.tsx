@@ -1,8 +1,10 @@
-import { Box, Grid, Typography } from "@mui/material";
+import { Box, Grid, MenuItem, Select, Typography } from "@mui/material";
 import { StatisticsService } from "apis/statisticsService/statisticsService";
 import { CustomBackgroundCard } from "components/CustomBackgroundCard";
 import { CustomIcon } from "components/CustomIcon";
-import { monthListEng, monthListVi } from "constants/constants";
+import { StyledInput } from "components/CustomTextField";
+import { CustomTitle } from "components/CustomTitle";
+import { monthListEng, monthListVi, weekListEng, weekListVi } from "constants/constants";
 import ReactEcharts from "echarts-for-react";
 import { StatisticsDTO } from "models/statistics";
 import { useEffect, useState } from "react";
@@ -10,6 +12,7 @@ import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { COLORS } from "styles";
 import CommonUtils from "utils/commonUtils";
+import DateUtils from "utils/dateUtils";
 
 function StatisticsPage() {
   const { t } = useTranslation(["statistics"]);
@@ -18,22 +21,27 @@ function StatisticsPage() {
   const navigate = useNavigate();
 
   const [stats, setStats] = useState<StatisticsDTO[]>([]);
+  const [periodType, setPeriodType] = useState<string>("WEEK");
+  const [categoryType, setCategoryType] = useState<string>("sales");
 
   const getAllStatistics = async () => {
-    await new StatisticsService().getAllStatistics().then(response => {
+    await new StatisticsService().getAllStatistics(periodType).then(response => {
       response.result && setStats(response.result);
     });
   };
 
   useEffect(() => {
     CommonUtils.setPageTitle(t("commons:title_statistics"));
-    getAllStatistics();
   }, []);
+
+  useEffect(() => {
+    getAllStatistics();
+  }, [periodType]);
 
   const getRevenueChartOption = () => {
     return {
       toolbox: {
-        show: true,
+        show: false,
         feature: {
           saveAsImage: {
             type: "png",
@@ -63,7 +71,19 @@ function StatisticsPage() {
       xAxis: [
         {
           type: "category",
-          data: currentLanguage === "en" ? monthListEng : monthListVi,
+          data:
+            periodType === "YEAR"
+              ? currentLanguage === "en"
+                ? monthListEng
+                : monthListVi
+              : periodType === "MONTH"
+              ? Array.from(
+                  { length: DateUtils.getWeekCount(2022, new Date().getMonth()) - 1 },
+                  (item, index) => `${currentLanguage === "en" ? "Week" : "Tuần"} ${index + 1}`,
+                )
+              : currentLanguage === "en"
+              ? weekListEng
+              : weekListVi,
           axisTick: {
             alignWithLabel: true,
           },
@@ -89,12 +109,27 @@ function StatisticsPage() {
       ],
       series: [
         {
-          name: t("stats_chart_revenue_subtitle"),
+          name: "Doanh thu",
           type: "bar",
           data:
             stats.length > 0
-              ? JSON.parse(stats.find(stat => stat.type === "REVENUE")?.data["2022"]).map((item: any) => {
+              ? JSON.parse(stats.find(stat => stat.type === "REVENUE")?.data["2022"])["income"].map((item: any) => {
                   return { value: item, itemStyle: { color: COLORS.green } };
+                })
+              : [],
+        },
+        {
+          name: t("stats_chart_revenue_subtitle"),
+          type: "line",
+          smooth: true,
+          yAxisIndex: 0,
+          lineStyle: {
+            color: COLORS.red,
+          },
+          data:
+            stats.length > 0
+              ? JSON.parse(stats.find(stat => stat.type === "REVENUE")?.data["2022"])["revenue"].map((item: any) => {
+                  return { value: item, itemStyle: { color: COLORS.red } };
                 })
               : [],
         },
@@ -105,7 +140,7 @@ function StatisticsPage() {
   const getCustomerChartOption = () => {
     return {
       toolbox: {
-        show: true,
+        show: false,
         feature: {
           saveAsImage: {
             type: "png",
@@ -135,7 +170,19 @@ function StatisticsPage() {
       xAxis: [
         {
           type: "category",
-          data: currentLanguage === "en" ? monthListEng : monthListVi,
+          data:
+            periodType === "YEAR"
+              ? currentLanguage === "en"
+                ? monthListEng
+                : monthListVi
+              : periodType === "MONTH"
+              ? Array.from(
+                  { length: DateUtils.getWeekCount(2022, new Date().getMonth()) - 1 },
+                  (item, index) => `${currentLanguage === "en" ? "Week" : "Tuần"} ${index + 1}`,
+                )
+              : currentLanguage === "en"
+              ? weekListEng
+              : weekListVi,
           axisTick: {
             alignWithLabel: true,
           },
@@ -157,6 +204,7 @@ function StatisticsPage() {
             show: true,
             fontFamily: "Inter",
           },
+          minInterval: 1,
         },
       ],
       series: [
@@ -181,7 +229,7 @@ function StatisticsPage() {
   const getCategoriesChartOption = () => {
     return {
       toolbox: {
-        show: true,
+        show: false,
         feature: {
           saveAsImage: {
             type: "png",
@@ -216,27 +264,34 @@ function StatisticsPage() {
       color: [COLORS.blue, COLORS.red, COLORS.orange, COLORS.yellow, COLORS.green, COLORS.primary, COLORS.gray],
       series: [
         {
-          name: t("stats_chart_category_subtitle"),
+          name: t(`stats_chart_category_subtitle_${categoryType}`),
           type: "pie",
           radius: ["40%", "70%"],
           avoidLabelOverlap: false,
           emphasis: {
             label: {
-              show: true,
-              fontWeight: "bold",
+              show: false,
+            },
+            labelLine: {
+              show: false,
             },
           },
           labelLine: {
-            show: true,
+            show: false,
           },
           label: {
-            fontFamily: "Inter",
+            show: false,
           },
           data:
             stats.length > 0
-              ? Object.keys(stats.find(stat => stat.type === "SALES")?.data).map((key: any) => {
-                  return { value: stats.find(stat => stat.type === "SALES")?.data[`${key}`], name: key };
-                })
+              ? Object.keys(JSON.parse(stats.find(stat => stat.type === "SALES")?.data[`${categoryType}`])).map(
+                  (key: any) => {
+                    return {
+                      value: JSON.parse(stats.find(stat => stat.type === "SALES")?.data[`${categoryType}`])[`${key}`],
+                      name: key,
+                    };
+                  },
+                )
               : [],
         },
       ],
@@ -246,7 +301,7 @@ function StatisticsPage() {
   const getTopProductsChartOption = () => {
     return {
       toolbox: {
-        show: true,
+        show: false,
         feature: {
           saveAsImage: {
             type: "png",
@@ -321,8 +376,80 @@ function StatisticsPage() {
     };
   };
 
+  const getTypeByLanguage = (type: string) => {
+    switch (type) {
+      case "WEEK":
+        return currentLanguage === "en" ? " for Week " : "của Tuần ";
+      case "MONTH":
+        return currentLanguage === "en" ? " for " : " của Tháng ";
+      case "YEAR":
+        return currentLanguage === "en" ? " for " : " của Năm ";
+    }
+  };
+
+  const getTitleByType = () => {
+    let result = t("stats_title");
+    result += ` ${getTypeByLanguage(periodType)}`;
+    switch (periodType) {
+      case "WEEK":
+        result += DateUtils.getWeekNum(new Date());
+        result += `, ${currentLanguage === "en" ? " " : "Tháng "} ${DateUtils.getMonthByLanguage(
+          new Date(),
+          currentLanguage,
+        )}`;
+        result += `, ${new Date().getFullYear()}`;
+        break;
+      case "MONTH":
+        result += `${DateUtils.getMonthByLanguage(new Date(), currentLanguage)}`;
+        result += `, ${new Date().getFullYear()}`;
+        break;
+      case "YEAR":
+        result += `${new Date().getFullYear()}`;
+        break;
+    }
+    return result;
+  };
+
   return (
     <Grid container sx={{ paddingY: 5, paddingX: 3 }}>
+      <Grid item xs={12} sx={{ fontWeight: 800, fontSize: "30px", marginBottom: 4, paddingX: 2 }}>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            width: "100%",
+            alignItems: "center",
+          }}
+        >
+          <CustomTitle text={[{ text: getTitleByType(), highlight: true }]} />
+          <Box sx={{ display: "flex", gap: 1.5 }}>
+            <Select
+              value={periodType}
+              onChange={e => {
+                setPeriodType(e.target.value);
+              }}
+              input={<StyledInput />}
+            >
+              {[
+                {
+                  title: currentLanguage === "en" ? "This week" : "Theo tuần",
+                  value: "WEEK",
+                },
+                {
+                  title: currentLanguage === "en" ? "This month" : "Theo tháng",
+                  value: "MONTH",
+                },
+                {
+                  title: currentLanguage === "en" ? "This year" : "Theo năm",
+                  value: "YEAR",
+                },
+              ].map((option, key) => {
+                return <MenuItem value={option.value}>{option.title}</MenuItem>;
+              })}
+            </Select>
+          </Box>
+        </Box>
+      </Grid>
       <Grid item xs={4} sx={{ paddingX: 2 }}>
         <CustomBackgroundCard sizeX={"auto"} sizeY={"auto"} padding={-1}>
           <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 3 }}>
@@ -390,10 +517,7 @@ function StatisticsPage() {
       <Grid item xs={4} sx={{ paddingX: 2 }}>
         <CustomBackgroundCard sizeX={"auto"} sizeY={"auto"} padding={-1}>
           <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 3 }}>
-            <Box sx={{ fontWeight: 500, fontSize: "20px" }}>
-              {/* {"Thống kê sản phẩm"} */}
-              {t("stats_products_title")}
-            </Box>
+            <Box sx={{ fontWeight: 500, fontSize: "20px" }}>{t("stats_products_title")}</Box>
             <Box
               onClick={() => {
                 navigate("/products");
@@ -408,7 +532,6 @@ function StatisticsPage() {
                   ":hover": { textDecoration: "underline" },
                 }}
               >
-                {/* {"Quản lý sản phẩm"} */}
                 {t("stats_products_manage")}
               </Typography>
               <CustomIcon name={"rightArrow"} />
@@ -421,10 +544,7 @@ function StatisticsPage() {
               >
                 {stats.find(stat => stat.type === "PRODUCT")?.data["total"]}
               </Box>
-              <Box sx={{ textAlign: "center" }}>
-                {/* {"Tổng số"} */}
-                {t("stats_products_total")}
-              </Box>
+              <Box sx={{ textAlign: "center" }}>{t("stats_products_total")}</Box>
             </Box>
             <Box>
               <Box
@@ -432,10 +552,7 @@ function StatisticsPage() {
               >
                 {stats.find(stat => stat.type === "PRODUCT")?.data["outOfStock"]}
               </Box>
-              <Box sx={{ textAlign: "center" }}>
-                {/* {"Hết hàng"} */}
-                {t("stats_products_out_of_stock")}
-              </Box>
+              <Box sx={{ textAlign: "center" }}>{t("stats_products_out_of_stock")}</Box>
             </Box>
             <Box>
               <Box
@@ -443,10 +560,7 @@ function StatisticsPage() {
               >
                 {stats.find(stat => stat.type === "PRODUCT")?.data["totalTypes"]}
               </Box>
-              <Box sx={{ textAlign: "center" }}>
-                {/* {"Phân loại"} */}
-                {t("stats_products_type")}
-              </Box>
+              <Box sx={{ textAlign: "center" }}>{t("stats_products_type")}</Box>
             </Box>
           </Box>
         </CustomBackgroundCard>
@@ -454,28 +568,7 @@ function StatisticsPage() {
       <Grid item xs={4} sx={{ paddingX: 2 }}>
         <CustomBackgroundCard sizeX={"auto"} sizeY={"auto"} padding={-1}>
           <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 3 }}>
-            <Box sx={{ fontWeight: 500, fontSize: "20px" }}>
-              {/* {"Thống kê khách hàng"} */}
-              {t("stats_customers_title")}
-            </Box>
-            {/* <Box
-              onClick={() => {
-                navigate("/customers");
-              }}
-              sx={{ display: "flex", cursor: "pointer", alignItems: "center" }}
-            >
-              <Typography
-                sx={{
-                  fontSize: "16px",
-                  fontWeight: 400,
-                  color: COLORS.lightText,
-                  ":hover": { textDecoration: "underline" },
-                }}
-              >
-                {"Quản lý khách hàng"}
-              </Typography>
-              <CustomIcon name={"rightArrow"} />
-            </Box> */}
+            <Box sx={{ fontWeight: 500, fontSize: "20px" }}>{t("stats_customers_title")}</Box>
           </Box>
           <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
             <Box>
@@ -484,10 +577,7 @@ function StatisticsPage() {
               >
                 {stats.find(stat => stat.type === "CUSTOMER")?.data["total"]}
               </Box>
-              <Box sx={{ textAlign: "center" }}>
-                {/* {"Tổng số"} */}
-                {t("stats_customers_total")}
-              </Box>
+              <Box sx={{ textAlign: "center" }}>{t("stats_customers_total")}</Box>
             </Box>
             <Box>
               <Box
@@ -495,10 +585,7 @@ function StatisticsPage() {
               >
                 {stats.find(stat => stat.type === "CUSTOMER")?.data["new"]}
               </Box>
-              <Box sx={{ textAlign: "center" }}>
-                {/* {"Khách hàng mới"} */}
-                {t("stats_customers_new")}
-              </Box>
+              <Box sx={{ textAlign: "center" }}>{t("stats_customers_new")}</Box>
             </Box>
             <Box>
               <Box
@@ -506,10 +593,7 @@ function StatisticsPage() {
               >
                 {stats.find(stat => stat.type === "CUSTOMER")?.data["returning"]}
               </Box>
-              <Box sx={{ textAlign: "center" }}>
-                {/* {"Khách hàng quay lại"} */}
-                {t("stats_customers_returing")}
-              </Box>
+              <Box sx={{ textAlign: "center" }}>{t("stats_customers_returing")}</Box>
             </Box>
           </Box>
         </CustomBackgroundCard>
@@ -519,9 +603,35 @@ function StatisticsPage() {
           <ReactEcharts option={getRevenueChartOption()} style={{ height: "100%" }} />
         </CustomBackgroundCard>
       </Grid>
-      <Grid item xs={4} sx={{ paddingX: 2, height: "45vh", marginTop: 4 }}>
+      <Grid item xs={4} sx={{ paddingX: 2, height: "45vh", marginTop: 4, position: "relative" }}>
+        <Box sx={{ position: "absolute", right: 40, top: 18, zIndex: 99 }}>
+          <Select
+            value={categoryType}
+            onChange={e => {
+              setCategoryType(e.target.value);
+            }}
+            input={<StyledInput />}
+          >
+            {[
+              {
+                title: currentLanguage === "en" ? "By sales" : "Số lượng",
+                value: "sales",
+              },
+              {
+                title: currentLanguage === "en" ? "By income" : "Doanh thu",
+                value: "income",
+              },
+              {
+                title: currentLanguage === "en" ? "By revenue" : "Thu nhập",
+                value: "revenue",
+              },
+            ].map((option, key) => {
+              return <MenuItem value={option.value}>{option.title}</MenuItem>;
+            })}
+          </Select>
+        </Box>
         <CustomBackgroundCard sizeX={"auto"} sizeY={"100%"} padding={-1}>
-          <ReactEcharts option={getCategoriesChartOption()} style={{ height: "100%" }} />
+          <ReactEcharts option={getCategoriesChartOption()} style={{ height: "100%", zIndex: 1 }} />
         </CustomBackgroundCard>
       </Grid>
       <Grid item xs={8} sx={{ paddingX: 2, height: "45vh", marginTop: 10, marginBottom: 6 }}>

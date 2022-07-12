@@ -123,7 +123,7 @@ export const Header = () => {
         <Tooltip title={t("header_help")}>
           <IconButton
             onClick={() => {
-              // navigate("/error");
+              navigate("/help");
             }}
           >
             <CustomIcon name="about" size={28} />

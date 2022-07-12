@@ -61,4 +61,49 @@ export default class DateUtils {
     }
     return result.join(" ");
   }
+
+  static getWeekCount(year: number, month: number) {
+    var firstOfMonth = new Date(year, month - 1, 1);
+    var lastOfMonth = new Date(year, month, 0);
+    var used = firstOfMonth.getDay() + 6 + lastOfMonth.getDate();
+    return Math.ceil(used / 7);
+  }
+
+  static getWeekNum(d: Date) {
+    var date = d.getDate();
+    var day = d.getDay();
+    return Math.ceil((date - 1 - day) / 7) + 1;
+  }
+
+  static getMonthByLanguage(date: Date, language: string) {
+    var month = date.getMonth();
+    if (language === "en") {
+      switch (month) {
+        case 1:
+          return "January";
+        case 2:
+          return "February";
+        case 3:
+          return "March";
+        case 4:
+          return "April";
+        case 5:
+          return "May";
+        case 6:
+          return "June";
+        case 7:
+          return "July";
+        case 8:
+          return "August";
+        case 9:
+          return "September";
+        case 10:
+          return "October";
+        case 11:
+          return "November";
+        case 12:
+          return "December";
+      }
+    } else return month;
+  }
 }

@@ -9,6 +9,7 @@ const CreateOrderPage = lazy(() => import("pages/createOrder"));
 const EditOrderPage = lazy(() => import("pages/editOrder"));
 const InventoryPage = lazy(() => import("pages/inventory"));
 const StatisticsPage = lazy(() => import("pages/statistics"));
+const HelpPage = lazy(() => import("pages/help"));
 
 export interface RouteProps {
   title: string;
@@ -28,4 +29,5 @@ export const PUBLIC_ROUTES: RouteProps[] = [
   { title: "Edit order request", component: <EditOrderPage fromRequest={true} />, path: "/order/request" },
   { title: "Products", component: <InventoryPage />, path: "/products" },
   { title: "Report", component: <StatisticsPage />, path: "/report" },
+  { title: "Help", component: <HelpPage />, path: "/help" },
 ];

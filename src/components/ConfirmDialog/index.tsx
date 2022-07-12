@@ -1,5 +1,6 @@
 import { Box, Dialog, DialogContent, DialogTitle } from "@mui/material";
 import { CustomButton } from "components/CustomButton";
+import { useTranslation } from "react-i18next";
 
 export interface ConfirmationDialogProps {
   id: string;
@@ -13,6 +14,7 @@ export interface ConfirmationDialogProps {
 
 export const ConfirmationDialog = (props: ConfirmationDialogProps) => {
   const { onClose, open, ...other } = props;
+  const { t } = useTranslation(["commons"]);
 
   const handleCancel = (isClose: boolean) => {
     onClose(false, isClose);
@@ -51,9 +53,9 @@ export const ConfirmationDialog = (props: ConfirmationDialogProps) => {
             justifyContent: "flex-end",
           }}
         >
-          <CustomButton text="Đống ý" type="rounded" startIcon="checkCircle" handleOnClick={handleOk} />
+          <CustomButton text={t("button_confirm")} type="rounded" startIcon="checkCircle" handleOnClick={handleOk} />
           <CustomButton
-            text="Huỷ"
+            text={t("button_cancel")}
             type="rounded-outlined"
             startIcon="cancelCircle"
             handleOnClick={() => {

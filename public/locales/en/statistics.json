@@ -16,9 +16,12 @@
     "stats_chart_revenue": "Total revenue by month",
     "stats_chart_revenue_subtitle": "Revenue",
     "stats_chart_category": "Sales by categories",
-    "stats_chart_category_subtitle": "Number of sales",
+    "stats_chart_category_subtitle_sales": "Number of sales",
+    "stats_chart_category_subtitle_income": "Income",
+    "stats_chart_category_subtitle_revenue": "Revenue",
     "stats_chart_customer": "Number of customers by month",
     "stats_chart_customer_subtitle": "Number of customers",
     "stats_chart_top_proucts": "Top products",
-    "stats_chart_top_proucts_subtitle": "Number of sales"
+    "stats_chart_top_proucts_subtitle": "Number of sales",
+    "stats_title": "Report"
 }

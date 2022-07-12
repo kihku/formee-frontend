@@ -5,9 +5,9 @@ import { StatisticsDTO } from "models/statistics";
 export class StatisticsService extends BaseService {
   url = "/api/statistics";
 
-  getAllStatistics = async (): Promise<DataResponse<StatisticsDTO[]>> => {
+  getAllStatistics = async (periodType: string): Promise<DataResponse<StatisticsDTO[]>> => {
     let data: any = {};
-    await AXIOS_INSTANCE.get(`${this.url}`, this.getRequestHeaders())
+    await AXIOS_INSTANCE.get(`${this.url}?type=${periodType}`, this.getRequestHeaders())
       .then(response => {
         data = response.data;
       })
