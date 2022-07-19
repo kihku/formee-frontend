@@ -16,7 +16,7 @@ function HelpPage() {
   const [expanded, setExpanded] = useState<boolean[]>(Array.from({ length: helpListEng.length }, () => false));
 
   useEffect(() => {
-    CommonUtils.setPageTitle(t("help_title"));
+    CommonUtils.setPageTitle(currentLanguage === "en" ? "Frequently asked questions" : "Những câu hỏi thường gặp");
   }, []);
 
   return (
@@ -62,17 +62,19 @@ function HelpPage() {
                 </Box>
                 <IconButton>
                   <ExpandMoreRoundedIcon
-                    sx={{ transform: expanded[0] ? "rotate(180deg)" : "rotate(0)", transition: "all 0.15s linear" }}
+                    sx={{ transform: expanded[index] ? "rotate(180deg)" : "rotate(0)", transition: "all 0.15s linear" }}
                   />
                 </IconButton>
               </Box>
-              <Collapse in={expanded[0]} timeout={400}>
+              <Collapse in={expanded[index]} timeout={400 * (item.imagePath.length / 2)}>
                 {item.answer.map(ans => (
                   <Box sx={{ paddingY: 0.25 }}>{ans}</Box>
                 ))}
-                <Box sx={{ marginTop: 2 }}>
-                  <img src={item.imagePath} width={"100%"} height={"100%"} />
-                </Box>
+                {item.imagePath.map(image => (
+                  <Box sx={{ marginTop: 2 }}>
+                    <img src={image} width={"100%"} height={"100%"} />
+                  </Box>
+                ))}
               </Collapse>
             </Box>
           );

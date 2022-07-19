@@ -12,6 +12,7 @@ import GeneralErrorPage from "pages/generalError";
 import OrderTrackingPage from "pages/tracking";
 import LayoutCommon from "components/LayoutCommon";
 import SignUpPage from "pages/login/signUp";
+import OnboardingPage from "pages/login/onboarding";
 
 export const CustomLoadingSpinner = () => {
   return (
@@ -24,13 +25,14 @@ export const CustomLoadingSpinner = () => {
 function App() {
   return (
     <Suspense fallback={<CustomLoadingSpinner />}>
-      <Fade in>
+      <Fade in timeout={400}>
         <div className="base-layout">
           <LayoutCommon />
           <Routes>
             <Route path="/" element={<Navigate to="/register" />} />
             <Route path="/register" element={<SignUpPage />} />
             <Route path="/login" element={<LoginPage />} />
+            <Route path="/onboarding" element={<OnboardingPage />} />
             <Route path="/tracking/*" element={<OrderTrackingPage />} />
             {PUBLIC_ROUTES.map((page, key) => {
               return (

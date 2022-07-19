@@ -1,4 +1,4 @@
-import { Box, Fade, Grid } from "@mui/material";
+import { Box, Fade, FormHelperText, Grid } from "@mui/material";
 import { UserService } from "apis/userService/userService";
 import { CustomButton } from "components/CustomButton";
 import { StyledInput } from "components/CustomTextField";
@@ -18,13 +18,23 @@ interface AccountSettingsProps {
 }
 
 function AccountSettings(props: AccountSettingsProps) {
-  const { t } = useTranslation(["settings", "commons"]);
+  const { t } = useTranslation(["settings", "commons", "messages"]);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   // const [openDialog, setOpenDialog] = useState<boolean>(false);
 
-  const validationSchema = Yup.object().shape({});
+  const validationSchema = Yup.object().shape({
+    email: Yup.string()
+      .trim()
+      .test("invalid-email", t("messages:messages_invalid_email"), email => {
+        if (email !== undefined) {
+          let str = email.toString();
+          return /^[a-zA-Z0-9.]+@(?:[a-zA-Z0-9]+\.)+[A-Za-z]+$/.test(str);
+        }
+        return true;
+      }),
+  });
 
   const handleSubmit = async (values: UserDTO) => {
     await new UserService().updateProfile(values).then(response => {
@@ -95,6 +105,13 @@ function AccountSettings(props: AccountSettingsProps) {
                   formik.setFieldValue("email", e.target.value);
                 }}
               />
+              <FormHelperText
+                sx={{
+                  color: "red",
+                }}
+              >
+                {formik.errors["email"] && formik.errors["email"]}
+              </FormHelperText>
             </Grid>
             <Grid item xs={3} sx={{ marginBottom: 3 }}></Grid>
 

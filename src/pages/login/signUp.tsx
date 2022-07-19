@@ -1,10 +1,24 @@
-import { Box, CssBaseline, FormHelperText, Grid, InputLabel, Paper, ThemeProvider, Typography } from "@mui/material";
+/* eslint-disable jsx-a11y/alt-text */
+import {
+  Box,
+  CssBaseline,
+  FormHelperText,
+  Grid,
+  InputBase,
+  InputLabel,
+  MenuItem,
+  Paper,
+  Select,
+  ThemeProvider,
+  Typography,
+} from "@mui/material";
 import { UserService } from "apis/userService/userService";
 import { CustomButton } from "components/CustomButton";
 import { StyledInput } from "components/CustomTextField";
 import { initializeApp } from "firebase/app";
 import { createUserWithEmailAndPassword, getAuth } from "firebase/auth";
 import { useFormik } from "formik";
+import i18n from "i18n";
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch } from "react-redux";
@@ -72,6 +86,10 @@ function SignUpPage() {
       });
   }
 
+  const changeLanguage = (language: "en" | "vi") => {
+    i18n.changeLanguage(language);
+  };
+
   const handleLogin = (idToken: string, uid: string) => {
     setCookie("USER_TOKEN", idToken);
     setCookie("USER_ID", uid);
@@ -89,7 +107,7 @@ function SignUpPage() {
             profilePicture: response.profilePicture,
           }),
         );
-        navigate("/home");
+        navigate("/onboarding");
       })
       .catch(e => {
         dispatch(openNotification({ open: true, content: e.message, severity: "error" }));
@@ -102,7 +120,7 @@ function SignUpPage() {
 
   return (
     <Paper
-      title="Login Page"
+      // title="Login Page"
       sx={{
         display: "flex",
         justifyContent: "center",
@@ -159,27 +177,81 @@ function SignUpPage() {
           >
             <Box
               sx={{
-                gap: 2,
                 display: "flex",
-                flexDirection: "row",
-                justifyContent: "right",
+                justifyContent: "space-between",
                 alignItems: "center",
               }}
             >
-              <ThemeProvider theme={lightTheme}>
-                <Typography sx={{ color: COLORS.lightText }}>{t("sign_up_subtitle")}</Typography>
-
-                <CustomButton
-                  text={t("login_sign_in")}
-                  type="rounded-outlined"
-                  endIcon="rightArrow"
-                  color={COLORS.lightText}
-                  handleOnClick={() => {
-                    // handleSignIn(formik.values);
-                    navigate("/login");
+              <Select input={<InputBase value={String(localStorage.getItem("i18nextLng"))} />}>
+                <MenuItem
+                  value={"vi"}
+                  onClick={() => {
+                    changeLanguage("vi");
+                    window.location.reload();
                   }}
-                />
-              </ThemeProvider>
+                >
+                  <Box
+                    sx={{
+                      whiteSpace: "nowrap",
+                      textOverflow: "ellipsis",
+                      overflow: "hidden",
+                      fontSize: 14,
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 1.5,
+                    }}
+                  >
+                    <img src={"/images/language-vi.png"} width={"20vh"} height={"20vh"} />
+                    {t("commons:header_language_vi")}
+                  </Box>
+                </MenuItem>
+                <MenuItem
+                  value={"en"}
+                  onClick={() => {
+                    changeLanguage("en");
+                    window.location.reload();
+                  }}
+                >
+                  <Box
+                    sx={{
+                      whiteSpace: "nowrap",
+                      textOverflow: "ellipsis",
+                      overflow: "hidden",
+                      fontSize: 14,
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 1.5,
+                    }}
+                  >
+                    <img src={"/images/language-en.png"} width={"20vh"} height={"20vh"} />
+                    {t("commons:header_language_en")}
+                  </Box>
+                </MenuItem>
+              </Select>
+              <Box
+                sx={{
+                  gap: 2,
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "right",
+                  alignItems: "center",
+                }}
+              >
+                <ThemeProvider theme={lightTheme}>
+                  <Typography sx={{ color: COLORS.lightText }}>{t("sign_up_subtitle")}</Typography>
+
+                  <CustomButton
+                    text={t("login_sign_in")}
+                    type="rounded-outlined"
+                    endIcon="rightArrow"
+                    color={COLORS.lightText}
+                    handleOnClick={() => {
+                      // handleSignIn(formik.values);
+                      navigate("/login");
+                    }}
+                  />
+                </ThemeProvider>
+              </Box>
             </Box>
             <Box sx={{ paddingTop: "4%", paddingBottom: "4%", zoom: "120%" }}>
               <Typography fontWeight={700} fontSize={35}>
@@ -275,7 +347,7 @@ function SignUpPage() {
               >
                 {t("login_google")}
               </Typography>
-              <GoogleLoginButton />
+              <GoogleLoginButton openUserGuide={true} />
             </Box>
           </Grid>
         </Grid>

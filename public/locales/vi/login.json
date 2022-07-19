@@ -9,5 +9,17 @@
     "login_sign_in": "Đăng nhập",
     "sign_up_title": "Chào mừng bạn đến với FORMEE!",
     "sign_up_subtitle": "Đăng ký tài khoản mới",
-    "sign_up_existing_acc": "Đã tạo tài khoản?"
+    "sign_up_existing_acc": "Đã tạo tài khoản?",
+    "onboarding_title": "Quá trình đăng ký đã hoàn tất!",
+    "onboarding_subtitle": "Hãy cho chúng tôi biết một chút thông tin về bạn nhé",
+    "onboarding_display_name": "Tên hiển thị",
+    "onboarding_phone": "Số điện thoại",
+    "onboarding_email": "Email",
+    "onboarding_product_title": "Bạn dự định sẽ kinh doanh những loại sản phẩm nào?",
+    "onboarding_product_subtitle": "Hãy chọn tối đa 3 loại sản phẩm",
+    "onboarding_next_step": "Tiếp theo",
+    "onboarding_previous_step": "Trở về",
+    "onboarding_finish": "Hoàn tất",
+    "onboarding_product_detail_title": "Bạn dự định sẽ kinh doanh những loại sản phẩm chính xác nào?",
+    "onboarding_product_detail_subtitle": "Hãy chọn tối đa 5 loại sản phẩm"
 }

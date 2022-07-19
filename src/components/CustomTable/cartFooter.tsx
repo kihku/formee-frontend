@@ -54,8 +54,8 @@ const CustomCartFooter: React.FC<CustomCartFooterProps> = ({
           <Box sx={{ display: "flex", justifyContent: "space-between", fontWeight: 500 }}>
             <Box>{t("form_cart_sub_total")}</Box>
             <Box>
-              {subTotal}
-              {" đ"}
+              {subTotal.toLocaleString()}
+              {/* {" đ"} */}
             </Box>
           </Box>
         </Grid>
@@ -66,8 +66,8 @@ const CustomCartFooter: React.FC<CustomCartFooterProps> = ({
             <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", fontWeight: 500 }}>
               <Box>{t("form_cart_shipping")}</Box>
               <Box>
-                {formik.values["shippingFee"] ? formik.values["shippingFee"] : "0"}
-                {" đ"}
+                {(formik.values["shippingFee"] ? formik.values["shippingFee"] : "0").toLocaleString()}
+                {/* {" đ"} */}
               </Box>
             </Box>
           </Grid>
@@ -119,8 +119,8 @@ const CustomCartFooter: React.FC<CustomCartFooterProps> = ({
           >
             <Box>{t("form_cart_total")}</Box>
             <Box>
-              {total}
-              {" đ"}
+              {total.toLocaleString()}
+              {/* {" đ"} */}
             </Box>
           </Box>
         </Grid>

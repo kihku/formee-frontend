@@ -102,8 +102,8 @@ const DialogViewProduct = ({ itemEdit, openDialog, handleCloseDialog }: DialogVi
                   </InputLabel>
                 </Grid>
                 <Grid item xs={8} sx={{ marginBottom: 2, fontWeight: 600, color: COLORS.primary }}>
-                  {formik.values.productPrice}
-                  {" đ"}
+                  {formik.values.productPrice.toLocaleString()}
+                  {/* {" đ"} */}
                 </Grid>
               </Grid>
             </Grid>

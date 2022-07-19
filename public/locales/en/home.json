@@ -6,5 +6,6 @@
     "home_order_create_button": "Create form",
     "home_order_create_name": "Form name",
     "home_order_create_color": "Color",
-    "home_order_create_optional": "Add additional fields"
+    "home_order_create_optional": "Add additional fields",
+    "home_user_guide_title": "Welcome to FORMEE!"
 }

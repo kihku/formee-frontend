@@ -101,6 +101,19 @@ export class ProductService extends BaseService {
     return data;
   };
 
+  createMultipleProductTypes = async (types: string[]): Promise<DataResponse<any>> => {
+    let data: any = {};
+    await AXIOS_INSTANCE.post(`${this.url}/type/create-multiple`, types, this.getRequestHeaders())
+      .then(response => {
+        data = response.data;
+      })
+      .catch(error => {
+        console.log(error);
+        return Promise.reject(error);
+      });
+    return data;
+  };
+
   deleteTypeById = async (typeId: string): Promise<any> => {
     let data: any = {};
     await AXIOS_INSTANCE.delete(`${this.url}/type/${typeId}`, this.getRequestHeaders())

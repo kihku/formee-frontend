@@ -13,13 +13,14 @@ import DialogFinishOrder from "pages/createOrder/dialogFinish";
 import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { CellProps, Column, useTable } from "react-table";
 import { openNotification } from "redux/actions/notification";
 import { COLORS } from "styles";
 import CommonUtils from "utils/commonUtils";
 import DateUtils from "utils/dateUtils";
-import DialogAddForm from "./dialogNewForm";
+import DialogAddForm from "./dialogs/dialogNewForm";
+import DialogWelcome from "./dialogs/dialogWelcome";
 
 function HomePage() {
   const { t } = useTranslation(["home", "table", "commons"]);
@@ -27,6 +28,7 @@ function HomePage() {
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const location = useLocation();
 
   const [item, setItem] = useState<FormResponseDTO>({} as FormResponseDTO);
   const [recentForms, setRecentForms] = useState<FormDTO[]>([]);
@@ -34,6 +36,7 @@ function HomePage() {
   const [recentOrders, setRecentOrders] = useState<FormResponseDTO[]>([]);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [openDetailDialog, setOpenDetailDialog] = useState<boolean>(false);
+  const [openWelcomeDialog, setOpenWelcomeDialog] = useState<boolean>(false);
 
   const getRecentForms = async () => {
     await new FormService().getRecentForms().then(response => {
@@ -403,8 +406,12 @@ function HomePage() {
   useEffect(() => {
     getRecentOrders();
     getRecentForms();
-    // console.log(currentLanguage);
-    CommonUtils.setPageTitle(t("commons:title_home"));
+    CommonUtils.setPageTitle(currentLanguage === "en" ? "Home" : "Trang chủ");
+    if (location.state) {
+      let state: any = location.state;
+      let openUserGuide: boolean = Boolean(state.openUserGuide);
+      setOpenWelcomeDialog(openUserGuide);
+    }
   }, []);
 
   return (
@@ -442,17 +449,6 @@ function HomePage() {
                 paddingTop: "2%",
               }}
             >
-              {recentForms &&
-                recentForms.length > 0 &&
-                recentForms.map((form, key) => {
-                  return (
-                    <Zoom key={key} in style={{ transformOrigin: "50% 50% 0" }} {...{ timeout: 500 }}>
-                      <Grid item xs={4} sx={{ paddingX: 2, paddingY: 1 }}>
-                        <CustomFormCard item={form} />
-                      </Grid>
-                    </Zoom>
-                  );
-                })}
               <Grid item xs={4} sx={{ paddingX: 2, paddingY: 1 }}>
                 <Box
                   sx={{
@@ -484,6 +480,17 @@ function HomePage() {
                   </Box>
                 </Box>
               </Grid>
+              {recentForms &&
+                recentForms.length > 0 &&
+                recentForms.map((form, key) => {
+                  return (
+                    <Zoom key={key} in style={{ transformOrigin: "50% 50% 0" }} {...{ timeout: 500 }}>
+                      <Grid item xs={4} sx={{ paddingX: 2, paddingY: 1 }}>
+                        <CustomFormCard item={form} />
+                      </Grid>
+                    </Zoom>
+                  );
+                })}
             </Grid>
           </Grid>
           <Grid item xs={7}>
@@ -585,6 +592,18 @@ function HomePage() {
           openDialog={openAddFormDialog}
           handleCloseDialog={() => {
             setOpenAddFormDialog(false);
+          }}
+        />
+      )}
+      {openWelcomeDialog && (
+        <DialogWelcome
+          openDialog={openWelcomeDialog}
+          handleCloseDialog={() => {
+            setOpenWelcomeDialog(false);
+          }}
+          handleOpenNewForm={() => {
+            setOpenWelcomeDialog(false);
+            setOpenAddFormDialog(true);
           }}
         />
       )}

@@ -134,8 +134,8 @@ function ProductsPage() {
               fontWeight: row.original.inventory === 0 ? 600 : 400,
             }}
           >
-            {row.original.costPrice}
-            {" đ"}
+            {row.original.costPrice.toLocaleString()}
+            {/* {" đ"} */}
           </Box>
         );
       },
@@ -154,8 +154,8 @@ function ProductsPage() {
               fontWeight: row.original.inventory === 0 ? 600 : 400,
             }}
           >
-            {row.original.productPrice}
-            {" đ"}
+            {row.original.productPrice.toLocaleString()}
+            {/* {" đ"} */}
           </Box>
         );
       },
@@ -289,8 +289,8 @@ function ProductsPage() {
               fontWeight: row.original.inventory === 0 ? 600 : 400,
             }}
           >
-            {row.original.costPrice}
-            {" đ"}
+            {row.original.costPrice.toLocaleString()}
+            {/* {" đ"} */}
           </Box>
         );
       },
@@ -309,8 +309,8 @@ function ProductsPage() {
               fontWeight: row.original.inventory === 0 ? 600 : 400,
             }}
           >
-            {row.original.productPrice}
-            {" đ"}
+            {row.original.productPrice.toLocaleString()}
+            {/* {" đ"} */}
           </Box>
         );
       },

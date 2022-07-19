@@ -29,7 +29,11 @@ const auth = getAuth(app);
 
 const provider = new GoogleAuthProvider();
 
-export const GoogleLoginButton = () => {
+export interface GoogleLoginButtonProps {
+  openUserGuide: boolean;
+}
+
+export const GoogleLoginButton = ({ openUserGuide }: GoogleLoginButtonProps) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -56,7 +60,12 @@ export const GoogleLoginButton = () => {
                       profilePicture: response.profilePicture,
                     }),
                   );
-                  navigate("/home");
+                  // navigate("/home", {
+                  //   state: {
+                  //     openUserGuide: openUserGuide,
+                  //   },
+                  // });
+                  navigate("/onboarding");
                 })
                 .catch(e => {
                   dispatch(openNotification({ open: true, content: e.message, severity: "error" }));

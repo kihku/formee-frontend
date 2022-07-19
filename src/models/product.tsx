@@ -38,6 +38,7 @@ export interface ProductTypeDTO {
   name: string;
   color: string;
   backgroundColor: string;
+  children?: string[];
 }
 
 export const initProduct: ProductDTO = {

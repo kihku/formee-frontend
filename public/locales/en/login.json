@@ -9,5 +9,17 @@
     "login_sign_in": "SIGN IN",
     "sign_up_title": "Welcome to FORMEE!",
     "sign_up_subtitle": "Register your account",
-    "sign_up_existing_acc": "Already have an account?"
+    "sign_up_existing_acc": "Already have an account?",
+    "onboarding_title": "Registration complete!",
+    "onboarding_subtitle": "Tell us a little bit about yourself",
+    "onboarding_display_name": "Display name",
+    "onboarding_phone": "Phone number",
+    "onboarding_email": "Email",
+    "onboarding_product_title": "What kinds of products are you looking to sell?",
+    "onboarding_product_subtitle": "Choose up to 3 categories",
+    "onboarding_next_step": "Next step",
+    "onboarding_previous_step": "Previous step",
+    "onboarding_finish": "Finish",
+    "onboarding_product_detail_title": "What exact product types are you looking to sell?",
+    "onboarding_product_detail_subtitle": "Choose up to 5 product types"
 }

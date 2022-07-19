@@ -346,7 +346,7 @@ function LoginPage() {
               >
                 {t("login_google")}
               </Typography>
-              <GoogleLoginButton />
+              <GoogleLoginButton openUserGuide={false} />
             </Box>
           </Grid>
         </Grid>

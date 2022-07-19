@@ -98,7 +98,7 @@ export const FormCart = ({ index, formik, disabled, disabledForm }: FormCartProp
       Cell: ({ row }: CellProps<ProductDTO, {}>) => {
         return (
           <Box display="flex" justifyContent="left">
-            {row.original.productPrice}
+            {row.original.productPrice.toLocaleString()}
           </Box>
         );
       },
@@ -163,7 +163,7 @@ export const FormCart = ({ index, formik, disabled, disabledForm }: FormCartProp
       Cell: ({ row }: CellProps<ProductDTO, {}>) => {
         return (
           <Box display="flex" justifyContent="left">
-            {row.original.productPrice * row.original.quantity}
+            {(row.original.productPrice * row.original.quantity).toLocaleString()}
           </Box>
         );
       },
@@ -228,7 +228,7 @@ export const FormCart = ({ index, formik, disabled, disabledForm }: FormCartProp
       Cell: ({ row }: CellProps<ProductDTO, {}>) => {
         return (
           <Box display="flex" justifyContent="left">
-            {row.original.productPrice}
+            {row.original.productPrice.toLocaleString()}
           </Box>
         );
       },
@@ -358,8 +358,8 @@ export const FormCart = ({ index, formik, disabled, disabledForm }: FormCartProp
       Cell: ({ row }: CellProps<ProductDTO, {}>) => {
         return (
           <Box display="flex" justifyContent="left">
-            {row.original.productPrice}
-            {" đ"}
+            {row.original.productPrice.toLocaleString()}
+            {/* {" đ"} */}
           </Box>
         );
       },
@@ -383,8 +383,8 @@ export const FormCart = ({ index, formik, disabled, disabledForm }: FormCartProp
       Cell: ({ row }: CellProps<ProductDTO, {}>) => {
         return (
           <Box display="flex" justifyContent="left">
-            {row.original.productPrice * row.original.quantity}
-            {" đ"}
+            {(row.original.productPrice * row.original.quantity).toLocaleString()}
+            {/* {" đ"} */}
           </Box>
         );
       },
@@ -435,8 +435,8 @@ export const FormCart = ({ index, formik, disabled, disabledForm }: FormCartProp
       Cell: ({ row }: CellProps<ProductDTO, {}>) => {
         return (
           <Box display="flex" justifyContent="left">
-            {row.original.productPrice}
-            {" đ"}
+            {row.original.productPrice.toLocaleString()}
+            {/* {" đ"} */}
           </Box>
         );
       },
@@ -460,8 +460,8 @@ export const FormCart = ({ index, formik, disabled, disabledForm }: FormCartProp
       Cell: ({ row }: CellProps<ProductDTO, {}>) => {
         return (
           <Box display="flex" justifyContent="left">
-            {row.original.productPrice * row.original.quantity}
-            {" đ"}
+            {(row.original.productPrice * row.original.quantity).toLocaleString()}
+            {/* {" đ"} */}
           </Box>
         );
       },
@@ -554,8 +554,8 @@ export const FormCart = ({ index, formik, disabled, disabledForm }: FormCartProp
                         {option.name}
                       </Box>
                       <Box>
-                        {option.productPrice}
-                        {" đ "}
+                        {option.productPrice.toLocaleString()}
+                        {/* {" đ "} */}
                         {`(${currentLanguage === "en" ? "Inventory" : "Kho"}: ${option.inventory})`}
                       </Box>
                     </Box>
