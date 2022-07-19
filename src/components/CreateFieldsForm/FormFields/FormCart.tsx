@@ -555,7 +555,7 @@ export const FormCart = ({ index, formik, disabled, disabledForm }: FormCartProp
                       </Box>
                       <Box>
                         {option.productPrice.toLocaleString()}
-                        {/* {" đ "} */}
+                        {" "}
                         {`(${currentLanguage === "en" ? "Inventory" : "Kho"}: ${option.inventory})`}
                       </Box>
                     </Box>

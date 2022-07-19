@@ -60,12 +60,7 @@ export const GoogleLoginButton = ({ openUserGuide }: GoogleLoginButtonProps) => 
                       profilePicture: response.profilePicture,
                     }),
                   );
-                  // navigate("/home", {
-                  //   state: {
-                  //     openUserGuide: openUserGuide,
-                  //   },
-                  // });
-                  navigate("/onboarding");
+                  navigate(openUserGuide ? "/onboarding" : "/home");
                 })
                 .catch(e => {
                   dispatch(openNotification({ open: true, content: e.message, severity: "error" }));

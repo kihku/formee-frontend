@@ -1,0 +1,9 @@
+{
+    "customers_title": "Customers",
+    "customers_create": "Create customer",
+    "customers_name": "Customer name",
+    "customers_phone": "Phone number",
+    "customers_address": "Address",
+    "customers_edit": "Edit customer",
+    "customers_delete": "Delete customer"
+}

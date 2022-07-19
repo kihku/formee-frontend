@@ -36,20 +36,18 @@ export const Header = () => {
         xs={8}
         sx={{
           display: "flex",
-          paddingLeft: "5vh",
+          paddingLeft: "1vw",
           justifyContent: "start",
           gap: 1.5,
         }}
       >
         <Box
-          sx={{ display: "flex", alignItems: "center", marginRight: 5 }}
+          sx={{ display: "flex", alignItems: "center", marginRight: 2, cursor: "pointer" }}
           onClick={() => {
             navigate("/home");
           }}
         >
-          <Icon sx={{ transform: "scale(1.8)", cursor: "pointer" }}>
-            <img src="/images/logo.svg" height="100%" />
-          </Icon>
+          <img src="/images/logo-full.svg" height="35vh" />
         </Box>
         <CustomChip
           clickable
@@ -87,8 +85,22 @@ export const Header = () => {
         />
         <CustomChip
           clickable
-          backgroundColor={window.location.href.split("/").at(-1) === "repor" ? COLORS.primaryBackground : COLORS.white}
-          textColor={window.location.href.split("/").at(-1) === "repor" ? COLORS.primary : COLORS.text}
+          backgroundColor={
+            window.location.href.split("/").at(-1) === "customers" ? COLORS.primaryBackground : COLORS.white
+          }
+          textColor={window.location.href.split("/").at(-1) === "customers" ? COLORS.primary : COLORS.text}
+          text={t("header_customers")}
+          size={18}
+          handleOnClick={() => {
+            navigate("/customers");
+          }}
+        />
+        <CustomChip
+          clickable
+          backgroundColor={
+            window.location.href.split("/").at(-1) === "report" ? COLORS.primaryBackground : COLORS.white
+          }
+          textColor={window.location.href.split("/").at(-1) === "report" ? COLORS.primary : COLORS.text}
           text={t("header_report")}
           size={18}
           handleOnClick={() => {

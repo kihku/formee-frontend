@@ -7,7 +7,6 @@ import { CustomButton } from "components/CustomButton";
 import { StyledInput } from "components/CustomTextField";
 import { productTypesEng, productTypesVi } from "constants/productTypes";
 import { useFormik } from "formik";
-import i18n from "i18n";
 import { UserDTO } from "models/user";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";

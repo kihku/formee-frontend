@@ -1,0 +1,9 @@
+{
+    "customers_title": "Khách hàng",
+    "customers_create": "Tạo khách hàng mới",
+    "customers_name": "Tên khách hàng",
+    "customers_phone": "Số điện thoại",
+    "customers_address": "Địa chỉ",
+    "customers_edit": "Chỉnh sửa khách hàng",
+    "customers_delete": "Xoá khách hàng"
+}
