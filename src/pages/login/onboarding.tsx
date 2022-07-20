@@ -135,7 +135,7 @@ function OnboardingPage() {
                   height: "100%",
                   width: "100%",
                   minHeight: "80vh",
-                  backgroundImage: "url(/images/setUpImage.jpg)",
+                  backgroundImage: "url(/images/setupImage.jpg)",
                   backgroundRepeat: "no-repeat",
                   backgroundSize: "cover",
                   backgroundPosition: "center",
