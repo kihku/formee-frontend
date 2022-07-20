@@ -569,6 +569,24 @@ function StatisticsPage() {
         <CustomBackgroundCard sizeX={"auto"} sizeY={"auto"} padding={-1}>
           <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 3 }}>
             <Box sx={{ fontWeight: 500, fontSize: "20px" }}>{t("stats_customers_title")}</Box>
+            <Box
+              onClick={() => {
+                navigate("/customers");
+              }}
+              sx={{ display: "flex", cursor: "pointer", alignItems: "center" }}
+            >
+              <Typography
+                sx={{
+                  fontSize: "16px",
+                  fontWeight: 400,
+                  color: COLORS.lightText,
+                  ":hover": { textDecoration: "underline" },
+                }}
+              >
+                {t("stats_customers_manage")}
+              </Typography>
+              <CustomIcon name={"rightArrow"} />
+            </Box>
           </Box>
           <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
             <Box>
