@@ -6,7 +6,6 @@ import CreateFieldsForm from "components/CreateFieldsForm";
 import { FormAddress } from "components/CreateFieldsForm/FormFields/FormAddress";
 import { FormCart } from "components/CreateFieldsForm/FormFields/FormCart";
 import { FormPayment } from "components/CreateFieldsForm/FormFields/FormPayment";
-import { FormSelect } from "components/CreateFieldsForm/FormFields/FormSelect";
 import { FormShipping } from "components/CreateFieldsForm/FormFields/FormShipping";
 import { FormTextField } from "components/CreateFieldsForm/FormFields/FormTextField";
 import { CustomButton } from "components/CustomButton";
@@ -16,7 +15,7 @@ import { CustomTitle } from "components/CustomTitle";
 import { orderStatusListEng, orderStatusListVi } from "constants/constants";
 import { useFormik } from "formik";
 import { FormDTO, FormResponseDTO, FormSectionDTO } from "models/form";
-import { QRCodeCanvas, QRCodeSVG } from "qrcode.react";
+import { QRCodeCanvas } from "qrcode.react";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch } from "react-redux";
@@ -110,7 +109,7 @@ const DialogFinishOrder = ({ responseId, openDialog, handleCloseDialog, orderNam
       .getOrderById(orderId)
       .then(response => {
         if (response.result) {
-          console.log(response.result);
+          // console.log(response.result);
           setFormResponse({ ...response.result, response: JSON.parse(response.result.response) });
           formik.setValues({ ...response.result, response: JSON.parse(response.result.response) });
           setFormId(response.result.formId);
@@ -119,6 +118,17 @@ const DialogFinishOrder = ({ responseId, openDialog, handleCloseDialog, orderNam
       .catch(e => {
         navigate("/error");
       });
+  };
+
+  const handleExportInvoice = async () => {
+    await new OrderService().exportInvoice(responseId, CommonUtils.encodeUUID(responseId)).then(response => {
+      let type = "application/pdf";
+      var blob = new Blob([response], { type: type });
+      var link = document.createElement("a");
+      link.href = window.URL.createObjectURL(blob);
+      link.download = "Đơn hàng - " + orderName;
+      link.click();
+    });
   };
 
   useEffect(() => {
@@ -158,6 +168,9 @@ const DialogFinishOrder = ({ responseId, openDialog, handleCloseDialog, orderNam
             />
           </Box>
           <Box sx={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
+            <IconButton onClick={handleExportInvoice}>
+              <CustomIcon name="receipt" size={30} />
+            </IconButton>
             <IconButton onClick={closeDialog}>
               <CustomIcon name="close" size={30} />
             </IconButton>

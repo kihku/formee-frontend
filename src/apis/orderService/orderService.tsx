@@ -1,6 +1,6 @@
 import AXIOS_INSTANCE from "apis/axiosClient";
 import { BaseService, DataResponse } from "apis/baseService";
-import { FormDTO, FormOrderSearchRequest, FormResponseDTO } from "models/form";
+import { FormOrderSearchRequest, FormResponseDTO } from "models/form";
 
 export class OrderService extends BaseService {
   url = "/api/order";
@@ -62,6 +62,25 @@ export class OrderService extends BaseService {
     await AXIOS_INSTANCE.post(`${this.url}/export`, request, {
       responseType: "blob",
     })
+      .then(response => {
+        data = response.data;
+      })
+      .catch(error => {
+        console.log(error);
+        return Promise.reject(error);
+      });
+    return data;
+  };
+
+  exportInvoice = async (orderId: string, encoded: string): Promise<any> => {
+    let data: any = {};
+    await AXIOS_INSTANCE.post(
+      `${this.url}/export-invoice`,
+      { originalId: orderId, encodedId: encoded },
+      {
+        responseType: "blob",
+      },
+    )
       .then(response => {
         data = response.data;
       })

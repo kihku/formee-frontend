@@ -56,6 +56,7 @@ import ColorizeRoundedIcon from "@mui/icons-material/ColorizeRounded";
 import TravelExploreRoundedIcon from "@mui/icons-material/TravelExploreRounded";
 import QrCode2RoundedIcon from "@mui/icons-material/QrCode2Rounded";
 import ImageRoundedIcon from "@mui/icons-material/ImageRounded";
+import ReceiptLongRoundedIcon from "@mui/icons-material/ReceiptLongRounded";
 import { COLORS } from "styles";
 
 export type IconType =
@@ -117,7 +118,8 @@ export type IconType =
   | "colorPicker"
   | "shipping"
   | "qrCode"
-  | "image";
+  | "image"
+  | "receipt";
 
 interface IconProps {
   name: IconType;
@@ -265,5 +267,7 @@ export const CustomIcon = ({ name, size, color }: IconProps) => {
       return <QrCode2RoundedIcon sx={iconStyle} />;
     case "image":
       return <ImageRoundedIcon sx={iconStyle} />;
+    case "receipt":
+      return <ReceiptLongRoundedIcon sx={iconStyle} />;
   }
 };
