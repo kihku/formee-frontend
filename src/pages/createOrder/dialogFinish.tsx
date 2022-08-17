@@ -168,9 +168,9 @@ const DialogFinishOrder = ({ responseId, openDialog, handleCloseDialog, orderNam
             />
           </Box>
           <Box sx={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
-            <IconButton onClick={handleExportInvoice}>
+            {/* <IconButton onClick={handleExportInvoice}>
               <CustomIcon name="receipt" size={30} />
-            </IconButton>
+            </IconButton> */}
             <IconButton onClick={closeDialog}>
               <CustomIcon name="close" size={30} />
             </IconButton>
@@ -253,6 +253,14 @@ const DialogFinishOrder = ({ responseId, openDialog, handleCloseDialog, orderNam
                       orderId: responseId,
                     },
                   });
+                }}
+              />
+              <CustomButton
+                text={t("order_export_receipt")}
+                type="rounded-outlined"
+                startIcon="receipt"
+                handleOnClick={() => {
+                  handleExportInvoice();
                 }}
               />
               <CustomButton

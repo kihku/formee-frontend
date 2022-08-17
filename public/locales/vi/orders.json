@@ -18,5 +18,6 @@
     "button_confirm": "Xác nhận",
     "button_close": "Đóng",
     "order_delivery_shipping": "Vận chuyển",
-    "order_delivery_self_pickup": "Tự đến lấy"
+    "order_delivery_self_pickup": "Tự đến lấy",
+    "order_export_receipt": "Xuất thành file"
 }

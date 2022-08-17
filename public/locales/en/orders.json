@@ -16,5 +16,6 @@
     "order_edit_confirm": "Confirm order edit",
     "order_edit_message": "Leave a message for the customer (optional)",
     "order_delivery_shipping": "Shipping",
-    "order_delivery_self_pickup": "Self-pickup"
+    "order_delivery_self_pickup": "Self-pickup",
+    "order_export_receipt": "Export to file"
 }

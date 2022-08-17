@@ -142,6 +142,8 @@ const DialogEditProduct = ({ itemEdit, openDialog, handleCloseDialog, productTyp
                 <Grid item xs={12} sx={{ marginBottom: 2 }}>
                   <StyledInput
                     fullWidth
+                    multiline
+                    rows={2}
                     value={formik.values.description}
                     onChange={e => {
                       formik.setFieldValue("description", e.target.value);

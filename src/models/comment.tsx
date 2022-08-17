@@ -5,4 +5,5 @@ export interface CommentDTO {
     createdBy: string;
     createdDate: string;
     fromEdit: boolean;
+    captcha?: string;
 }

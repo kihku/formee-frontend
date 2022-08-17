@@ -1,11 +1,8 @@
-import { Box, FormHelperText, Grid, IconButton, InputLabel } from "@mui/material";
-import { CustomButton } from "components/CustomButton";
-import { CustomIcon } from "components/CustomIcon";
+import { Grid, InputLabel } from "@mui/material";
 import CustomCartFooter from "components/CustomTable/cartFooter";
 import { FormFieldGeneral, FormikType } from "models/baseModels";
 import { FormSectionDTO } from "models/form";
 import { useTranslation } from "react-i18next";
-import { COLORS } from "styles";
 import StringUtils from "utils/stringUtils";
 import { FormSection } from "./FormFields/FormSection";
 
@@ -61,7 +58,16 @@ export const CreateFieldsForm = <T extends object, K extends object>({
                             },
                           }}
                         >
-                          <InputLabel sx={{ whiteSpace: "normal", textOverflow: "unset" }}>{label}</InputLabel>
+                          <InputLabel
+                            sx={{
+                              whiteSpace: "normal",
+                              textOverflow: "unset",
+                              paddingRight: { xs: 0, md: 3 },
+                              textAlign: { xs: "left", md: "right" },
+                            }}
+                          >
+                            {label}
+                          </InputLabel>
                           {/* <FormHelperText
                             sx={{
                               color: COLORS.primary,
@@ -90,7 +96,6 @@ export const CreateFieldsForm = <T extends object, K extends object>({
                               xs: 0.5,
                               md: 2,
                             },
-                            // paddingRight: "10px",
                           }}
                         >
                           {Component && (

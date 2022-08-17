@@ -1,4 +1,4 @@
-import { Box, Dialog, DialogContent, DialogTitle, Grid } from "@mui/material";
+import { Box, Dialog, DialogContent, DialogTitle, FormHelperText, Grid } from "@mui/material";
 import CreateFields, { CreateFieldsProps } from "components/CreateFields";
 import { CustomButton } from "components/CustomButton";
 import { CustomTextField } from "components/CustomTextField";
@@ -6,6 +6,9 @@ import { useFormik } from "formik";
 import { CommentDTO } from "models/comment";
 import { useTranslation } from "react-i18next";
 import * as Yup from "yup";
+import React from "react";
+import ReCAPTCHA from "react-google-recaptcha";
+import { CAPTCHA_KEYS } from "constants/keys";
 
 export interface DialogConfirmEditOrderProps {
   orderId: string;
@@ -17,7 +20,9 @@ export interface DialogConfirmEditOrderProps {
 const DialogConfirmEditOrder = (props: DialogConfirmEditOrderProps) => {
   const { t } = useTranslation(["commons", "tracking"]);
 
-  const validationSchema = Yup.object().shape({});
+  const validationSchema = Yup.object().shape({
+    captcha: Yup.string().required("Vui lòng xác thực mã captcha"),
+  });
 
   const closeDialog = () => {
     formik.resetForm();
@@ -30,7 +35,7 @@ const DialogConfirmEditOrder = (props: DialogConfirmEditOrderProps) => {
   };
 
   const formik = useFormik({
-    initialValues: { orderId: props.orderId, message: "", fromEdit: true } as CommentDTO,
+    initialValues: { orderId: props.orderId, message: "", fromEdit: true, captcha: "" } as CommentDTO,
     onSubmit: handleSubmitForm,
     validationSchema: validationSchema,
     validateOnChange: false,
@@ -60,6 +65,36 @@ const DialogConfirmEditOrder = (props: DialogConfirmEditOrderProps) => {
               {t("tracking:tracking_edit_content")}
             </Grid>
             <CreateFields formik={formik} fields={fields} />
+            <Grid
+              item
+              xs={12}
+              sx={{
+                display: "flex",
+                alignItems: "end",
+                paddingRight: "10px",
+                paddingBottom: "20px",
+                flexDirection: "column",
+              }}
+            >
+              <ReCAPTCHA
+                style={{ display: "inline-block" }}
+                theme="light"
+                ref={React.createRef()}
+                sitekey={CAPTCHA_KEYS.PRODUCTION.siteKey}
+                onChange={(value: any) => {
+                  // console.log("aaaa", value);
+                  formik.setFieldValue("captcha", value);
+                }}
+                asyncScriptOnLoad={() => {}}
+              />
+              <FormHelperText
+                sx={{
+                  color: "red",
+                }}
+              >
+                {formik.errors["captcha"] && formik.errors["captcha"]}
+              </FormHelperText>
+            </Grid>
             <Grid item xs={12} sx={{ display: "flex", justifyContent: "flex-end" }}>
               <Box sx={{ display: "flex", gap: 1.5, paddingX: "10px", marginBottom: 1 }}>
                 <CustomButton

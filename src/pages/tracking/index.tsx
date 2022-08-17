@@ -413,6 +413,7 @@ function OrderTrackingPage() {
             handleSubmitDialog={(comment: CommentDTO) => {
               handleAddComment(comment).then(() => {
                 formik.handleSubmit();
+                setEnableEditing(false);
               });
             }}
             handleCloseDialog={() => {
