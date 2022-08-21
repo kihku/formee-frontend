@@ -220,13 +220,13 @@ function CreateOrderPage() {
             <CustomBackgroundCard sizeX="auto" sizeY="auto">
               <Grid item xs={12}>
                 <Grid container>
-                  <Grid item xs={2}>
+                  <Grid item xs={2} sx={{ textAlign: "right", paddingRight: "20px", paddingTop: 1 }}>
                     <InputLabel sx={{ whiteSpace: "normal", textOverflow: "unset" }}>
                       {t("orders:order_form_name")}
                     </InputLabel>
                   </Grid>
                   <Grid item xs={5} sx={{ marginBottom: 2, paddingRight: "10px" }}>
-                    <CustomTextField formik={formik} name="orderName" />
+                    <CustomTextField formik={formik} name="orderName" placeholder={t("orders:order_name_placeholder")} />
                   </Grid>
                 </Grid>
               </Grid>

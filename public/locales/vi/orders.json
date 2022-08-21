@@ -19,5 +19,7 @@
     "button_close": "Đóng",
     "order_delivery_shipping": "Vận chuyển",
     "order_delivery_self_pickup": "Tự đến lấy",
-    "order_export_receipt": "Xuất thành file"
+    "order_export_receipt": "Xuất thành file",
+    "order_name_placeholder": "Đơn hàng mẫu",
+    "order_phone_placeholder": "033xxxxxxx"
 }

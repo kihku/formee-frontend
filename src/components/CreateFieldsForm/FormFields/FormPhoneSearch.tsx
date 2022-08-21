@@ -16,7 +16,7 @@ interface FormPhoneSearchProps {
 }
 
 export const FormPhoneSearch = ({ formik, disabled }: FormPhoneSearchProps) => {
-  const { t } = useTranslation(["forms"]);
+  const { t } = useTranslation(["forms", "orders"]);
   const [customers, setCustomers] = useState<CustomerDTO[]>([]);
 
   const getCustomers = async () => {
@@ -62,6 +62,7 @@ export const FormPhoneSearch = ({ formik, disabled }: FormPhoneSearchProps) => {
                       formik.setFieldValue &&
                       formik.setFieldValue("response", [e.target.value, ...formik.values["response"].slice(1)]);
                   }}
+                  placeholder={t("orders:order_phone_placeholder")}
                 />
               );
             }}

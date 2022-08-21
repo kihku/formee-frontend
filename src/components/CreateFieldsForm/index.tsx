@@ -64,6 +64,7 @@ export const CreateFieldsForm = <T extends object, K extends object>({
                               textOverflow: "unset",
                               paddingRight: { xs: 0, md: 3 },
                               textAlign: { xs: "left", md: "right" },
+                              paddingTop: 1,
                             }}
                           >
                             {label}
